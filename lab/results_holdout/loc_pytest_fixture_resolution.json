@@ -1,0 +1,889 @@
+{
+  "task_id": "loc_pytest_fixture_resolution",
+  "repo": "pytest-dev/pytest",
+  "question": "Issue: a fixture defined on a plugin class is not bound to the requesting test instance, so the wrong callable is invoked during fixture setup. Which function resolves the actual fixture callable (binding it to request.instance when appropriate), and where is it invoked during fixture setup?",
+  "results": [
+    {
+      "task_id": "loc_pytest_fixture_resolution",
+      "tokens_total": 704906,
+      "tool_calls": 28,
+      "files_accessed": 240,
+      "recall": 1.0,
+      "precision": 0.004166666666666667,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/_pytest/fixtures.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/_pytest/warning_types.py",
+        "src/_pytest/cacheprovider.py",
+        "src/_pytest/timing.py",
+        "src/_pytest/_code/source.py",
+        "src/_pytest/_py/path.py",
+        "src/_pytest/fixtures.py",
+        "src/_pytest/python.py",
+        "src/_pytest/doctest.py",
+        "src/_pytest/pathlib.py",
+        "src/_pytest/nodes.py",
+        "src/_pytest/main.py",
+        "src/_pytest/python_api.py",
+        "src/_pytest/monkeypatch.py",
+        "src/_pytest/_code/code.py",
+        "src/_pytest/reports.py",
+        "src/_pytest/assertion/rewrite.py",
+        "src/_pytest/compat.py",
+        "src/_pytest/capture.py",
+        "src/_pytest/junitxml.py",
+        "src/_pytest/unittest.py",
+        "src/_pytest/logging.py",
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/tmpdir.py",
+        "src/_pytest/assertion/util.py",
+        "src/_pytest/recwarn.py",
+        "src/_pytest/faulthandler.py",
+        "src/_pytest/pytester.py",
+        "src/_pytest/outcomes.py",
+        "doc/en/conf.py",
+        "extra/get_issues.py",
+        "src/_pytest/mark/structures.py",
+        "testing/test_monkeypatch.py",
+        "testing/test_pathlib.py",
+        "testing/test_runner.py",
+        "testing/test_mark.py",
+        "testing/test_setuponly.py",
+        "testing/plugins_integration/pytest_rerunfailures_integration.py",
+        "testing/test_setupplan.py",
+        "testing/io/test_terminalwriter.py",
+        "testing/test_assertrewrite.py",
+        "testing/test_recwarn.py",
+        "testing/test_pluginmanager.py",
+        "testing/conftest.py",
+        "testing/test_warnings.py",
+        "testing/test_session.py",
+        "testing/test_skipping.py",
+        "testing/code/test_source.py",
+        "testing/test_nodes.py",
+        "testing/typing_checks.py",
+        "testing/test_error_diffs.py",
+        "testing/test_unittest.py",
+        "testing/test_conftest.py",
+        "testing/test_reports.py",
+        "testing/test_terminal.py",
+        "testing/test_collection.py",
+        "testing/test_tmpdir.py",
+        "testing/code/test_excinfo.py",
+        "testing/example_scripts/acceptance/fixture_mock_integration.py",
+        "testing/python/fixtures.py",
+        "testing/test_cacheprovider.py",
+        "testing/test_capture.py",
+        "testing/test_link_resolve.py",
+        "testing/examples/test_issue519.py",
+        "testing/test_debugging.py",
+        "testing/python/raises.py",
+        "testing/test_parseopt.py",
+        "testing/test_doctest.py",
+        "testing/test_assertion.py",
+        "testing/test_config.py",
+        "testing/python/integration.py",
+        "testing/acceptance_test.py",
+        "testing/python/metafunc.py",
+        "testing/_py/test_local.py",
+        "testing/test_junitxml.py",
+        "testing/example_scripts/unittest/test_unittest_asynctest.py",
+        "testing/logging/test_fixture.py",
+        "testing/python/collect.py",
+        "testing/example_scripts/issue_519.py",
+        "testing/test_stepwise.py",
+        "testing/python/approx.py",
+        "src/_pytest/scope.py",
+        "src/_pytest/setupplan.py",
+        "src/_pytest/legacypath.py",
+        "src/_pytest/setuponly.py",
+        "src/_pytest/hookspec.py",
+        "src/_pytest/helpconfig.py",
+        "src/_pytest/runner.py",
+        "bench/manyparam.py",
+        "src/pytest/__init__.py",
+        "src/_pytest/deprecated.py",
+        "src/_pytest/terminal.py",
+        "scripts/update-plugin-list.py",
+        "src/_pytest/mark/__init__.py",
+        "testing/test_legacypath.py",
+        "testing/test_python_path.py",
+        "testing/python/show_fixtures_per_test.py",
+        "testing/test_helpconfig.py",
+        "testing/plugins_integration/bdd_wallet.py",
+        "testing/test_pastebin.py",
+        "doc/en/example/fixtures/test_fixtures_order_autouse_multiple_scopes.py",
+        "doc/en/example/fixtures/test_fixtures_order_scope.py",
+        "doc/en/example/fixtures/test_fixtures_request_different_scope.py",
+        "doc/en/example/multipython.py",
+        "doc/en/example/fixtures/test_fixtures_order_autouse.py",
+        "doc/en/example/fixtures/test_fixtures_order_autouse_temp_effects.py",
+        "doc/en/example/fixtures/test_fixtures_order_dependencies.py",
+        "testing/test_threadexception.py",
+        "testing/test_unraisableexception.py",
+        "testing/logging/test_reporting.py",
+        "testing/test_pytester.py",
+        "testing/deprecated_test.py",
+        "testing/test_main.py",
+        "testing/test_mark_expression.py",
+        "testing/test_runner_xunit.py",
+        "testing/example_scripts/unittest/test_parametrized_fixture_error_message.py",
+        "testing/example_scripts/fixtures/test_getfixturevalue_dynamic.py",
+        "testing/example_scripts/fixtures/test_fixture_named_request.py",
+        "testing/example_scripts/tmpdir/tmp_path_fixture.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_funcarg_lookup_classlevel.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_funcarg_basic.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_funcarg_lookupfails.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_conftest_module/test_extend_fixture_conftest_module.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_detect_recursive_dependency_error.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_funcarg_lookup_modulelevel.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_module_class.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_conftest_module/conftest.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_conftest_funcargs_only_available_in_subdir/sub2/conftest.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_conftest_funcargs_only_available_in_subdir/sub1/conftest.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_conftest_conftest/conftest.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_conftest_conftest/pkg/conftest.py",
+        "src/_pytest/freeze_support.py",
+        "src/_pytest/_py/error.py",
+        "src/_pytest/config/argparsing.py",
+        "src/_pytest/skipping.py",
+        "src/_pytest/stash.py",
+        "src/_pytest/debugging.py",
+        "src/_pytest/config/compat.py",
+        "testing/io/test_saferepr.py",
+        "testing/test_stash.py",
+        "doc/en/example/customdirectory/conftest.py",
+        "src/_pytest/stepwise.py",
+        "src/_pytest/assertion/__init__.py",
+        "src/_pytest/pastebin.py",
+        "src/_pytest/pytester_assertions.py",
+        "doc/en/example/assertion/test_failures.py",
+        "testing/test_faulthandler.py",
+        "src/_pytest/threadexception.py",
+        "src/_pytest/_io/pprint.py",
+        "src/_pytest/_io/terminalwriter.py",
+        "src/_pytest/_argcomplete.py",
+        "src/_pytest/_io/saferepr.py",
+        "src/_pytest/unraisableexception.py",
+        "src/_pytest/config/exceptions.py",
+        "src/_pytest/mark/expression.py",
+        "bench/xunit.py",
+        "scripts/prepare-release-pr.py",
+        "bench/unit_test.py",
+        "testing/test_warning_types.py",
+        "testing/example_scripts/dataclasses/test_compare_dataclasses_verbose.py",
+        "testing/test_findpaths.py",
+        "testing/example_scripts/dataclasses/test_compare_initvar.py",
+        "testing/example_scripts/dataclasses/test_compare_dataclasses_field_comparison_off.py",
+        "testing/example_scripts/dataclasses/test_compare_dataclasses.py",
+        "testing/example_scripts/dataclasses/test_compare_dataclasses_with_custom_eq.py",
+        "testing/example_scripts/dataclasses/test_compare_two_different_dataclasses.py",
+        "testing/test_scope.py",
+        "doc/en/example/nonpython/conftest.py",
+        "testing/example_scripts/dataclasses/test_compare_recursive_dataclasses.py",
+        "testing/test_compat.py",
+        "testing/code/test_code.py",
+        "testing/io/test_pprint.py",
+        "testing/example_scripts/issue88_initial_file_multinodes/conftest.py",
+        "doc/en/example/assertion/test_setup_flow_example.py",
+        "testing/example_scripts/unittest/test_unittest_plain_async.py",
+        "doc/en/example/assertion/failure_demo.py",
+        "testing/example_scripts/unittest/test_unittest_asyncio.py",
+        "testing/example_scripts/unittest/test_setup_skip_class.py",
+        "testing/example_scripts/customdirectory/conftest.py",
+        "doc/en/example/pythoncollection.py",
+        "testing/test_argcomplete.py",
+        "testing/example_scripts/unittest/test_setup_skip_module.py",
+        "testing/example_scripts/config/collect_pytest_prefix/conftest.py",
+        "testing/example_scripts/fixtures/custom_item/conftest.py",
+        "testing/example_scripts/unittest/test_setup_skip.py",
+        "testing/logging/test_formatter.py",
+        "src/_pytest/warnings.py",
+        "src/_pytest/python_path.py",
+        "src/pytest/__main__.py",
+        "src/py.py",
+        "bench/bench.py",
+        "src/_pytest/assertion/truncate.py",
+        "bench/skip.py",
+        "src/_pytest/config/findpaths.py",
+        "bench/bench_argcomplete.py",
+        "bench/empty.py",
+        "testing/plugins_integration/pytest_anyio_integration.py",
+        "testing/io/test_wcwidth.py",
+        "testing/plugins_integration/pytest_asyncio_integration.py",
+        "testing/test_meta.py",
+        "testing/plugins_integration/pytest_trio_integration.py",
+        "testing/test_entry_points.py",
+        "testing/plugins_integration/simple_integration.py",
+        "testing/example_scripts/config/collect_pytest_prefix/test_foo.py",
+        "testing/plugins_integration/pytest_twisted_integration.py",
+        "testing/example_scripts/warnings/test_group_warnings_by_message.py",
+        "doc/en/example/customdirectory/tests/test_second.py",
+        "testing/example_scripts/warnings/test_group_warnings_by_message_summary/test_2.py",
+        "testing/plugins_integration/pytest_mock_integration.py",
+        "doc/en/example/customdirectory/tests/test_third.py",
+        "doc/en/example/xfail_demo.py",
+        "testing/example_scripts/perf_examples/collect_stats/generate_folders.py",
+        "testing/example_scripts/warnings/test_group_warnings_by_message_summary/test_1.py",
+        "doc/en/example/customdirectory/tests/test_first.py",
+        "testing/example_scripts/perf_examples/collect_stats/template_test.py",
+        "doc/en/example/assertion/global_testmodule_config/test_hello_world.py",
+        "testing/example_scripts/marks/marks_considered_keywords/test_marks_as_keywords.py",
+        "testing/example_scripts/conftest_usageerror/conftest.py",
+        "doc/en/example/assertion/global_testmodule_config/conftest.py",
+        "testing/example_scripts/collect/package_init_given_as_arg/pkg/test_foo.py",
+        "testing/example_scripts/customdirectory/tests/test_second.py",
+        "testing/example_scripts/collect/package_init_given_as_arg/pkg/__init__.py",
+        "testing/example_scripts/customdirectory/tests/test_third.py",
+        "testing/example_scripts/doctest/main_py/__main__.py",
+        "testing/example_scripts/issue88_initial_file_multinodes/test_hello.py",
+        "testing/example_scripts/collect/collect_init_tests/tests/test_foo.py",
+        "testing/example_scripts/collect/package_infinite_recursion/tests/test_basic.py",
+        "testing/example_scripts/customdirectory/tests/test_first.py",
+        "testing/example_scripts/collect/collect_init_tests/tests/__init__.py",
+        "testing/freeze/runtests_script.py",
+        "testing/example_scripts/doctest/main_py/test_normal_module.py",
+        "testing/example_scripts/collect/package_infinite_recursion/conftest.py",
+        "testing/freeze/tests/test_trivial.py",
+        "testing/example_scripts/fixtures/custom_item/foo/test_foo.py",
+        "testing/freeze/tox_run.py",
+        "scripts/generate-gh-release-notes.py",
+        "testing/freeze/create_executable.py",
+        "scripts/release.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_conftest_funcargs_only_available_in_subdir/sub2/test_in_sub2.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_conftest_funcargs_only_available_in_subdir/sub1/test_in_sub1.py",
+        "testing/example_scripts/fixtures/fill_fixtures/test_extend_fixture_conftest_conftest/pkg/test_spam.py"
+      ],
+      "wall_time_ms": 559.4149999087676,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_pytest_fixture_resolution",
+      "tokens_total": 16012,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/_pytest/fixtures.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/_pytest/fixtures.py"
+      ],
+      "wall_time_ms": 4.609333002008498,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_pytest_fixture_resolution",
+      "strategy": "bm25",
+      "tokens_total": 86871,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.1,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/_pytest/fixtures.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/_pytest/python.py",
+        "src/_pytest/fixtures.py",
+        "src/_pytest/unittest.py",
+        "src/_pytest/hookspec.py",
+        "src/_pytest/nodes.py",
+        "src/_pytest/pytester.py",
+        "src/_pytest/outcomes.py",
+        "src/_pytest/legacypath.py",
+        "src/_pytest/compat.py",
+        "src/_pytest/config/__init__.py"
+      ],
+      "wall_time_ms": 28.22766697499901,
+      "cold_start_ms": 395.600541960448
+    },
+    {
+      "task_id": "loc_pytest_fixture_resolution",
+      "strategy": "bm25_ppr",
+      "tokens_total": 168518,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/_pytest/fixtures.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/_pytest/python.py",
+        "src/_pytest/fixtures.py",
+        "src/_pytest/unittest.py",
+        "src/_pytest/hookspec.py",
+        "src/_pytest/nodes.py",
+        "src/_pytest/pytester.py",
+        "src/_pytest/outcomes.py",
+        "src/_pytest/legacypath.py",
+        "src/_pytest/compat.py",
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/mark/structures.py",
+        "src/_pytest/deprecated.py",
+        "src/_pytest/runner.py",
+        "src/_pytest/cacheprovider.py",
+        "src/_pytest/python_api.py",
+        "src/_pytest/setuponly.py",
+        "src/_pytest/main.py",
+        "src/_pytest/junitxml.py",
+        "src/_pytest/doctest.py",
+        "src/_pytest/debugging.py",
+        "src/_pytest/logging.py",
+        "src/_pytest/monkeypatch.py",
+        "src/_pytest/reports.py",
+        "src/_pytest/capture.py",
+        "src/_pytest/tmpdir.py",
+        "src/_pytest/pathlib.py"
+      ],
+      "wall_time_ms": 95.64241697080433,
+      "cold_start_ms": 395.600541960448
+    },
+    {
+      "task_id": "loc_pytest_fixture_resolution",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8427,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/_pytest/fixtures.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/_pytest/python.py",
+        "src/_pytest/fixtures.py",
+        "src/_pytest/unittest.py",
+        "src/_pytest/hookspec.py",
+        "src/_pytest/nodes.py",
+        "src/_pytest/pytester.py",
+        "src/_pytest/outcomes.py",
+        "src/_pytest/legacypath.py",
+        "src/_pytest/compat.py",
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/mark/structures.py",
+        "src/_pytest/deprecated.py",
+        "src/_pytest/runner.py",
+        "src/_pytest/cacheprovider.py",
+        "src/_pytest/python_api.py",
+        "src/_pytest/setuponly.py",
+        "src/_pytest/main.py",
+        "src/_pytest/junitxml.py",
+        "src/_pytest/doctest.py",
+        "src/_pytest/debugging.py",
+        "src/_pytest/logging.py",
+        "src/_pytest/monkeypatch.py",
+        "src/_pytest/reports.py",
+        "src/_pytest/capture.py",
+        "src/_pytest/tmpdir.py",
+        "src/_pytest/pathlib.py"
+      ],
+      "wall_time_ms": 232.834417023696,
+      "cold_start_ms": 395.600541960448,
+      "regions": {
+        "src/_pytest/python.py": [
+          [
+            113,
+            117
+          ],
+          [
+            720,
+            730
+          ],
+          [
+            1082,
+            1089
+          ],
+          [
+            1449,
+            1480
+          ],
+          [
+            1672,
+            1679
+          ]
+        ],
+        "src/_pytest/fixtures.py": [
+          [
+            116,
+            120
+          ],
+          [
+            121,
+            124
+          ],
+          [
+            125,
+            136
+          ],
+          [
+            156,
+            170
+          ],
+          [
+            172,
+            182
+          ],
+          [
+            662,
+            702
+          ],
+          [
+            882,
+            901
+          ],
+          [
+            920,
+            942
+          ],
+          [
+            1105,
+            1128
+          ],
+          [
+            1129,
+            1152
+          ],
+          [
+            1153,
+            1177
+          ],
+          [
+            1220,
+            1230
+          ],
+          [
+            1232,
+            1242
+          ],
+          [
+            1344,
+            1344
+          ],
+          [
+            1345,
+            1358
+          ],
+          [
+            1359,
+            1384
+          ],
+          [
+            1385,
+            1394
+          ],
+          [
+            1395,
+            1413
+          ],
+          [
+            1796,
+            1804
+          ],
+          [
+            1805,
+            1813
+          ]
+        ],
+        "src/_pytest/unittest.py": [
+          [
+            1,
+            29
+          ]
+        ],
+        "src/_pytest/hookspec.py": [
+          [
+            75,
+            98
+          ],
+          [
+            293,
+            304
+          ],
+          [
+            430,
+            443
+          ],
+          [
+            459,
+            479
+          ],
+          [
+            732,
+            750
+          ],
+          [
+            751,
+            766
+          ],
+          [
+            767,
+            790
+          ],
+          [
+            811,
+            824
+          ],
+          [
+            826,
+            843
+          ],
+          [
+            845,
+            866
+          ],
+          [
+            868,
+            895
+          ],
+          [
+            896,
+            921
+          ],
+          [
+            922,
+            934
+          ],
+          [
+            935,
+            950
+          ],
+          [
+            951,
+            967
+          ],
+          [
+            1210,
+            1238
+          ],
+          [
+            1304,
+            1319
+          ],
+          [
+            1320,
+            1333
+          ]
+        ],
+        "src/_pytest/nodes.py": [
+          [
+            624,
+            630
+          ]
+        ],
+        "src/_pytest/pytester.py": [
+          [
+            197,
+            197
+          ],
+          [
+            198,
+            204
+          ],
+          [
+            205,
+            214
+          ],
+          [
+            459,
+            459
+          ],
+          [
+            460,
+            465
+          ],
+          [
+            466,
+            466
+          ],
+          [
+            467,
+            475
+          ],
+          [
+            476,
+            476
+          ],
+          [
+            477,
+            492
+          ],
+          [
+            493,
+            493
+          ],
+          [
+            502,
+            502
+          ]
+        ],
+        "src/_pytest/outcomes.py": [
+          [
+            1,
+            17
+          ]
+        ],
+        "src/_pytest/legacypath.py": [
+          [
+            253,
+            265
+          ],
+          [
+            296,
+            322
+          ],
+          [
+            331,
+            335
+          ],
+          [
+            336,
+            345
+          ],
+          [
+            346,
+            356
+          ],
+          [
+            377,
+            386
+          ]
+        ],
+        "src/_pytest/compat.py": [
+          [
+            51,
+            62
+          ],
+          [
+            214,
+            224
+          ]
+        ],
+        "src/_pytest/config/__init__.py": [
+          [
+            307,
+            317
+          ]
+        ],
+        "src/_pytest/mark/structures.py": [
+          [
+            42,
+            45
+          ]
+        ],
+        "src/_pytest/deprecated.py": [
+          [
+            89,
+            91
+          ]
+        ],
+        "src/_pytest/runner.py": [
+          [
+            102,
+            105
+          ],
+          [
+            158,
+            162
+          ],
+          [
+            367,
+            370
+          ]
+        ],
+        "src/_pytest/cacheprovider.py": [
+          [
+            555,
+            555
+          ],
+          [
+            556,
+            570
+          ]
+        ],
+        "src/_pytest/python_api.py": [
+          [
+            794,
+            801
+          ]
+        ],
+        "src/_pytest/setuponly.py": [
+          [
+            1,
+            14
+          ],
+          [
+            15,
+            30
+          ],
+          [
+            31,
+            31
+          ],
+          [
+            32,
+            52
+          ],
+          [
+            53,
+            63
+          ],
+          [
+            98,
+            98
+          ]
+        ],
+        "src/_pytest/main.py": [
+          [
+            468,
+            473
+          ],
+          [
+            474,
+            477
+          ],
+          [
+            999,
+            1006
+          ]
+        ],
+        "src/_pytest/junitxml.py": [
+          [
+            279,
+            279
+          ],
+          [
+            280,
+            301
+          ],
+          [
+            302,
+            302
+          ],
+          [
+            340,
+            340
+          ]
+        ],
+        "src/_pytest/doctest.py": [
+          [
+            172,
+            177
+          ],
+          [
+            740,
+            740
+          ]
+        ],
+        "src/_pytest/debugging.py": [
+          [
+            1,
+            26
+          ]
+        ],
+        "src/_pytest/logging.py": [
+          [
+            597,
+            597
+          ],
+          [
+            639,
+            642
+          ]
+        ],
+        "src/_pytest/monkeypatch.py": [
+          [
+            30,
+            30
+          ]
+        ],
+        "src/_pytest/reports.py": [
+          [
+            458,
+            468
+          ]
+        ],
+        "src/_pytest/capture.py": [
+          [
+            977,
+            977
+          ],
+          [
+            1005,
+            1005
+          ],
+          [
+            1033,
+            1033
+          ],
+          [
+            1061,
+            1061
+          ]
+        ],
+        "src/_pytest/tmpdir.py": [
+          [
+            225,
+            239
+          ],
+          [
+            240,
+            240
+          ],
+          [
+            241,
+            246
+          ],
+          [
+            247,
+            254
+          ],
+          [
+            255,
+            255
+          ],
+          [
+            307,
+            314
+          ]
+        ],
+        "src/_pytest/pathlib.py": [
+          [
+            936,
+            939
+          ]
+        ]
+      }
+    }
+  ]
+}

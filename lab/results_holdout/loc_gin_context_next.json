@@ -1,0 +1,430 @@
+{
+  "task_id": "loc_gin_context_next",
+  "repo": "gin-gonic/gin",
+  "question": "Issue: calling c.Abort() inside a middleware does not prevent the remaining handlers in the chain from running, and c.Next() advances through the handler chain incorrectly. Where does the request context advance through the middleware/handler chain, and where does Abort stop further handlers from being called?",
+  "results": [
+    {
+      "task_id": "loc_gin_context_next",
+      "tokens_total": 137128,
+      "tool_calls": 28,
+      "files_accessed": 57,
+      "recall": 1.0,
+      "precision": 0.017543859649122806,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "context.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "gin.go",
+        "githubapi_test.go",
+        "routes_test.go",
+        "context.go",
+        "deprecated.go",
+        "internal/bytesconv/bytesconv_1.20.go",
+        "binding/form_mapping_benchmark_test.go",
+        "context_test.go",
+        "ginS/gins.go",
+        "logger_test.go",
+        "recovery_test.go",
+        "routergroup_test.go",
+        "routergroup.go",
+        "middleware_test.go",
+        "auth.go",
+        "recovery.go",
+        "debug_test.go",
+        "benchmarks_test.go",
+        "mode.go",
+        "utils.go",
+        "debug.go",
+        "logger.go",
+        "utils_test.go",
+        "gin_test.go",
+        "fs.go",
+        "tree_test.go",
+        "tree.go",
+        "path.go",
+        "response_writer_test.go",
+        "gin_integration_test.go",
+        "deprecated_test.go",
+        "response_writer.go",
+        "binding/form_mapping_test.go",
+        "binding/protobuf.go",
+        "binding/binding.go",
+        "binding/multipart_form_mapping.go",
+        "binding/json.go",
+        "binding/binding_test.go",
+        "binding/toml.go",
+        "binding/binding_msgpack_test.go",
+        "binding/yaml.go",
+        "binding/form.go",
+        "binding/multipart_form_mapping_test.go",
+        "binding/xml.go",
+        "binding/form_mapping.go",
+        "binding/binding_nomsgpack.go",
+        "binding/msgpack.go",
+        "binding/query.go",
+        "context_1.18_test.go",
+        "binding/header.go",
+        "context_1.19_test.go",
+        "auth_test.go",
+        "render/redirect.go",
+        "render/render_test.go",
+        "test_helpers.go",
+        "errors.go",
+        "doc.go"
+      ],
+      "wall_time_ms": 319.57429193425924,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_gin_context_next",
+      "tokens_total": 9927,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "context.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "context.go"
+      ],
+      "wall_time_ms": 2.3297080770134926,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_gin_context_next",
+      "strategy": "bm25",
+      "tokens_total": 31914,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.1,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "context.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "context.go",
+        "gin.go",
+        "auth.go",
+        "logger.go",
+        "ginS/gins.go",
+        "recovery.go",
+        "debug.go",
+        "routergroup.go",
+        "path.go",
+        "tree.go"
+      ],
+      "wall_time_ms": 9.079249924980104,
+      "cold_start_ms": 91.39254200272262
+    },
+    {
+      "task_id": "loc_gin_context_next",
+      "strategy": "bm25_ppr",
+      "tokens_total": 42020,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "context.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "context.go",
+        "gin.go",
+        "auth.go",
+        "logger.go",
+        "ginS/gins.go",
+        "recovery.go",
+        "debug.go",
+        "routergroup.go",
+        "path.go",
+        "tree.go",
+        "context_appengine.go",
+        "utils.go",
+        "internal/bytesconv/bytesconv_1.20.go",
+        "deprecated.go",
+        "binding/binding_nomsgpack.go",
+        "binding/binding.go",
+        "binding/json.go",
+        "mode.go",
+        "fs.go",
+        "binding/form_mapping.go",
+        "render/html.go",
+        "binding/query.go",
+        "render/render.go",
+        "render/redirect.go",
+        "errors.go",
+        "binding/multipart_form_mapping.go"
+      ],
+      "wall_time_ms": 739.8588329087943,
+      "cold_start_ms": 91.39254200272262
+    },
+    {
+      "task_id": "loc_gin_context_next",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8343,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "context.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "context.go",
+        "gin.go",
+        "auth.go",
+        "logger.go",
+        "ginS/gins.go",
+        "recovery.go",
+        "debug.go",
+        "routergroup.go",
+        "path.go",
+        "tree.go",
+        "context_appengine.go",
+        "utils.go",
+        "internal/bytesconv/bytesconv_1.20.go",
+        "deprecated.go",
+        "binding/binding_nomsgpack.go",
+        "binding/binding.go",
+        "binding/json.go",
+        "mode.go",
+        "fs.go",
+        "binding/form_mapping.go",
+        "render/html.go",
+        "binding/query.go",
+        "render/render.go",
+        "render/redirect.go",
+        "errors.go",
+        "binding/multipart_form_mapping.go"
+      ],
+      "wall_time_ms": 739.8042080458254,
+      "cold_start_ms": 91.39254200272262,
+      "regions": {
+        "context.go": [
+          [
+            13,
+            31
+          ]
+        ],
+        "gin.go": [
+          [
+            17,
+            34
+          ]
+        ],
+        "auth.go": [
+          [
+            14,
+            31
+          ],
+          [
+            14,
+            116
+          ]
+        ],
+        "logger.go": [
+          [
+            8,
+            32
+          ]
+        ],
+        "ginS/gins.go": [
+          [
+            10,
+            29
+          ]
+        ],
+        "recovery.go": [
+          [
+            1,
+            19
+          ],
+          [
+            1,
+            148
+          ]
+        ],
+        "debug.go": [
+          [
+            1,
+            23
+          ],
+          [
+            1,
+            111
+          ]
+        ],
+        "routergroup.go": [
+          [
+            1,
+            19
+          ]
+        ],
+        "path.go": [
+          [
+            1,
+            19
+          ],
+          [
+            96,
+            150
+          ]
+        ],
+        "tree.go": [
+          [
+            93,
+            112
+          ]
+        ],
+        "context_appengine.go": [
+          [
+            1,
+            11
+          ]
+        ],
+        "utils.go": [
+          [
+            1,
+            25
+          ],
+          [
+            1,
+            79
+          ]
+        ],
+        "internal/bytesconv/bytesconv_1.20.go": [
+          [
+            1,
+            19
+          ],
+          [
+            1,
+            23
+          ]
+        ],
+        "deprecated.go": [
+          [
+            1,
+            19
+          ],
+          [
+            1,
+            23
+          ]
+        ],
+        "binding/binding_nomsgpack.go": [
+          [
+            1,
+            20
+          ]
+        ],
+        "binding/binding.go": [
+          [
+            1,
+            18
+          ]
+        ],
+        "binding/json.go": [
+          [
+            1,
+            24
+          ],
+          [
+            1,
+            56
+          ]
+        ],
+        "mode.go": [
+          [
+            4,
+            31
+          ]
+        ],
+        "fs.go": [
+          [
+            1,
+            25
+          ],
+          [
+            1,
+            45
+          ]
+        ],
+        "binding/form_mapping.go": [
+          [
+            42,
+            62
+          ]
+        ],
+        "render/html.go": [
+          [
+            1,
+            26
+          ]
+        ],
+        "binding/query.go": [
+          [
+            1,
+            21
+          ]
+        ],
+        "render/render.go": [
+          [
+            1,
+            20
+          ]
+        ],
+        "render/redirect.go": [
+          [
+            1,
+            22
+          ],
+          [
+            1,
+            29
+          ]
+        ],
+        "errors.go": [
+          [
+            1,
+            24
+          ]
+        ],
+        "binding/multipart_form_mapping.go": [
+          [
+            1,
+            20
+          ]
+        ]
+      }
+    }
+  ]
+}

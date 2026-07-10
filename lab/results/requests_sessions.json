@@ -1,0 +1,559 @@
+{
+  "task_id": "requests_sessions",
+  "repo": "psf/requests",
+  "question": "How does requests manage HTTP sessions and connection pooling?",
+  "results": [
+    {
+      "task_id": "requests_sessions",
+      "tokens_total": 84738,
+      "tool_calls": 10,
+      "files_accessed": 34,
+      "recall": 1.0,
+      "precision": 0.08823529411764706,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/requests/adapters.py",
+        "src/requests/help.py",
+        "src/requests/auth.py",
+        "src/requests/status_codes.py",
+        "setup.py",
+        "src/requests/structures.py",
+        "src/requests/compat.py",
+        "src/requests/_internal_utils.py",
+        "src/requests/certs.py",
+        "tests/compat.py",
+        "src/requests/cookies.py",
+        "src/requests/__init__.py",
+        "src/requests/hooks.py",
+        "src/requests/packages.py",
+        "src/requests/exceptions.py",
+        "tests/test_lowlevel.py",
+        "src/requests/api.py",
+        "docs/conf.py",
+        "tests/test_packages.py",
+        "tests/test_structures.py",
+        "src/requests/__version__.py",
+        "tests/test_hooks.py",
+        "tests/test_testserver.py",
+        "src/requests/sessions.py",
+        "src/requests/models.py",
+        "tests/test_help.py",
+        "tests/__init__.py",
+        "tests/test_requests.py",
+        "src/requests/utils.py",
+        "tests/conftest.py",
+        "tests/test_adapters.py",
+        "tests/testserver/server.py",
+        "tests/test_utils.py",
+        "tests/utils.py"
+      ],
+      "wall_time_ms": 139.71141690853983,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "requests_sessions",
+      "tokens_total": 19529,
+      "tool_calls": 3,
+      "files_accessed": 3,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "wall_time_ms": 6.08349998947233,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "requests_sessions",
+      "strategy": "bm25",
+      "tokens_total": 59519,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.3,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/requests/adapters.py",
+        "src/requests/sessions.py",
+        "src/requests/models.py",
+        "src/requests/api.py",
+        "src/requests/cookies.py",
+        "tests/test_requests.py",
+        "src/requests/__init__.py",
+        "src/requests/utils.py",
+        "src/requests/exceptions.py",
+        "src/requests/certs.py"
+      ],
+      "wall_time_ms": 19.000875065103173,
+      "cold_start_ms": 56.92679202184081
+    },
+    {
+      "task_id": "requests_sessions",
+      "strategy": "bm25_ppr",
+      "tokens_total": 65905,
+      "tool_calls": 1,
+      "files_accessed": 19,
+      "recall": 1.0,
+      "precision": 0.15789473684210525,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/requests/adapters.py",
+        "src/requests/sessions.py",
+        "src/requests/models.py",
+        "src/requests/api.py",
+        "src/requests/cookies.py",
+        "tests/test_requests.py",
+        "src/requests/__init__.py",
+        "src/requests/utils.py",
+        "src/requests/exceptions.py",
+        "src/requests/certs.py",
+        "src/requests/auth.py",
+        "src/requests/status_codes.py",
+        "src/requests/structures.py",
+        "src/requests/hooks.py",
+        "src/requests/compat.py",
+        "src/requests/_internal_utils.py",
+        "src/requests/help.py",
+        "src/requests/__version__.py",
+        "src/requests/packages.py"
+      ],
+      "wall_time_ms": 27.9641249217093,
+      "cold_start_ms": 56.92679202184081
+    },
+    {
+      "task_id": "requests_sessions",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8303,
+      "tool_calls": 1,
+      "files_accessed": 19,
+      "recall": 1.0,
+      "precision": 0.15789473684210525,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/requests/sessions.py",
+        "src/requests/adapters.py",
+        "src/requests/models.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/requests/adapters.py",
+        "src/requests/sessions.py",
+        "src/requests/models.py",
+        "src/requests/api.py",
+        "src/requests/cookies.py",
+        "tests/test_requests.py",
+        "src/requests/__init__.py",
+        "src/requests/utils.py",
+        "src/requests/exceptions.py",
+        "src/requests/certs.py",
+        "src/requests/auth.py",
+        "src/requests/status_codes.py",
+        "src/requests/structures.py",
+        "src/requests/hooks.py",
+        "src/requests/compat.py",
+        "src/requests/_internal_utils.py",
+        "src/requests/help.py",
+        "src/requests/__version__.py",
+        "src/requests/packages.py"
+      ],
+      "wall_time_ms": 80.58487495873123,
+      "cold_start_ms": 56.92679202184081,
+      "regions": {
+        "src/requests/adapters.py": [
+          [
+            1,
+            89
+          ],
+          [
+            90,
+            113
+          ],
+          [
+            90,
+            136
+          ],
+          [
+            137,
+            166
+          ]
+        ],
+        "src/requests/sessions.py": [
+          [
+            1,
+            60
+          ],
+          [
+            61,
+            90
+          ],
+          [
+            91,
+            105
+          ],
+          [
+            819,
+            831
+          ]
+        ],
+        "src/requests/models.py": [
+          [
+            1,
+            35
+          ],
+          [
+            206,
+            229
+          ]
+        ],
+        "src/requests/api.py": [
+          [
+            1,
+            13
+          ],
+          [
+            62,
+            75
+          ],
+          [
+            76,
+            87
+          ],
+          [
+            88,
+            102
+          ],
+          [
+            103,
+            117
+          ],
+          [
+            118,
+            132
+          ],
+          [
+            133,
+            147
+          ],
+          [
+            148,
+            157
+          ]
+        ],
+        "src/requests/cookies.py": [
+          [
+            1,
+            22
+          ],
+          [
+            103,
+            123
+          ],
+          [
+            124,
+            139
+          ],
+          [
+            140,
+            150
+          ],
+          [
+            440,
+            454
+          ]
+        ],
+        "tests/test_requests.py": [
+          [
+            1,
+            79
+          ],
+          [
+            2514,
+            2545
+          ],
+          [
+            2546,
+            2553
+          ],
+          [
+            2554,
+            2574
+          ],
+          [
+            2575,
+            2583
+          ],
+          [
+            2584,
+            2596
+          ],
+          [
+            2605,
+            2615
+          ],
+          [
+            2616,
+            2635
+          ],
+          [
+            2636,
+            2644
+          ],
+          [
+            2645,
+            2654
+          ],
+          [
+            2655,
+            2664
+          ],
+          [
+            2969,
+            2976
+          ]
+        ],
+        "src/requests/__init__.py": [
+          [
+            1,
+            39
+          ]
+        ],
+        "src/requests/utils.py": [
+          [
+            305,
+            305
+          ],
+          [
+            743,
+            743
+          ],
+          [
+            891,
+            899
+          ],
+          [
+            900,
+            913
+          ],
+          [
+            989,
+            1017
+          ],
+          [
+            1081,
+            1096
+          ]
+        ],
+        "src/requests/exceptions.py": [
+          [
+            1,
+            11
+          ],
+          [
+            12,
+            26
+          ],
+          [
+            27,
+            30
+          ],
+          [
+            55,
+            58
+          ],
+          [
+            59,
+            62
+          ],
+          [
+            63,
+            66
+          ],
+          [
+            67,
+            70
+          ],
+          [
+            71,
+            79
+          ],
+          [
+            80,
+            86
+          ],
+          [
+            87,
+            90
+          ],
+          [
+            91,
+            94
+          ],
+          [
+            95,
+            98
+          ],
+          [
+            99,
+            102
+          ],
+          [
+            103,
+            106
+          ],
+          [
+            107,
+            110
+          ],
+          [
+            111,
+            114
+          ],
+          [
+            119,
+            122
+          ],
+          [
+            123,
+            126
+          ],
+          [
+            127,
+            130
+          ],
+          [
+            131,
+            134
+          ],
+          [
+            135,
+            141
+          ],
+          [
+            142,
+            145
+          ],
+          [
+            146,
+            149
+          ],
+          [
+            150,
+            151
+          ]
+        ],
+        "src/requests/certs.py": [
+          [
+            1,
+            17
+          ]
+        ],
+        "src/requests/auth.py": [
+          [
+            1,
+            24
+          ],
+          [
+            76,
+            98
+          ],
+          [
+            99,
+            106
+          ]
+        ],
+        "src/requests/status_codes.py": [
+          [
+            1,
+            21
+          ]
+        ],
+        "src/requests/structures.py": [
+          [
+            1,
+            12
+          ]
+        ],
+        "src/requests/hooks.py": [
+          [
+            1,
+            14
+          ]
+        ],
+        "src/requests/compat.py": [
+          [
+            1,
+            17
+          ]
+        ],
+        "src/requests/_internal_utils.py": [
+          [
+            1,
+            24
+          ]
+        ],
+        "src/requests/help.py": [
+          [
+            1,
+            33
+          ]
+        ],
+        "src/requests/__version__.py": [
+          [
+            1,
+            14
+          ]
+        ],
+        "src/requests/packages.py": [
+          [
+            1,
+            22
+          ]
+        ]
+      }
+    }
+  ]
+}

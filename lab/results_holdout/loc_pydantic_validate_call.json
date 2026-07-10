@@ -1,0 +1,790 @@
+{
+  "task_id": "loc_pydantic_validate_call",
+  "repo": "pydantic/pydantic",
+  "question": "Issue: a function decorated with @validate_call no longer validates its arguments against the generated schema, and when validate_return is enabled the return value is not validated either. Which wrapper builds the argument validator (and the optional return validator) and applies them when the decorated callable is invoked?",
+  "results": [
+    {
+      "task_id": "loc_pydantic_validate_call",
+      "tokens_total": 876624,
+      "tool_calls": 28,
+      "files_accessed": 225,
+      "recall": 1.0,
+      "precision": 0.0044444444444444444,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "pydantic/deprecated/json.py",
+        "pydantic/deprecated/parse.py",
+        "pydantic/deprecated/class_validators.py",
+        "pydantic/deprecated/tools.py",
+        "pydantic/deprecated/config.py",
+        "pydantic/_internal/_utils.py",
+        "pydantic/deprecated/decorator.py",
+        "pydantic/types.py",
+        "pydantic/config.py",
+        "pydantic/main.py",
+        "pydantic/_internal/_dataclasses.py",
+        "pydantic/mypy.py",
+        "pydantic/networks.py",
+        "pydantic/fields.py",
+        "pydantic/_internal/_generics.py",
+        "pydantic/_internal/_core_utils.py",
+        "pydantic/json_schema.py",
+        "pydantic/_internal/_namespace_utils.py",
+        "pydantic/_internal/_typing_extra.py",
+        "pydantic/_internal/_validators.py",
+        "pydantic/_internal/_mock_val_ser.py",
+        "pydantic/_internal/_generate_schema.py",
+        "pydantic/_internal/_discriminated_union.py",
+        "pydantic/_internal/_model_construction.py",
+        "pydantic/v1/schema.py",
+        "docs/plugins/main.py",
+        "pydantic/_internal/_core_metadata.py",
+        "pydantic/_internal/_config.py",
+        "pydantic/v1/generics.py",
+        "pydantic/v1/mypy.py",
+        "pydantic/v1/typing.py",
+        "pydantic/_internal/_fields.py",
+        "pydantic/v1/annotated_types.py",
+        "pydantic/v1/validators.py",
+        "pydantic/v1/types.py",
+        "tests/test_validate_call.py",
+        "tests/test_annotated.py",
+        "tests/test_internal.py",
+        "tests/test_deprecated_fields.py",
+        "pydantic/v1/config.py",
+        "tests/test_datetime.py",
+        "tests/test_dataclasses.py",
+        "tests/test_type_adapter.py",
+        "tests/test_serialize.py",
+        "tests/test_generics.py",
+        "tests/test_validators.py",
+        "tests/test_types.py",
+        "tests/test_type_alias_type.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin-strict_toml/plugin_success.py",
+        "pydantic/v1/_hypothesis_plugin.py",
+        "tests/test_computed_fields.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-strict_ini/plugin_success.py",
+        "tests/test_forward_ref.py",
+        "tests/test_types_namedtuple.py",
+        "tests/test_discriminated_union.py",
+        "tests/benchmarks/test_fastapi_startup_simple.py",
+        "tests/mypy/outputs/1.10.1/mypy-default_ini/plugin_success.py",
+        "tests/test_main.py",
+        "tests/test_json_schema.py",
+        "tests/mypy/modules/plugin_success.py",
+        "tests/benchmarks/test_fastapi_startup_generics.py",
+        "tests/typechecking/decorators.py",
+        "tests/typechecking/computed_field.py",
+        "tests/typechecking/validate_call.py",
+        "tests/typechecking/pipeline_api.py",
+        "tests/typechecking/fields.py",
+        "tests/test_networks.py",
+        "tests/typechecking/base_model.py",
+        "tests/test_edge_cases.py",
+        "pydantic/annotated_handlers.py",
+        "pydantic/dataclasses.py",
+        "pydantic/errors.py",
+        "pydantic/validate_call_decorator.py",
+        "pydantic/functional_serializers.py",
+        "pydantic/type_adapter.py",
+        "pydantic/root_model.py",
+        "pydantic/__init__.py",
+        "pydantic/alias_generators.py",
+        "pydantic/warnings.py",
+        "pydantic/functional_validators.py",
+        "pydantic/color.py",
+        "pydantic/plugin/__init__.py",
+        "pydantic/experimental/pipeline.py",
+        "pydantic/v1/fields.py",
+        "pydantic/v1/decorator.py",
+        "pydantic/v1/datetime_parse.py",
+        "pydantic/v1/main.py",
+        "tests/test_plugins.py",
+        "tests/test_pipeline.py",
+        "docs/extra/fluff.js",
+        "pydantic/v1/dataclasses.py",
+        "tests/test_types_typeddict.py",
+        "tests/test_type_hints.py",
+        "docs/extra/feedback.js",
+        "pydantic/_internal/_std_types_schema.py",
+        "tests/test_typing.py",
+        "tests/conftest.py",
+        "pydantic/v1/utils.py",
+        "pydantic/_internal/_decorators.py",
+        "tests/test_utils.py",
+        "tests/test_root_model.py",
+        "pydantic/v1/class_validators.py",
+        "tests/test_json.py",
+        "tests/test_parse.py",
+        "tests/test_create_model.py",
+        "docs/plugins/conversion_table.py",
+        "tests/test_model_validator.py",
+        "pydantic/_internal/_known_annotated_metadata.py",
+        "tests/test_aliases.py",
+        "pydantic/_internal/_decorators_v1.py",
+        "pydantic/_internal/_docs_extraction.py",
+        "pydantic/_internal/_repr.py",
+        "pydantic/_internal/_validate_call.py",
+        "pydantic/_internal/_schema_generation_shared.py",
+        "tests/test_config.py",
+        "pydantic/_internal/_serializers.py",
+        "tests/test_deprecated_validate_arguments.py",
+        "tests/test_fastapi_json_schema.py",
+        "tests/benchmarks/generate_north_star_data.py",
+        "tests/test_deprecated.py",
+        "tests/test_types_self.py",
+        "pydantic/v1/env_settings.py",
+        "tests/test_construction.py",
+        "pydantic/_migration.py",
+        "pydantic/version.py",
+        "pydantic/experimental/__init__.py",
+        "pydantic/v1/color.py",
+        "pydantic/v1/json.py",
+        "tests/test_types_payment_card_number.py",
+        "tests/test_docs.py",
+        "pydantic/v1/errors.py",
+        "tests/mypy/modules/plugin_fail.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin-strict_toml/plugin_fail_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/plugin_fail_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-strict_ini/plugin_fail_baseConfig.py",
+        "tests/mypy/modules/plugin_fail_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/plugin_fail.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin-strict_toml/plugin_fail.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin_toml/plugin_fail_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-strict_ini/plugin_fail.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin_toml/plugin_fail.py",
+        "pydantic/aliases.py",
+        "pydantic/v1/__init__.py",
+        "tests/test_model_signature.py",
+        "tests/test_decorators.py",
+        "tests/mypy/modules/metaclass_args.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-very-strict_ini/metaclass_args.py",
+        "tests/mypy/outputs/1.10.1/mypy-default_ini/metaclass_args.py",
+        "tests/benchmarks/basemodel_eq_performance.py",
+        "pydantic/v1/tools.py",
+        "release/make_history.py",
+        "tests/test_pickle.py",
+        "pydantic/schema.py",
+        "pydantic/plugin/_schema_validator.py",
+        "tests/test_titles.py",
+        "pydantic/v1/networks.py",
+        "tests/test_types_zoneinfo.py",
+        "tests/plugin/example_plugin.py",
+        "tests/test_meta.py",
+        "tests/test_tools.py",
+        "tests/typechecking/json_schema_examples.py",
+        "tests/test_docs_extraction.py",
+        "tests/benchmarks/test_discriminated_unions.py",
+        "tests/benchmarks/test_model_schema_generation.py",
+        "tests/benchmarks/test_model_schema_generation_recursive.py",
+        "tests/test_strict.py",
+        "pydantic/deprecated/copy_internals.py",
+        "pydantic/plugin/_loader.py",
+        "pydantic/_internal/_import_utils.py",
+        "pydantic/_internal/_git.py",
+        "docs/plugins/using_update.py",
+        "pydantic/_internal/_signature.py",
+        "pydantic/_internal/_forward_ref.py",
+        "docs/plugins/griffe_doclinks.py",
+        "pydantic/v1/error_wrappers.py",
+        "pydantic/v1/version.py",
+        "pydantic/v1/parse.py",
+        "tests/test_rich_repr.py",
+        "tests/test_exports.py",
+        "tests/check_usage_docs.py",
+        "tests/test_structural_pattern_matching.py",
+        "tests/test_private_attributes.py",
+        "tests/test_plugin_loader.py",
+        "tests/test_migration.py",
+        "tests/test_v1.py",
+        "tests/test_validators_dataclass.py",
+        "tests/benchmarks/test_north_star.py",
+        "tests/test_assert_in_validators.py",
+        "tests/mypy/test_mypy.py",
+        "tests/mypy/modules/config_conditional_extra.py",
+        "tests/mypy/modules/plugin_success_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-default_ini/plugin_success_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-strict_ini/plugin_success_baseConfig.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin-strict_toml/plugin_success_baseConfig.py",
+        "tests/test_fields.py",
+        "tests/test_color.py",
+        "tests/benchmarks/shared.py",
+        "tests/test_errors.py",
+        "tests/test_abc.py",
+        "tests/test_networks_ipaddress.py",
+        "tests/test_allow_partial.py",
+        "tests/mypy/modules/generics.py",
+        "tests/mypy/modules/covariant_typevar.py",
+        "pydantic/error_wrappers.py",
+        "tests/test_warnings.py",
+        "tests/typechecking/root_model.py",
+        "tests/typechecking/type_adapter.py",
+        "tests/mypy/outputs/1.10.1/pyproject-default_toml/pydantic_settings.py",
+        "tests/mypy/outputs/1.10.1/mypy-default_ini/pydantic_settings.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin-strict_toml/fail_defaults.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/plugin_strict_fields.py",
+        "tests/mypy/outputs/1.10.1/pyproject-plugin_toml/pydantic_settings.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/pydantic_settings.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/custom_constructor.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin-strict_ini/fail_defaults.py",
+        "pydantic/class_validators.py",
+        "pydantic/validators.py",
+        "tests/test_serialize_as_any.py",
+        "tests/benchmarks/test_model_validation.py",
+        "tests/benchmarks/test_model_serialization.py",
+        "tests/mypy/modules/plugin_optional_inheritance.py",
+        "tests/mypy/modules/from_orm_v1_noconflict.py",
+        "tests/mypy/modules/no_strict_optional.py",
+        "tests/mypy/outputs/1.10.1/mypy-plugin_ini/plugin_optional_inheritance.py",
+        "tests/test_callable.py"
+      ],
+      "wall_time_ms": 589.7270829882473,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_pydantic_validate_call",
+      "tokens_total": 897,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "wall_time_ms": 0.29170908965170383,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_pydantic_validate_call",
+      "strategy": "bm25",
+      "tokens_total": 89323,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 0.0,
+      "precision": 0.0,
+      "required_file_recall": 0.0,
+      "missed_required_file_rate": 1.0,
+      "missed_required_task_rate": 1.0,
+      "all_required_files_present": false,
+      "required_files_present": [],
+      "required_files_missing": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "result_files": [
+        "pydantic/validate_call_decorator.py",
+        "pydantic/_internal/_decorators.py",
+        "pydantic/_internal/_generate_schema.py",
+        "pydantic/type_adapter.py",
+        "pydantic/deprecated/decorator.py",
+        "pydantic/config.py",
+        "pydantic/dataclasses.py",
+        "pydantic/fields.py",
+        "pydantic/main.py",
+        "pydantic/_internal/_model_construction.py"
+      ],
+      "wall_time_ms": 28.322792029939592,
+      "cold_start_ms": 488.826125045307
+    },
+    {
+      "task_id": "loc_pydantic_validate_call",
+      "strategy": "bm25_ppr",
+      "tokens_total": 167899,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "pydantic/validate_call_decorator.py",
+        "pydantic/_internal/_decorators.py",
+        "pydantic/_internal/_generate_schema.py",
+        "pydantic/type_adapter.py",
+        "pydantic/deprecated/decorator.py",
+        "pydantic/config.py",
+        "pydantic/dataclasses.py",
+        "pydantic/fields.py",
+        "pydantic/main.py",
+        "pydantic/_internal/_model_construction.py",
+        "pydantic/functional_validators.py",
+        "pydantic/json_schema.py",
+        "pydantic/_internal/_validate_call.py",
+        "pydantic/deprecated/class_validators.py",
+        "pydantic/_internal/_decorators_v1.py",
+        "pydantic/_internal/_validators.py",
+        "pydantic/v1/__init__.py",
+        "pydantic/plugin/_schema_validator.py",
+        "pydantic/deprecated/json.py",
+        "pydantic/functional_serializers.py",
+        "pydantic/_internal/_dataclasses.py",
+        "pydantic/mypy.py",
+        "pydantic/_internal/_discriminated_union.py",
+        "pydantic/_internal/_config.py",
+        "pydantic/_internal/_typing_extra.py",
+        "pydantic/_internal/_fields.py"
+      ],
+      "wall_time_ms": 106.23937495984137,
+      "cold_start_ms": 488.826125045307
+    },
+    {
+      "task_id": "loc_pydantic_validate_call",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8536,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "pydantic/_internal/_validate_call.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "pydantic/validate_call_decorator.py",
+        "pydantic/_internal/_decorators.py",
+        "pydantic/_internal/_generate_schema.py",
+        "pydantic/type_adapter.py",
+        "pydantic/deprecated/decorator.py",
+        "pydantic/config.py",
+        "pydantic/dataclasses.py",
+        "pydantic/fields.py",
+        "pydantic/main.py",
+        "pydantic/_internal/_model_construction.py",
+        "pydantic/functional_validators.py",
+        "pydantic/json_schema.py",
+        "pydantic/_internal/_validate_call.py",
+        "pydantic/deprecated/class_validators.py",
+        "pydantic/_internal/_decorators_v1.py",
+        "pydantic/_internal/_validators.py",
+        "pydantic/v1/__init__.py",
+        "pydantic/plugin/_schema_validator.py",
+        "pydantic/deprecated/json.py",
+        "pydantic/functional_serializers.py",
+        "pydantic/_internal/_dataclasses.py",
+        "pydantic/mypy.py",
+        "pydantic/_internal/_discriminated_union.py",
+        "pydantic/_internal/_config.py",
+        "pydantic/_internal/_typing_extra.py",
+        "pydantic/_internal/_fields.py"
+      ],
+      "wall_time_ms": 239.97424996923655,
+      "cold_start_ms": 488.826125045307,
+      "regions": {
+        "pydantic/validate_call_decorator.py": [
+          [
+            1,
+            23
+          ],
+          [
+            73,
+            77
+          ],
+          [
+            79,
+            81
+          ],
+          [
+            82,
+            115
+          ]
+        ],
+        "pydantic/_internal/_decorators.py": [
+          [
+            1,
+            26
+          ],
+          [
+            28,
+            50
+          ],
+          [
+            52,
+            73
+          ],
+          [
+            75,
+            87
+          ],
+          [
+            89,
+            110
+          ],
+          [
+            112,
+            129
+          ],
+          [
+            131,
+            159
+          ],
+          [
+            673,
+            691
+          ],
+          [
+            692,
+            707
+          ],
+          [
+            708,
+            715
+          ]
+        ],
+        "pydantic/_internal/_generate_schema.py": [
+          [
+            168,
+            188
+          ],
+          [
+            216,
+            221
+          ],
+          [
+            2292,
+            2307
+          ],
+          [
+            2355,
+            2379
+          ]
+        ],
+        "pydantic/type_adapter.py": [
+          [
+            1,
+            26
+          ]
+        ],
+        "pydantic/deprecated/decorator.py": [
+          [
+            1,
+            27
+          ],
+          [
+            29,
+            33
+          ],
+          [
+            35,
+            37
+          ],
+          [
+            38,
+            41
+          ],
+          [
+            42,
+            74
+          ]
+        ],
+        "pydantic/config.py": [
+          [
+            1,
+            24
+          ]
+        ],
+        "pydantic/dataclasses.py": [
+          [
+            298,
+            314
+          ]
+        ],
+        "pydantic/fields.py": [
+          [
+            745,
+            745
+          ],
+          [
+            784,
+            784
+          ],
+          [
+            823,
+            823
+          ],
+          [
+            1177,
+            1177
+          ],
+          [
+            1183,
+            1183
+          ],
+          [
+            1184,
+            1188
+          ]
+        ],
+        "pydantic/main.py": [
+          [
+            1537,
+            1550
+          ]
+        ],
+        "pydantic/_internal/_model_construction.py": [
+          [
+            69,
+            78
+          ],
+          [
+            704,
+            738
+          ]
+        ],
+        "pydantic/functional_validators.py": [
+          [
+            375,
+            384
+          ],
+          [
+            386,
+            395
+          ],
+          [
+            397,
+            405
+          ],
+          [
+            520,
+            531
+          ],
+          [
+            532,
+            548
+          ],
+          [
+            549,
+            564
+          ],
+          [
+            565,
+            579
+          ],
+          [
+            580,
+            595
+          ],
+          [
+            596,
+            609
+          ],
+          [
+            641,
+            648
+          ],
+          [
+            650,
+            657
+          ],
+          [
+            659,
+            666
+          ]
+        ],
+        "pydantic/json_schema.py": [
+          [
+            2427,
+            2430
+          ]
+        ],
+        "pydantic/_internal/_validate_call.py": [
+          [
+            1,
+            16
+          ],
+          [
+            17,
+            21
+          ],
+          [
+            22,
+            26
+          ]
+        ],
+        "pydantic/deprecated/class_validators.py": [
+          [
+            159,
+            170
+          ],
+          [
+            172,
+            183
+          ]
+        ],
+        "pydantic/_internal/_decorators_v1.py": [
+          [
+            15,
+            20
+          ],
+          [
+            21,
+            26
+          ],
+          [
+            27,
+            32
+          ],
+          [
+            33,
+            38
+          ],
+          [
+            39,
+            49
+          ],
+          [
+            113,
+            118
+          ],
+          [
+            119,
+            124
+          ],
+          [
+            125,
+            132
+          ]
+        ],
+        "pydantic/_internal/_validators.py": [
+          [
+            122,
+            131
+          ],
+          [
+            240,
+            249
+          ],
+          [
+            266,
+            274
+          ],
+          [
+            275,
+            283
+          ],
+          [
+            284,
+            292
+          ],
+          [
+            293,
+            301
+          ],
+          [
+            302,
+            310
+          ],
+          [
+            322,
+            333
+          ]
+        ],
+        "pydantic/v1/__init__.py": [
+          [
+            1,
+            25
+          ]
+        ],
+        "pydantic/plugin/_schema_validator.py": [
+          [
+            21,
+            45
+          ]
+        ],
+        "pydantic/deprecated/json.py": [
+          [
+            33,
+            54
+          ]
+        ],
+        "pydantic/functional_serializers.py": [
+          [
+            1,
+            17
+          ],
+          [
+            207,
+            217
+          ],
+          [
+            331,
+            335
+          ],
+          [
+            337,
+            344
+          ]
+        ],
+        "pydantic/_internal/_dataclasses.py": [
+          [
+            85,
+            101
+          ]
+        ],
+        "pydantic/mypy.py": [
+          [
+            1178,
+            1182
+          ],
+          [
+            1183,
+            1190
+          ]
+        ],
+        "pydantic/_internal/_discriminated_union.py": [
+          [
+            20,
+            29
+          ],
+          [
+            30,
+            36
+          ]
+        ],
+        "pydantic/_internal/_config.py": [
+          [
+            210,
+            235
+          ]
+        ],
+        "pydantic/_internal/_typing_extra.py": [
+          [
+            90,
+            98
+          ]
+        ],
+        "pydantic/_internal/_fields.py": [
+          [
+            379,
+            392
+          ]
+        ]
+      }
+    }
+  ]
+}

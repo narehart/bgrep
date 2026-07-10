@@ -1,0 +1,513 @@
+{
+  "task_id": "loc_flask_full_dispatch",
+  "repo": "pallets/flask",
+  "question": "Issue: an exception raised inside a view is not routed through the registered error handlers, so the user sees a raw 500 instead of the handler's response. Where does Flask run the full request cycle (preprocess, dispatch, error handling) and where is a raised exception handed to the user error handlers?",
+  "results": [
+    {
+      "task_id": "loc_flask_full_dispatch",
+      "tokens_total": 130136,
+      "tool_calls": 32,
+      "files_accessed": 76,
+      "recall": 1.0,
+      "precision": 0.013157894736842105,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/flask/app.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/flask/typing.py",
+        "src/flask/debughelpers.py",
+        "docs/conf.py",
+        "tests/test_basic.py",
+        "src/flask/helpers.py",
+        "src/flask/testing.py",
+        "src/flask/ctx.py",
+        "src/flask/app.py",
+        "src/flask/wrappers.py",
+        "src/flask/cli.py",
+        "src/flask/__init__.py",
+        "src/flask/config.py",
+        "src/flask/signals.py",
+        "src/flask/sansio/scaffold.py",
+        "src/flask/sansio/app.py",
+        "src/flask/sansio/blueprints.py",
+        "tests/test_regression.py",
+        "tests/test_subclassing.py",
+        "tests/test_appctx.py",
+        "tests/test_user_error_handler.py",
+        "tests/test_cli.py",
+        "tests/test_blueprints.py",
+        "tests/test_helpers.py",
+        "examples/tutorial/flaskr/blog.py",
+        "tests/type_check/typing_error_handler.py",
+        "tests/type_check/typing_app_decorators.py",
+        "tests/test_reqctx.py",
+        "tests/test_signals.py",
+        "tests/test_async.py",
+        "tests/test_logging.py",
+        "src/flask/json/tag.py",
+        "src/flask/views.py",
+        "src/flask/json/__init__.py",
+        "src/flask/blueprints.py",
+        "src/flask/templating.py",
+        "tests/test_testing.py",
+        "examples/javascript/js_example/__init__.py",
+        "tests/test_views.py",
+        "examples/celery/src/task_app/__init__.py",
+        "examples/tutorial/flaskr/auth.py",
+        "examples/tutorial/tests/test_auth.py",
+        "tests/type_check/typing_route.py",
+        "src/flask/sessions.py",
+        "src/flask/json/provider.py",
+        "src/flask/logging.py",
+        "examples/tutorial/tests/test_db.py",
+        "tests/test_templating.py",
+        "examples/tutorial/flaskr/__init__.py",
+        "tests/test_json.py",
+        "tests/test_config.py",
+        "tests/test_apps/cliapp/importerrorapp.py",
+        "tests/test_request.py",
+        "tests/conftest.py",
+        "tests/test_json_tag.py",
+        "tests/test_instance_config.py",
+        "examples/tutorial/tests/test_blog.py",
+        "examples/tutorial/tests/conftest.py",
+        "examples/javascript/tests/test_js_example.py",
+        "tests/test_session_interface.py",
+        "examples/tutorial/tests/test_factory.py",
+        "src/flask/globals.py",
+        "examples/javascript/js_example/views.py",
+        "examples/celery/src/task_app/views.py",
+        "tests/test_converters.py",
+        "examples/celery/make_celery.py",
+        "examples/tutorial/flaskr/db.py",
+        "tests/test_apps/cliapp/app.py",
+        "tests/test_apps/helloworld/hello.py",
+        "tests/test_apps/cliapp/multiapp.py",
+        "tests/test_apps/cliapp/factory.py",
+        "tests/test_apps/cliapp/inner1/inner2/flask.py",
+        "tests/test_apps/cliapp/inner1/__init__.py",
+        "tests/test_apps/blueprintapp/apps/frontend/__init__.py",
+        "tests/test_apps/blueprintapp/apps/admin/__init__.py",
+        "tests/test_apps/blueprintapp/__init__.py",
+        "tests/test_apps/subdomaintestmodule/__init__.py"
+      ],
+      "wall_time_ms": 370.3378749778494,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_flask_full_dispatch",
+      "tokens_total": 12978,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/flask/app.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/flask/app.py"
+      ],
+      "wall_time_ms": 3.9886669255793095,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_flask_full_dispatch",
+      "strategy": "bm25",
+      "tokens_total": 54357,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.1,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/flask/app.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/flask/app.py",
+        "src/flask/sansio/scaffold.py",
+        "src/flask/sansio/app.py",
+        "src/flask/helpers.py",
+        "src/flask/wrappers.py",
+        "src/flask/views.py",
+        "src/flask/cli.py",
+        "src/flask/sansio/blueprints.py",
+        "src/flask/testing.py",
+        "src/flask/debughelpers.py"
+      ],
+      "wall_time_ms": 16.7977079981938,
+      "cold_start_ms": 89.60633294191211
+    },
+    {
+      "task_id": "loc_flask_full_dispatch",
+      "strategy": "bm25_ppr",
+      "tokens_total": 72318,
+      "tool_calls": 1,
+      "files_accessed": 23,
+      "recall": 1.0,
+      "precision": 0.043478260869565216,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/flask/app.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/flask/app.py",
+        "src/flask/sansio/scaffold.py",
+        "src/flask/sansio/app.py",
+        "src/flask/helpers.py",
+        "src/flask/wrappers.py",
+        "src/flask/views.py",
+        "src/flask/cli.py",
+        "src/flask/sansio/blueprints.py",
+        "src/flask/testing.py",
+        "src/flask/debughelpers.py",
+        "src/flask/ctx.py",
+        "src/flask/typing.py",
+        "src/flask/blueprints.py",
+        "src/flask/json/provider.py",
+        "src/flask/json/__init__.py",
+        "src/flask/config.py",
+        "src/flask/templating.py",
+        "src/flask/sessions.py",
+        "src/flask/__init__.py",
+        "src/flask/logging.py",
+        "src/flask/globals.py",
+        "src/flask/signals.py",
+        "src/flask/__main__.py"
+      ],
+      "wall_time_ms": 32.640499994158745,
+      "cold_start_ms": 89.60633294191211
+    },
+    {
+      "task_id": "loc_flask_full_dispatch",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8401,
+      "tool_calls": 1,
+      "files_accessed": 23,
+      "recall": 1.0,
+      "precision": 0.043478260869565216,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/flask/app.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/flask/app.py",
+        "src/flask/sansio/scaffold.py",
+        "src/flask/sansio/app.py",
+        "src/flask/helpers.py",
+        "src/flask/wrappers.py",
+        "src/flask/views.py",
+        "src/flask/cli.py",
+        "src/flask/sansio/blueprints.py",
+        "src/flask/testing.py",
+        "src/flask/debughelpers.py",
+        "src/flask/ctx.py",
+        "src/flask/typing.py",
+        "src/flask/blueprints.py",
+        "src/flask/json/provider.py",
+        "src/flask/json/__init__.py",
+        "src/flask/config.py",
+        "src/flask/templating.py",
+        "src/flask/sessions.py",
+        "src/flask/__init__.py",
+        "src/flask/logging.py",
+        "src/flask/globals.py",
+        "src/flask/signals.py",
+        "src/flask/__main__.py"
+      ],
+      "wall_time_ms": 95.19120794720948,
+      "cold_start_ms": 89.60633294191211,
+      "regions": {
+        "src/flask/app.py": [
+          [
+            1,
+            23
+          ]
+        ],
+        "src/flask/sansio/scaffold.py": [
+          [
+            1,
+            41
+          ],
+          [
+            701,
+            708
+          ]
+        ],
+        "src/flask/sansio/app.py": [
+          [
+            1,
+            23
+          ],
+          [
+            1,
+            51
+          ]
+        ],
+        "src/flask/helpers.py": [
+          [
+            1,
+            26
+          ],
+          [
+            27,
+            34
+          ],
+          [
+            35,
+            49
+          ],
+          [
+            188,
+            241
+          ],
+          [
+            242,
+            265
+          ],
+          [
+            266,
+            285
+          ],
+          [
+            266,
+            288
+          ],
+          [
+            387,
+            399
+          ],
+          [
+            526,
+            569
+          ]
+        ],
+        "src/flask/wrappers.py": [
+          [
+            1,
+            17
+          ],
+          [
+            222,
+            257
+          ]
+        ],
+        "src/flask/views.py": [
+          [
+            1,
+            15
+          ],
+          [
+            16,
+            34
+          ],
+          [
+            138,
+            191
+          ]
+        ],
+        "src/flask/cli.py": [
+          [
+            1,
+            36
+          ],
+          [
+            37,
+            40
+          ],
+          [
+            230,
+            234
+          ],
+          [
+            236,
+            240
+          ],
+          [
+            772,
+            785
+          ],
+          [
+            873,
+            887
+          ],
+          [
+            888,
+            888
+          ],
+          [
+            1005,
+            1005
+          ],
+          [
+            1054,
+            1054
+          ],
+          [
+            1055,
+            1064
+          ]
+        ],
+        "src/flask/sansio/blueprints.py": [
+          [
+            1,
+            18
+          ]
+        ],
+        "src/flask/testing.py": [
+          [
+            1,
+            25
+          ]
+        ],
+        "src/flask/debughelpers.py": [
+          [
+            1,
+            16
+          ],
+          [
+            17,
+            22
+          ],
+          [
+            23,
+            49
+          ],
+          [
+            50,
+            80
+          ]
+        ],
+        "src/flask/ctx.py": [
+          [
+            1,
+            28
+          ],
+          [
+            117,
+            143
+          ],
+          [
+            117,
+            154
+          ],
+          [
+            155,
+            195
+          ],
+          [
+            228,
+            237
+          ]
+        ],
+        "src/flask/typing.py": [
+          [
+            1,
+            20
+          ]
+        ],
+        "src/flask/blueprints.py": [
+          [
+            18,
+            38
+          ]
+        ],
+        "src/flask/json/provider.py": [
+          [
+            1,
+            18
+          ]
+        ],
+        "src/flask/json/__init__.py": [
+          [
+            1,
+            12
+          ],
+          [
+            138,
+            155
+          ]
+        ],
+        "src/flask/config.py": [
+          [
+            50,
+            71
+          ]
+        ],
+        "src/flask/templating.py": [
+          [
+            1,
+            23
+          ],
+          [
+            165,
+            187
+          ]
+        ],
+        "src/flask/sessions.py": [
+          [
+            1,
+            23
+          ]
+        ],
+        "src/flask/__init__.py": [
+          [
+            46,
+            60
+          ]
+        ],
+        "src/flask/logging.py": [
+          [
+            1,
+            14
+          ],
+          [
+            16,
+            30
+          ]
+        ],
+        "src/flask/globals.py": [
+          [
+            1,
+            21
+          ]
+        ],
+        "src/flask/signals.py": [
+          [
+            1,
+            17
+          ]
+        ],
+        "src/flask/__main__.py": [
+          [
+            1,
+            3
+          ]
+        ]
+      }
+    }
+  ]
+}

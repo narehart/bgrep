@@ -1,0 +1,410 @@
+{
+  "task_id": "loc_gin_tree_route",
+  "repo": "gin-gonic/gin",
+  "question": "Bug report: registering a route containing a named parameter or wildcard (for example /user/:id/*action) builds the radix tree incorrectly, so later lookups miss the route. Where does the router insert a path and its handlers into the radix tree, splitting nodes on the common prefix and creating the wildcard child nodes?",
+  "results": [
+    {
+      "task_id": "loc_gin_tree_route",
+      "tokens_total": 142344,
+      "tool_calls": 37,
+      "files_accessed": 49,
+      "recall": 1.0,
+      "precision": 0.02040816326530612,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "tree.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "gin.go",
+        "debug_test.go",
+        "recovery_test.go",
+        "mode.go",
+        "response_writer.go",
+        "utils.go",
+        "context.go",
+        "debug.go",
+        "context_test.go",
+        "routes_test.go",
+        "render/render_test.go",
+        "render/render.go",
+        "render/html.go",
+        "recovery.go",
+        "mode_test.go",
+        "gin_test.go",
+        "benchmarks_test.go",
+        "path_test.go",
+        "logger_test.go",
+        "githubapi_test.go",
+        "path.go",
+        "tree_test.go",
+        "fs.go",
+        "routergroup_test.go",
+        "routergroup.go",
+        "ginS/gins.go",
+        "gin_integration_test.go",
+        "tree.go",
+        "middleware_test.go",
+        "auth_test.go",
+        "utils_test.go",
+        "binding/binding.go",
+        "binding/binding_nomsgpack.go",
+        "errors.go",
+        "binding/binding_test.go",
+        "binding/default_validator_test.go",
+        "logger.go",
+        "testdata/protoexample/test.pb.go",
+        "auth.go",
+        "binding/validate_test.go",
+        "binding/form_mapping_test.go",
+        "binding/binding_msgpack_test.go",
+        "binding/form_mapping.go",
+        "render/json.go",
+        "render/reader.go",
+        "render/text.go",
+        "errors_test.go",
+        "internal/bytesconv/bytesconv_test.go",
+        "test_helpers.go"
+      ],
+      "wall_time_ms": 382.65449996106327,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_gin_tree_route",
+      "tokens_total": 6456,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "tree.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "tree.go"
+      ],
+      "wall_time_ms": 1.7787909600883722,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_gin_tree_route",
+      "strategy": "bm25",
+      "tokens_total": 41066,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.1,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "tree.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "tree.go",
+        "gin.go",
+        "context.go",
+        "routergroup.go",
+        "ginS/gins.go",
+        "auth.go",
+        "utils.go",
+        "tree_test.go",
+        "path.go",
+        "debug.go"
+      ],
+      "wall_time_ms": 11.067832936532795,
+      "cold_start_ms": 91.39254200272262
+    },
+    {
+      "task_id": "loc_gin_tree_route",
+      "strategy": "bm25_ppr",
+      "tokens_total": 54802,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "tree.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "tree.go",
+        "gin.go",
+        "context.go",
+        "routergroup.go",
+        "ginS/gins.go",
+        "auth.go",
+        "utils.go",
+        "tree_test.go",
+        "path.go",
+        "debug.go",
+        "logger.go",
+        "recovery.go",
+        "render/html.go",
+        "binding/binding_nomsgpack.go",
+        "binding/binding.go",
+        "errors.go",
+        "response_writer.go",
+        "render/json.go",
+        "binding/form_mapping.go",
+        "binding/default_validator.go",
+        "mode.go",
+        "binding/json.go",
+        "render/redirect.go",
+        "context_appengine.go",
+        "render/render.go",
+        "fs.go"
+      ],
+      "wall_time_ms": 712.3720420058817,
+      "cold_start_ms": 91.39254200272262
+    },
+    {
+      "task_id": "loc_gin_tree_route",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8290,
+      "tool_calls": 1,
+      "files_accessed": 26,
+      "recall": 1.0,
+      "precision": 0.038461538461538464,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "tree.go"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "tree.go",
+        "gin.go",
+        "context.go",
+        "routergroup.go",
+        "ginS/gins.go",
+        "auth.go",
+        "utils.go",
+        "tree_test.go",
+        "path.go",
+        "debug.go",
+        "logger.go",
+        "recovery.go",
+        "render/html.go",
+        "binding/binding_nomsgpack.go",
+        "binding/binding.go",
+        "errors.go",
+        "response_writer.go",
+        "render/json.go",
+        "binding/form_mapping.go",
+        "binding/default_validator.go",
+        "mode.go",
+        "binding/json.go",
+        "render/redirect.go",
+        "context_appengine.go",
+        "render/render.go",
+        "fs.go"
+      ],
+      "wall_time_ms": 761.716999928467,
+      "cold_start_ms": 91.39254200272262,
+      "regions": {
+        "tree.go": [
+          [
+            1,
+            21
+          ]
+        ],
+        "gin.go": [
+          [
+            1,
+            18
+          ]
+        ],
+        "context.go": [
+          [
+            1,
+            22
+          ],
+          [
+            1,
+            234
+          ]
+        ],
+        "routergroup.go": [
+          [
+            1,
+            19
+          ]
+        ],
+        "ginS/gins.go": [
+          [
+            10,
+            29
+          ]
+        ],
+        "auth.go": [
+          [
+            1,
+            19
+          ]
+        ],
+        "utils.go": [
+          [
+            1,
+            26
+          ]
+        ],
+        "tree_test.go": [
+          [
+            1,
+            13
+          ]
+        ],
+        "path.go": [
+          [
+            1,
+            21
+          ]
+        ],
+        "debug.go": [
+          [
+            1,
+            23
+          ],
+          [
+            1,
+            111
+          ]
+        ],
+        "logger.go": [
+          [
+            13,
+            36
+          ]
+        ],
+        "recovery.go": [
+          [
+            3,
+            21
+          ]
+        ],
+        "render/html.go": [
+          [
+            1,
+            23
+          ]
+        ],
+        "binding/binding_nomsgpack.go": [
+          [
+            1,
+            19
+          ],
+          [
+            1,
+            96
+          ]
+        ],
+        "binding/binding.go": [
+          [
+            1,
+            18
+          ],
+          [
+            1,
+            99
+          ]
+        ],
+        "errors.go": [
+          [
+            96,
+            120
+          ]
+        ],
+        "response_writer.go": [
+          [
+            1,
+            29
+          ]
+        ],
+        "render/json.go": [
+          [
+            1,
+            26
+          ]
+        ],
+        "binding/form_mapping.go": [
+          [
+            92,
+            114
+          ]
+        ],
+        "binding/default_validator.go": [
+          [
+            1,
+            25
+          ]
+        ],
+        "mode.go": [
+          [
+            1,
+            27
+          ]
+        ],
+        "binding/json.go": [
+          [
+            1,
+            24
+          ],
+          [
+            1,
+            56
+          ]
+        ],
+        "render/redirect.go": [
+          [
+            1,
+            22
+          ],
+          [
+            1,
+            29
+          ]
+        ],
+        "context_appengine.go": [
+          [
+            1,
+            11
+          ]
+        ],
+        "render/render.go": [
+          [
+            1,
+            20
+          ]
+        ],
+        "fs.go": [
+          [
+            1,
+            25
+          ],
+          [
+            1,
+            45
+          ]
+        ]
+      }
+    }
+  ]
+}

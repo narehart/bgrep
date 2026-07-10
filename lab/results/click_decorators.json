@@ -1,0 +1,480 @@
+{
+  "task_id": "click_decorators",
+  "repo": "pallets/click",
+  "question": "How does click implement command decorators and parameter decoration?",
+  "results": [
+    {
+      "task_id": "click_decorators",
+      "tokens_total": 132360,
+      "tool_calls": 9,
+      "files_accessed": 67,
+      "recall": 1.0,
+      "precision": 0.04477611940298507,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/click/decorators.py",
+        "src/click/shell_completion.py",
+        "src/click/utils.py",
+        "src/click/testing.py",
+        "src/click/core.py",
+        "src/click/_termui_impl.py",
+        "src/click/_compat.py",
+        "src/click/exceptions.py",
+        "src/click/parser.py",
+        "src/click/termui.py",
+        "tests/test_shell_completion.py",
+        "src/click/globals.py",
+        "src/click/__init__.py",
+        "tests/test_normalization.py",
+        "tests/test_custom_classes.py",
+        "tests/test_testing.py",
+        "examples/validation/validation.py",
+        "tests/test_parser.py",
+        "tests/test_options.py",
+        "tests/test_commands.py",
+        "src/click/types.py",
+        "tests/test_defaults.py",
+        "tests/test_utils.py",
+        "tests/test_chain.py",
+        "tests/test_basic.py",
+        "tests/conftest.py",
+        "tests/test_imports.py",
+        "examples/imagepipe/setup.py",
+        "tests/test_command_decorators.py",
+        "tests/test_termui.py",
+        "examples/validation/setup.py",
+        "tests/test_compat.py",
+        "tests/test_types.py",
+        "examples/inout/inout.py",
+        "tests/typing/typing_group_kw_options.py",
+        "tests/typing/typing_password_option.py",
+        "tests/test_arguments.py",
+        "tests/test_context.py",
+        "tests/typing/typing_confirmation_option.py",
+        "tests/test_info_dict.py",
+        "tests/typing/typing_help_option.py",
+        "examples/inout/setup.py",
+        "tests/typing/typing_options.py",
+        "examples/imagepipe/imagepipe.py",
+        "tests/typing/typing_simple_example.py",
+        "tests/typing/typing_version_option.py",
+        "examples/repo/repo.py",
+        "tests/test_formatting.py",
+        "examples/complex/setup.py",
+        "tests/typing/typing_aliased_group.py",
+        "docs/conf.py",
+        "examples/completion/setup.py",
+        "examples/completion/completion.py",
+        "examples/repo/setup.py",
+        "examples/termui/setup.py",
+        "examples/colors/setup.py",
+        "examples/naval/setup.py",
+        "examples/aliases/setup.py",
+        "examples/naval/naval.py",
+        "examples/colors/colors.py",
+        "examples/termui/termui.py",
+        "examples/complex/complex/commands/cmd_init.py",
+        "examples/aliases/aliases.py",
+        "examples/complex/complex/cli.py",
+        "examples/complex/complex/commands/cmd_status.py",
+        "src/click/_winconsole.py",
+        "src/click/formatting.py"
+      ],
+      "wall_time_ms": 138.6949160369113,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "click_decorators",
+      "tokens_total": 37156,
+      "tool_calls": 3,
+      "files_accessed": 3,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "wall_time_ms": 12.49258394818753,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "click_decorators",
+      "strategy": "bm25",
+      "tokens_total": 62223,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.3,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/click/core.py",
+        "src/click/decorators.py",
+        "src/click/parser.py",
+        "src/click/__init__.py",
+        "src/click/types.py",
+        "src/click/shell_completion.py",
+        "src/click/utils.py",
+        "src/click/exceptions.py",
+        "src/click/termui.py",
+        "src/click/formatting.py"
+      ],
+      "wall_time_ms": 20.958291948772967,
+      "cold_start_ms": 87.45650004129857
+    },
+    {
+      "task_id": "click_decorators",
+      "strategy": "bm25_ppr",
+      "tokens_total": 78528,
+      "tool_calls": 1,
+      "files_accessed": 16,
+      "recall": 1.0,
+      "precision": 0.1875,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/click/core.py",
+        "src/click/decorators.py",
+        "src/click/parser.py",
+        "src/click/__init__.py",
+        "src/click/types.py",
+        "src/click/shell_completion.py",
+        "src/click/utils.py",
+        "src/click/exceptions.py",
+        "src/click/termui.py",
+        "src/click/formatting.py",
+        "src/click/testing.py",
+        "src/click/globals.py",
+        "src/click/_compat.py",
+        "src/click/_termui_impl.py",
+        "src/click/_winconsole.py",
+        "src/click/_textwrap.py"
+      ],
+      "wall_time_ms": 36.047292058356106,
+      "cold_start_ms": 87.45650004129857
+    },
+    {
+      "task_id": "click_decorators",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8256,
+      "tool_calls": 1,
+      "files_accessed": 16,
+      "recall": 1.0,
+      "precision": 0.1875,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "src/click/decorators.py",
+        "src/click/core.py",
+        "src/click/types.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "src/click/core.py",
+        "src/click/decorators.py",
+        "src/click/parser.py",
+        "src/click/__init__.py",
+        "src/click/types.py",
+        "src/click/shell_completion.py",
+        "src/click/utils.py",
+        "src/click/exceptions.py",
+        "src/click/termui.py",
+        "src/click/formatting.py",
+        "src/click/testing.py",
+        "src/click/globals.py",
+        "src/click/_compat.py",
+        "src/click/_termui_impl.py",
+        "src/click/_winconsole.py",
+        "src/click/_textwrap.py"
+      ],
+      "wall_time_ms": 93.84774998761714,
+      "cold_start_ms": 87.45650004129857,
+      "regions": {
+        "src/click/core.py": [
+          [
+            1,
+            49
+          ],
+          [
+            50,
+            68
+          ],
+          [
+            98,
+            115
+          ],
+          [
+            116,
+            142
+          ],
+          [
+            143,
+            168
+          ],
+          [
+            2974,
+            3047
+          ]
+        ],
+        "src/click/decorators.py": [
+          [
+            1,
+            26
+          ],
+          [
+            27,
+            37
+          ],
+          [
+            99,
+            135
+          ],
+          [
+            137,
+            141
+          ],
+          [
+            143,
+            150
+          ],
+          [
+            152,
+            160
+          ],
+          [
+            162,
+            166
+          ],
+          [
+            167,
+            252
+          ],
+          [
+            254,
+            258
+          ],
+          [
+            260,
+            267
+          ],
+          [
+            269,
+            277
+          ],
+          [
+            279,
+            283
+          ],
+          [
+            284,
+            304
+          ],
+          [
+            305,
+            314
+          ],
+          [
+            315,
+            342
+          ],
+          [
+            343,
+            370
+          ],
+          [
+            371,
+            394
+          ],
+          [
+            395,
+            411
+          ],
+          [
+            525,
+            553
+          ],
+          [
+            554,
+            562
+          ]
+        ],
+        "src/click/parser.py": [
+          [
+            1,
+            32
+          ],
+          [
+            1,
+            50
+          ],
+          [
+            247,
+            254
+          ]
+        ],
+        "src/click/__init__.py": [
+          [
+            1,
+            27
+          ]
+        ],
+        "src/click/types.py": [
+          [
+            1,
+            23
+          ],
+          [
+            157,
+            164
+          ],
+          [
+            189,
+            200
+          ],
+          [
+            405,
+            422
+          ]
+        ],
+        "src/click/shell_completion.py": [
+          [
+            1,
+            16
+          ],
+          [
+            444,
+            468
+          ],
+          [
+            469,
+            477
+          ],
+          [
+            478,
+            501
+          ]
+        ],
+        "src/click/utils.py": [
+          [
+            575,
+            618
+          ]
+        ],
+        "src/click/exceptions.py": [
+          [
+            1,
+            15
+          ],
+          [
+            239,
+            255
+          ],
+          [
+            256,
+            264
+          ],
+          [
+            282,
+            285
+          ]
+        ],
+        "src/click/termui.py": [
+          [
+            1,
+            49
+          ],
+          [
+            56,
+            71
+          ],
+          [
+            591,
+            602
+          ]
+        ],
+        "src/click/formatting.py": [
+          [
+            283,
+            301
+          ]
+        ],
+        "src/click/testing.py": [
+          [
+            1,
+            20
+          ]
+        ],
+        "src/click/globals.py": [
+          [
+            17,
+            19
+          ]
+        ],
+        "src/click/_compat.py": [
+          [
+            205,
+            213
+          ]
+        ],
+        "src/click/_termui_impl.py": [
+          [
+            1,
+            38
+          ]
+        ],
+        "src/click/_winconsole.py": [
+          [
+            263,
+            279
+          ]
+        ],
+        "src/click/_textwrap.py": [
+          [
+            1,
+            5
+          ]
+        ]
+      }
+    }
+  ]
+}

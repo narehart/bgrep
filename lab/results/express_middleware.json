@@ -1,0 +1,418 @@
+{
+  "task_id": "express_middleware",
+  "repo": "expressjs/express",
+  "question": "How does express implement the middleware chain and next() function?",
+  "results": [
+    {
+      "task_id": "express_middleware",
+      "tokens_total": 147243,
+      "tool_calls": 9,
+      "files_accessed": 149,
+      "recall": 1.0,
+      "precision": 0.020134228187919462,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "lib/router/layer.js",
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/application.js",
+        "lib/view.js",
+        "lib/utils.js",
+        "lib/express.js",
+        "lib/request.js",
+        "lib/response.js",
+        "lib/middleware/init.js",
+        "lib/middleware/query.js",
+        "benchmarks/middleware.js",
+        "examples/session/redis.js",
+        "examples/session/index.js",
+        "examples/content-negotiation/index.js",
+        "examples/cookies/index.js",
+        "examples/route-middleware/index.js",
+        "examples/error/index.js",
+        "examples/downloads/index.js",
+        "examples/resource/index.js",
+        "examples/online/index.js",
+        "examples/view-constructor/index.js",
+        "examples/static-files/index.js",
+        "examples/cookie-sessions/index.js",
+        "examples/route-map/index.js",
+        "examples/hello-world/index.js",
+        "index.js",
+        "examples/web-service/index.js",
+        "examples/params/index.js",
+        "examples/route-separation/index.js",
+        "examples/ejs/index.js",
+        "examples/search/index.js",
+        "test/req.subdomains.js",
+        "examples/vhost/index.js",
+        "examples/view-locals/index.js",
+        "test/res.type.js",
+        "examples/mvc/index.js",
+        "examples/mvc/lib/boot.js",
+        "test/req.acceptsCharset.js",
+        "test/req.param.js",
+        "test/req.range.js",
+        "examples/auth/index.js",
+        "examples/error-pages/index.js",
+        "test/app.request.js",
+        "test/req.get.js",
+        "test/req.ips.js",
+        "examples/multi-router/index.js",
+        "test/app.routes.error.js",
+        "test/middleware.basic.js",
+        "test/res.attachment.js",
+        "test/res.format.js",
+        "test/res.redirect.js",
+        "test/app.head.js",
+        "test/app.listen.js",
+        "test/req.acceptsLanguages.js",
+        "test/req.route.js",
+        "examples/multi-router/controllers/api_v2.js",
+        "test/express.raw.js",
+        "examples/markdown/index.js",
+        "test/exports.js",
+        "test/config.js",
+        "test/res.json.js",
+        "test/regression.js",
+        "test/res.vary.js",
+        "test/express.text.js",
+        "examples/multi-router/controllers/api_v1.js",
+        "test/res.links.js",
+        "test/res.get.js",
+        "test/req.baseUrl.js",
+        "test/res.download.js",
+        "test/req.query.js",
+        "test/app.response.js",
+        "test/res.set.js",
+        "test/req.protocol.js",
+        "test/req.host.js",
+        "test/app.render.js",
+        "test/app.locals.js",
+        "test/express.static.js",
+        "test/req.acceptsEncodings.js",
+        "test/req.acceptsEncoding.js",
+        "test/support/utils.js",
+        "test/req.accepts.js",
+        "test/req.signedCookies.js",
+        "test/res.location.js",
+        "test/express.urlencoded.js",
+        "test/req.xhr.js",
+        "test/res.cookie.js",
+        "test/app.param.js",
+        "test/req.stale.js",
+        "test/req.ip.js",
+        "test/res.append.js",
+        "test/app.js",
+        "test/support/env.js",
+        "test/res.sendFile.js",
+        "test/app.use.js",
+        "test/app.options.js",
+        "test/req.secure.js",
+        "test/req.fresh.js",
+        "test/req.hostname.js",
+        "test/app.router.js",
+        "test/express.json.js",
+        "test/req.acceptsCharsets.js",
+        "test/app.del.js",
+        "test/Router.js",
+        "test/res.sendStatus.js",
+        "test/res.render.js",
+        "test/req.path.js",
+        "test/res.clearCookie.js",
+        "test/res.locals.js",
+        "test/Route.js",
+        "test/res.status.js",
+        "test/req.is.js",
+        "test/app.route.js",
+        "test/app.engine.js",
+        "test/res.jsonp.js",
+        "test/acceptance/web-service.js",
+        "test/app.all.js",
+        "test/res.send.js",
+        "test/req.acceptsLanguage.js",
+        "test/utils.js",
+        "examples/view-constructor/github-view.js",
+        "examples/route-separation/user.js",
+        "examples/view-locals/user.js",
+        "test/acceptance/error.js",
+        "examples/mvc/controllers/pet/index.js",
+        "examples/mvc/controllers/user/index.js",
+        "examples/mvc/controllers/user-pet/index.js",
+        "examples/content-negotiation/users.js",
+        "examples/search/public/client.js",
+        "examples/route-separation/post.js",
+        "examples/route-separation/site.js",
+        "examples/mvc/controllers/main/index.js",
+        "test/support/tmpl.js",
+        "test/acceptance/route-map.js",
+        "test/acceptance/error-pages.js",
+        "test/acceptance/cookies.js",
+        "test/acceptance/markdown.js",
+        "test/acceptance/auth.js",
+        "test/acceptance/hello-world.js",
+        "test/acceptance/multi-router.js",
+        "test/acceptance/content-negotiation.js",
+        "test/acceptance/mvc.js",
+        "test/acceptance/params.js",
+        "test/acceptance/resource.js",
+        "test/acceptance/vhost.js",
+        "test/acceptance/cookie-sessions.js",
+        "test/acceptance/ejs.js",
+        "test/acceptance/downloads.js",
+        "test/acceptance/route-separation.js"
+      ],
+      "wall_time_ms": 153.56483298819512,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "express_middleware",
+      "tokens_total": 5869,
+      "tool_calls": 3,
+      "files_accessed": 3,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "wall_time_ms": 1.6795420087873936,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "express_middleware",
+      "strategy": "bm25",
+      "tokens_total": 20183,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.3,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "lib/router/route.js",
+        "lib/router/layer.js",
+        "lib/router/index.js",
+        "lib/application.js",
+        "lib/middleware/init.js",
+        "lib/response.js",
+        "lib/express.js",
+        "examples/route-middleware/index.js",
+        "lib/middleware/query.js",
+        "test/Route.js"
+      ],
+      "wall_time_ms": 6.704124971292913,
+      "cold_start_ms": 93.34133297670633
+    },
+    {
+      "task_id": "express_middleware",
+      "strategy": "bm25_ppr",
+      "tokens_total": 25888,
+      "tool_calls": 1,
+      "files_accessed": 13,
+      "recall": 1.0,
+      "precision": 0.23076923076923078,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "lib/router/route.js",
+        "lib/router/layer.js",
+        "lib/router/index.js",
+        "lib/application.js",
+        "lib/middleware/init.js",
+        "lib/response.js",
+        "lib/express.js",
+        "examples/route-middleware/index.js",
+        "lib/middleware/query.js",
+        "test/Route.js",
+        "lib/view.js",
+        "lib/utils.js",
+        "lib/request.js"
+      ],
+      "wall_time_ms": 14.949666918255389,
+      "cold_start_ms": 93.34133297670633
+    },
+    {
+      "task_id": "express_middleware",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8042,
+      "tool_calls": 1,
+      "files_accessed": 13,
+      "recall": 1.0,
+      "precision": 0.23076923076923078,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "lib/router/index.js",
+        "lib/router/route.js",
+        "lib/router/layer.js"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "lib/router/route.js",
+        "lib/router/layer.js",
+        "lib/router/index.js",
+        "lib/application.js",
+        "lib/middleware/init.js",
+        "lib/response.js",
+        "lib/express.js",
+        "examples/route-middleware/index.js",
+        "lib/middleware/query.js",
+        "test/Route.js",
+        "lib/view.js",
+        "lib/utils.js",
+        "lib/request.js"
+      ],
+      "wall_time_ms": 31.40004095621407,
+      "cold_start_ms": 93.34133297670633,
+      "regions": {
+        "lib/router/route.js": [
+          [
+            1,
+            64
+          ],
+          [
+            1,
+            230
+          ]
+        ],
+        "lib/router/layer.js": [
+          [
+            1,
+            64
+          ],
+          [
+            1,
+            140
+          ]
+        ],
+        "lib/router/index.js": [
+          [
+            1,
+            54
+          ],
+          [
+            621,
+            673
+          ]
+        ],
+        "lib/application.js": [
+          [
+            1,
+            89
+          ],
+          [
+            99,
+            150
+          ],
+          [
+            435,
+            551
+          ],
+          [
+            589,
+            661
+          ]
+        ],
+        "lib/middleware/init.js": [
+          [
+            1,
+            43
+          ]
+        ],
+        "lib/response.js": [
+          [
+            368,
+            410
+          ]
+        ],
+        "lib/express.js": [
+          [
+            1,
+            65
+          ],
+          [
+            1,
+            116
+          ]
+        ],
+        "examples/route-middleware/index.js": [
+          [
+            1,
+            44
+          ]
+        ],
+        "lib/middleware/query.js": [
+          [
+            1,
+            47
+          ]
+        ],
+        "test/Route.js": [
+          [
+            1,
+            56
+          ]
+        ],
+        "lib/view.js": [
+          [
+            1,
+            62
+          ]
+        ],
+        "lib/utils.js": [
+          [
+            1,
+            48
+          ]
+        ],
+        "lib/request.js": [
+          [
+            1,
+            47
+          ]
+        ]
+      }
+    }
+  ]
+}

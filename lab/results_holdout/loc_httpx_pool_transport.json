@@ -1,0 +1,577 @@
+{
+  "task_id": "loc_httpx_pool_transport",
+  "repo": "encode/httpx",
+  "question": "Issue: the synchronous transport does not translate httpcore connection-pool errors into httpx exceptions and the request extensions are not forwarded to the connection pool. Which method on the sync transport converts an httpx Request into an httpcore request, dispatches it through the connection pool, and maps the errors back?",
+  "results": [
+    {
+      "task_id": "loc_httpx_pool_transport",
+      "tokens_total": 133475,
+      "tool_calls": 32,
+      "files_accessed": 56,
+      "recall": 1.0,
+      "precision": 0.017857142857142856,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "httpx/_transports/default.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "httpx/_exceptions.py",
+        "httpx/_content.py",
+        "httpx/_main.py",
+        "httpx/_transports/asgi.py",
+        "tests/client/test_async_client.py",
+        "httpx/_client.py",
+        "tests/test_asgi.py",
+        "tests/conftest.py",
+        "tests/test_decoders.py",
+        "tests/client/test_redirects.py",
+        "tests/models/test_requests.py",
+        "tests/models/test_url.py",
+        "httpx/_auth.py",
+        "httpx/_models.py",
+        "httpx/__init__.py",
+        "httpx/_transports/wsgi.py",
+        "httpx/_transports/mock.py",
+        "httpx/_transports/base.py",
+        "httpx/_transports/default.py",
+        "httpx/_transports/__init__.py",
+        "tests/client/test_headers.py",
+        "tests/client/test_event_hooks.py",
+        "tests/client/test_client.py",
+        "tests/client/test_cookies.py",
+        "tests/test_multipart.py",
+        "tests/client/test_proxies.py",
+        "tests/test_wsgi.py",
+        "tests/test_auth.py",
+        "tests/client/test_auth.py",
+        "tests/client/test_queryparams.py",
+        "tests/test_api.py",
+        "tests/test_exceptions.py",
+        "httpx/_config.py",
+        "httpx/_urls.py",
+        "tests/test_main.py",
+        "tests/test_config.py",
+        "tests/test_timeouts.py",
+        "tests/client/test_properties.py",
+        "httpx/_status_codes.py",
+        "httpx/_decoders.py",
+        "httpx/_utils.py",
+        "httpx/__version__.py",
+        "httpx/_multipart.py",
+        "httpx/_api.py",
+        "tests/test_status_codes.py",
+        "tests/test_content.py",
+        "tests/test_utils.py",
+        "tests/models/test_headers.py",
+        "tests/test_exported_members.py",
+        "tests/models/test_whatwg.py",
+        "tests/models/test_cookies.py",
+        "tests/models/test_queryparams.py",
+        "tests/models/test_responses.py",
+        "httpx/_urlparse.py",
+        "httpx/_types.py",
+        "tests/concurrency.py"
+      ],
+      "wall_time_ms": 365.06625008769333,
+      "strategy": "raw_ripgrep",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_httpx_pool_transport",
+      "tokens_total": 2917,
+      "tool_calls": 1,
+      "files_accessed": 1,
+      "recall": 1.0,
+      "precision": 1.0,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "httpx/_transports/default.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "httpx/_transports/default.py"
+      ],
+      "wall_time_ms": 0.9388750186190009,
+      "strategy": "raw_files",
+      "cold_start_ms": 0.0
+    },
+    {
+      "task_id": "loc_httpx_pool_transport",
+      "strategy": "bm25",
+      "tokens_total": 38878,
+      "tool_calls": 1,
+      "files_accessed": 10,
+      "recall": 1.0,
+      "precision": 0.1,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "httpx/_transports/default.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "httpx/_transports/default.py",
+        "httpx/_client.py",
+        "httpx/_exceptions.py",
+        "httpx/_models.py",
+        "httpx/_transports/base.py",
+        "httpx/_transports/wsgi.py",
+        "httpx/_auth.py",
+        "httpx/_transports/asgi.py",
+        "httpx/_utils.py",
+        "httpx/_main.py"
+      ],
+      "wall_time_ms": 13.12154100742191,
+      "cold_start_ms": 82.12579204700887
+    },
+    {
+      "task_id": "loc_httpx_pool_transport",
+      "strategy": "bm25_ppr",
+      "tokens_total": 63728,
+      "tool_calls": 1,
+      "files_accessed": 23,
+      "recall": 1.0,
+      "precision": 0.043478260869565216,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "httpx/_transports/default.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "httpx/_transports/default.py",
+        "httpx/_client.py",
+        "httpx/_exceptions.py",
+        "httpx/_models.py",
+        "httpx/_transports/base.py",
+        "httpx/_transports/wsgi.py",
+        "httpx/_auth.py",
+        "httpx/_transports/asgi.py",
+        "httpx/_utils.py",
+        "httpx/_main.py",
+        "httpx/__init__.py",
+        "httpx/_transports/mock.py",
+        "httpx/_types.py",
+        "httpx/_api.py",
+        "httpx/_config.py",
+        "httpx/_urls.py",
+        "httpx/_content.py",
+        "httpx/_decoders.py",
+        "httpx/_status_codes.py",
+        "httpx/_multipart.py",
+        "httpx/_urlparse.py",
+        "httpx/_transports/__init__.py",
+        "httpx/__version__.py"
+      ],
+      "wall_time_ms": 29.274625005200505,
+      "cold_start_ms": 82.12579204700887
+    },
+    {
+      "task_id": "loc_httpx_pool_transport",
+      "strategy": "bm25_ppr_pack",
+      "tokens_total": 8336,
+      "tool_calls": 1,
+      "files_accessed": 23,
+      "recall": 1.0,
+      "precision": 0.043478260869565216,
+      "required_file_recall": 1.0,
+      "missed_required_file_rate": 0.0,
+      "missed_required_task_rate": 0.0,
+      "all_required_files_present": true,
+      "required_files_present": [
+        "httpx/_transports/default.py"
+      ],
+      "required_files_missing": [],
+      "result_files": [
+        "httpx/_transports/default.py",
+        "httpx/_client.py",
+        "httpx/_exceptions.py",
+        "httpx/_models.py",
+        "httpx/_transports/base.py",
+        "httpx/_transports/wsgi.py",
+        "httpx/_auth.py",
+        "httpx/_transports/asgi.py",
+        "httpx/_utils.py",
+        "httpx/_main.py",
+        "httpx/__init__.py",
+        "httpx/_transports/mock.py",
+        "httpx/_types.py",
+        "httpx/_api.py",
+        "httpx/_config.py",
+        "httpx/_urls.py",
+        "httpx/_content.py",
+        "httpx/_decoders.py",
+        "httpx/_status_codes.py",
+        "httpx/_multipart.py",
+        "httpx/_urlparse.py",
+        "httpx/_transports/__init__.py",
+        "httpx/__version__.py"
+      ],
+      "wall_time_ms": 81.92108292132616,
+      "cold_start_ms": 82.12579204700887,
+      "regions": {
+        "httpx/_transports/default.py": [
+          [
+            1,
+            73
+          ],
+          [
+            74,
+            94
+          ],
+          [
+            96,
+            120
+          ],
+          [
+            121,
+            134
+          ],
+          [
+            135,
+            264
+          ],
+          [
+            265,
+            278
+          ]
+        ],
+        "httpx/_client.py": [
+          [
+            1,
+            30
+          ],
+          [
+            1,
+            61
+          ]
+        ],
+        "httpx/_exceptions.py": [
+          [
+            74,
+            106
+          ],
+          [
+            107,
+            122
+          ],
+          [
+            123,
+            131
+          ],
+          [
+            132,
+            139
+          ],
+          [
+            140,
+            145
+          ],
+          [
+            146,
+            151
+          ],
+          [
+            152,
+            157
+          ],
+          [
+            158,
+            166
+          ],
+          [
+            167,
+            174
+          ],
+          [
+            181,
+            186
+          ],
+          [
+            187,
+            192
+          ],
+          [
+            193,
+            201
+          ],
+          [
+            202,
+            207
+          ],
+          [
+            208,
+            215
+          ],
+          [
+            216,
+            221
+          ],
+          [
+            222,
+            231
+          ],
+          [
+            232,
+            242
+          ],
+          [
+            243,
+            248
+          ],
+          [
+            249,
+            257
+          ],
+          [
+            271,
+            279
+          ],
+          [
+            280,
+            296
+          ],
+          [
+            297,
+            308
+          ],
+          [
+            327,
+            339
+          ],
+          [
+            353,
+            365
+          ],
+          [
+            367,
+            379
+          ]
+        ],
+        "httpx/_models.py": [
+          [
+            1,
+            36
+          ],
+          [
+            67,
+            73
+          ]
+        ],
+        "httpx/_transports/base.py": [
+          [
+            1,
+            13
+          ],
+          [
+            14,
+            64
+          ],
+          [
+            65,
+            86
+          ]
+        ],
+        "httpx/_transports/wsgi.py": [
+          [
+            1,
+            21
+          ]
+        ],
+        "httpx/_auth.py": [
+          [
+            1,
+            21
+          ],
+          [
+            22,
+            51
+          ]
+        ],
+        "httpx/_transports/asgi.py": [
+          [
+            1,
+            28
+          ]
+        ],
+        "httpx/_utils.py": [
+          [
+            1,
+            14
+          ],
+          [
+            229,
+            236
+          ],
+          [
+            237,
+            242
+          ]
+        ],
+        "httpx/_main.py": [
+          [
+            1,
+            25
+          ],
+          [
+            147,
+            155
+          ],
+          [
+            301,
+            312
+          ],
+          [
+            315,
+            324
+          ],
+          [
+            325,
+            332
+          ],
+          [
+            333,
+            339
+          ],
+          [
+            340,
+            347
+          ],
+          [
+            348,
+            355
+          ],
+          [
+            356,
+            363
+          ],
+          [
+            364,
+            371
+          ],
+          [
+            372,
+            378
+          ],
+          [
+            392,
+            398
+          ],
+          [
+            423,
+            430
+          ],
+          [
+            436,
+            443
+          ],
+          [
+            444,
+            451
+          ]
+        ],
+        "httpx/__init__.py": [
+          [
+            1,
+            33
+          ]
+        ],
+        "httpx/_transports/mock.py": [
+          [
+            1,
+            14
+          ],
+          [
+            15,
+            43
+          ]
+        ],
+        "httpx/_types.py": [
+          [
+            92,
+            105
+          ]
+        ],
+        "httpx/_api.py": [
+          [
+            124,
+            151
+          ]
+        ],
+        "httpx/_config.py": [
+          [
+            159,
+            182
+          ]
+        ],
+        "httpx/_urls.py": [
+          [
+            420,
+            440
+          ]
+        ],
+        "httpx/_content.py": [
+          [
+            1,
+            30
+          ],
+          [
+            92,
+            106
+          ]
+        ],
+        "httpx/_decoders.py": [
+          [
+            44,
+            55
+          ],
+          [
+            306,
+            320
+          ]
+        ],
+        "httpx/_status_codes.py": [
+          [
+            8,
+            25
+          ]
+        ],
+        "httpx/_multipart.py": [
+          [
+            1,
+            31
+          ]
+        ],
+        "httpx/_urlparse.py": [
+          [
+            422,
+            438
+          ]
+        ],
+        "httpx/_transports/__init__.py": [
+          [
+            1,
+            15
+          ]
+        ],
+        "httpx/__version__.py": [
+          [
+            1,
+            3
+          ]
+        ]
+      }
+    }
+  ]
+}
