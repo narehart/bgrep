@@ -74,22 +74,30 @@ whack-a-mole between tasks; per-seed quotas starve globally-strong candidates.
 
 ## SWE-bench Lite file localization (2026-07-11)
 
-Frozen pipeline, query = raw issue text (no keywords, no LLM, no embeddings),
-gold = files edited by the merged fix. All 300 instances, zero errors:
+Query = raw issue text, no LLM, no embeddings, no training. Gold = files edited
+by the merged fix. 300 instances, zero errors, fully deterministic.
 
-- **All-gold-files-present: 267/300 = 0.890** (mean file recall 0.890)
-- Mean bundle 10,041 tokens, ~26 files; query 530ms on an index built in 2.1s
-- Per repo: seaborn/flask/requests/xarray 1.00, matplotlib & scikit-learn 0.96,
-  django 0.89 (102/114), pytest 0.88, sympy 0.84, astropy/pylint 0.83, sphinx 0.81
+Ablation (File@k = all gold files within top-k of the ranked list):
 
-Published context (see research findings): BM25 achieves all-files retrieval on
-~40% of instances at 27k tokens; GPT-4-based Agentless file localization ≈69%
-(74% with RepoGraph); agentic explorers ≈0.65 HitFile on the harder SWE-Explore.
-Caveat for comparisons: our bundle holds ~26 files — File@5/File@10 numbers from
-the ranked list (results_swebench/lite_ranked.jsonl) are the k-matched figures.
-Recurring miss pattern: fixes in lexically-distant infrastructure files (e.g.
-django/db/migrations/serializer.py for issues describing migration *output*) —
-the deep semantic gap that no lexical+structural method closes without an LLM.
+| lane | @1 | @5 | @10 | @all | mean tokens |
+|---|---|---|---|---|---|
+| v1 pipeline | .470 | .733 | .803 | .890 | 10,041 |
+| + vendor/minified exclusion, pack safety | .463 | .737 | .813 | .893 | 8,461 |
+| + comments field (REJECTED) | .357 | .670 | .773 | .867 | 8,453 |
+| + history via RRF fusion (REJECTED) | .337 | .643 | .757 | .890 | 8,457 |
+| **+ history as monotone additions (final)** | **.463** | **.737** | **.813** | **.910** | **8,492** |
+
+Final: 91.0% of instances get every gold file, ~8.5k-token bundle, 530ms query.
+Verified SOTA context (SweRank, arXiv:2505.07849): trained embedders reach
+Acc@10 90.9 (137M) / 94.2 (7B); +LLM rerank 96.0; BM25 61.7. bgrep holds the
+training-free/model-free point: File@10 81.3 (+19.6 over BM25), @all 91.0.
+
+Negative results (documented, reproducible): comments field hurts issue-style
+queries (-8 net instances) despite its API-search pedigree; fusing history into
+the ranking head craters @1 (.463 -> .337); co-change test-bridges are impossible
+by construction on repos with 1:1 test:impl coupling (django). The recurring
+design law, twice observed: auxiliary channels must be MONOTONE — they may add
+candidates, never reorder the lexical head.
 
 ## Run it
 

@@ -11,9 +11,11 @@ No lane ever reads task.expected_files / expected_regions / expected_symbols.
 This is a fork of lanes.py that adds three OPTIONAL git-history-derived
 signals, all default OFF so lanes2 with flags off matches lanes.py's
 *recall* exactly (candidate selection is identical):
-  (a) commit-message field on Corpus (history_msgs), fused into candidate
-      ranking via RRF against the body ranking in select_files() -- never
-      blended additively into bm25() (see msg_bm25())
+  (a) commit-message field on Corpus (history_msgs), appended as a monotone
+      top-up of up to 3 extra candidates in select_files() -- it never
+      influences lex_picks/sources/pool/additions (an earlier RRF fusion of
+      body and msg rankings measured to destroy head precision was removed),
+      and it is never blended additively into bm25() (see msg_bm25())
   (b) comment/docstring field on Corpus (use_comments)
   (c) co-change edges in select_files() frontier expansion (cochange),
       including test-file bridge edges between production files that
@@ -511,34 +513,20 @@ def select_files(
     for the per-source Guarantee-1 step (a file that reliably changes
     alongside a source is, evidentially, as strong a link as an import).
 
-    When the Corpus carries a commit-message field (history on), candidate
-    sourcing fuses two independent rankings via Reciprocal Rank Fusion
-    instead of adding scores on one shared scale: the body ranking (bm25(),
-    which no longer includes any msg contribution) and the msg-field ranking
-    (msg_bm25() alone, impl_prior applied). RRF avoids the scale-entanglement
-    that came from summing a length-unnormalized msg score into the body
-    score, and a high-churn hub file that dominates the msg field can only
-    ever contribute one rank position, not an unbounded score mass.
+    When the Corpus carries a commit-message field (history on), the msg
+    field is NOT fused into lex_picks/sources/pool/additions at all -- an RRF
+    fusion of body and msg rankings was tried and measured to destroy head
+    precision (recall@1 fell .463->.337 in a 300-instance ablation) for a
+    +5-instance gain at @all. The msg channel is therefore monotone: it may
+    only APPEND extra candidates after the body-only additions are finalized
+    (see the msg_bm25 top-up below), never influence lex_picks or displace/
+    reorder anything the body ranking already chose.
     """
     bm = corpus.bm25(terms)
     if not bm:
         return [], {}
     bm_n = _normalize(bm)
-    msg_scores = corpus.msg_bm25(terms) if corpus.msg_tf else {}
-    if msg_scores:
-        body_ranked = sorted(bm_n.items(), key=lambda kv: -kv[1])
-        msg_ranked = sorted(msg_scores.items(), key=lambda kv: -kv[1])
-        body_rank = {f: i for i, (f, _) in enumerate(body_ranked)}
-        msg_rank = {f: i for i, (f, _) in enumerate(msg_ranked)}
-        rrf = {
-            f: 1.0 / (60 + body_rank.get(f, len(body_ranked)))
-            + 0.7 / (60 + msg_rank.get(f, len(msg_ranked)))
-            for f in set(body_rank) | set(msg_rank)
-        }
-        fused_n = _normalize(rrf)
-        ranked = sorted(fused_n.items(), key=lambda kv: -kv[1])
-    else:
-        ranked = sorted(bm_n.items(), key=lambda kv: -kv[1])
+    ranked = sorted(bm_n.items(), key=lambda kv: -kv[1])
     best = ranked[0][1]
     lex_picks = [f for i, (f, s) in enumerate(ranked[:k_lex]) if i < 3 or s >= floor_ratio * best]
     # scores stays body-scale (bm_n): fusion decides WHICH files are picked,
@@ -655,6 +643,27 @@ def select_files(
                 break
             if c not in additions:
                 additions.append(c)
+
+    # History top-up: monotone-append only. The msg field never influences
+    # lex_picks/sources/pool/additions above -- it can only tack a few extra
+    # candidates onto the END of additions, past the 16 cap (up to 19 total),
+    # so it can never displace or reorder anything the body ranking chose.
+    msg_additions: list[str] = []
+    if corpus.msg_tf:
+        msg_scores = corpus.msg_bm25(terms)
+        if msg_scores:
+            msg_max = max(msg_scores.values())
+            if msg_max > 0:
+                already = set(lex_picks) | set(additions)
+                msg_ranked = sorted(msg_scores.items(), key=lambda kv: -kv[1])
+                for f, s in msg_ranked:
+                    if len(msg_additions) >= 3:
+                        break
+                    if f in already or s < 0.35 * msg_max or impl_prior(f) != 1.0:
+                        continue
+                    msg_additions.append(f)
+        additions.extend(msg_additions)
+
     global LAST_EXPLAIN
     LAST_EXPLAIN = {
         "seeds": sources,
@@ -662,6 +671,7 @@ def select_files(
         "pool": [(c, round(add_score(c), 4), round(pool[c], 2)) for c in ranked_pool],
         "additions": additions,
         "cochange_additions": [c for c in additions if c in cochange_origin],
+        "msg_additions": msg_additions,
     }
     out = lex_picks + additions
     for f in additions:
