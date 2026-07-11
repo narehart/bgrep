@@ -36,6 +36,7 @@ are corpus/packing hygiene rather than a retrieval signal):
 
 from __future__ import annotations
 
+import json
 import math
 import os
 import re
@@ -45,10 +46,17 @@ from pathlib import Path
 CODE_EXTENSIONS = (".py", ".ts", ".js", ".go", ".rs", ".java", ".kt", ".cs", ".swift", ".tsx", ".jsx")
 # Extended profile for the multilingual baseline (lab experiment code only --
 # NOT used by default; see Corpus's `extensions` param and
-# swebench_driver2.py's --extensions flag). Adds PHP, Ruby, and the C-family
-# (C/C++/Objective-C headers), deduped against CODE_EXTENSIONS.
+# swebench_driver2.py's --extensions flag). Adds PHP, Ruby (plus its
+# rake/gemspec/erb siblings), the C-family (C/C++/Objective-C headers), and
+# the .mjs/.cjs JS module-extension variants (needed so files reachable only
+# via extensionless-import resolution, see _JS_RESOLVE_SUFFIXES, actually
+# exist in the corpus to be added-to), deduped against CODE_EXTENSIONS.
+# CODE_EXTENSIONS itself is untouched -- the default (non-extended) profile,
+# including the Python Lite frozen-gate path, is byte-identical to before.
 EXTENDED_EXTENSIONS = tuple(dict.fromkeys(
-    CODE_EXTENSIONS + (".php", ".rb", ".c", ".cc", ".cpp", ".cxx", ".h", ".hpp", ".java", ".kt", ".cs", ".swift")
+    CODE_EXTENSIONS + (".php", ".rb", ".rake", ".gemspec", ".erb",
+                        ".c", ".cc", ".cpp", ".cxx", ".h", ".hpp",
+                        ".java", ".kt", ".cs", ".swift", ".mjs", ".cjs")
 ))
 MAX_FILE_BYTES = 2_000_000
 LAST_EXPLAIN: dict = {}
@@ -137,9 +145,16 @@ _TESTLIKE_RE = re.compile(
 
 # Vendor/minified/generated artifacts: not human-authored source, so excluded
 # from the corpus unconditionally (same rationale as the test-file prior --
-# a document-level property, not a signal that should be gate-able).
+# a document-level property, not a signal that should be gate-able). The
+# dist/*.{mjs,cjs} clause is gated to extensions only EXTENDED_EXTENSIONS
+# carries (CODE_EXTENSIONS has no .mjs/.cjs, so this arm can never match on
+# the default/Python path -- measured regression fix: indexing .cjs/.mjs
+# without it let compiled single-file bundles like dist/node/axios.cjs
+# outrank real source, the same failure mode bundle.js was already excluded
+# for, just under the extensions this task newly added to the corpus.
 _VENDOR_RE = re.compile(
-    r"(vendor|vendored|third_party|node_modules|\.min\.(js|css)$|bundle\.js$)",
+    r"(vendor|vendored|third_party|node_modules|\.min\.(js|css)$|bundle\.(js|mjs|cjs)$"
+    r"|(^|/)dist/.*\.(mjs|cjs)$)",
     re.I,
 )
 _MAX_LINE_CHARS = 3000
@@ -147,7 +162,21 @@ _MAX_LINE_CHARS = 3000
 
 def impl_prior(rel: str) -> float:
     """Document prior: implementation files are a priori more relevant to
-    'how does X work' retrieval than tests/benches/examples/docs."""
+    'how does X work' retrieval than tests/benches/examples/docs.
+
+    .gemspec/.rake files get an intermediate 0.5 prior (not the 0.3 test
+    prior): they are metadata/automation, not implementation, so v8's
+    extension of EXTENDED_EXTENSIONS to include them let short,
+    project-name-dense gemspecs/rake tasks outrank gold code at @1 (5
+    Ruby-instance regression). But they are occasionally the fix site
+    itself (e.g. a dependency-version bump lives in the .gemspec), so a
+    full 0.3 test-file downweight would over-correct; 0.5 balances the two.
+    .erb templates are left at the full 1.0 prior (they can be the actual
+    view-layer implementation). This path is unreachable under the default
+    CODE_EXTENSIONS profile -- .gemspec/.rake aren't in CODE_EXTENSIONS, so
+    the Python/Lite frozen-gate path is untouched."""
+    if rel.endswith((".gemspec", ".rake")):
+        return 0.5
     return 0.3 if _TESTLIKE_RE.search(rel) else 1.0
 
 
@@ -166,7 +195,29 @@ def path_tokens(rel: str) -> set[str]:
 _PY_DEF_RE = re.compile(r"^\s*(?:class|def)\s+(\w+)", re.M)
 _GO_DEF_RE = re.compile(r"^func\s+(?:\([^)]*\)\s*)?(\w+)", re.M)
 _RS_DEF_RE = re.compile(r"^\s*(?:pub\s+)?fn\s+(\w+)|^\s*(?:pub\s+)?struct\s+(\w+)", re.M)
-_JS_DEF_RE = re.compile(r"^\s*(?:export\s+)?(?:function|class)\s+(\w+)", re.M)
+# JS/TS: function/class decls (incl. default/async/generator exports), arrow
+# functions assigned to a const, `const X = (` (HOC-wrapped components etc.),
+# interface/type aliases. Each alternative has exactly one capturing group,
+# so the generic multi-group harvesting loop in Corpus.__init__ below (built
+# for the Python/Go/Rust pattern of "one match, one group") works unchanged.
+_JS_DEF_RE = re.compile(
+    r"^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?(?:function\*?|class)\s+(\w+)"
+    r"|^\s*(?:export\s+)?const\s+(\w+)\s*=\s*(?:\([^)]*\)|\w+)\s*=>"
+    r"|^\s*(?:export\s+)?const\s+(\w+)\s*=\s*\("
+    r"|^\s*(?:export\s+)?interface\s+(\w+)"
+    r"|^\s*(?:export\s+)?type\s+(\w+)\s*=",
+    re.M,
+)
+# Ruby: def name / def self.name / class Name(::Nested)* / module Name(::Nested)*.
+# Scoped class/module names (containing "::") are further split into their
+# individual segments right after extraction below, since issue text can
+# name either the qualified or bare form and extract_symbol_anchors() only
+# matches contiguous identifier runs (no "::").
+_RB_DEF_RE = re.compile(
+    r"^\s*def\s+(?:self\.)?([A-Za-z_]\w*[?!=]?)"
+    r"|^\s*(?:class|module)\s+([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)",
+    re.M,
+)
 
 _PY_DOCSTRING_RE = re.compile(r'"""(.*?)"""|\'\'\'(.*?)\'\'\'', re.S)
 _PY_COMMENT_RE = re.compile(r"#(.*)$", re.M)
@@ -255,8 +306,10 @@ class Corpus:
                     def_re = _GO_DEF_RE
                 elif rel.endswith(".rs"):
                     def_re = _RS_DEF_RE
-                elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
+                elif rel.endswith((".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs")):
                     def_re = _JS_DEF_RE
+                elif rel.endswith(".rb"):
+                    def_re = _RB_DEF_RE
                 else:
                     def_re = None
                 if def_re is not None:
@@ -265,6 +318,12 @@ class Corpus:
                         for g in m.groups():
                             if g:
                                 syms.add(g)
+                    if rel.endswith(".rb"):
+                        # split scoped class/module names (Foo::Bar) into
+                        # their individual segments -- see _RB_DEF_RE comment.
+                        for s in list(syms):
+                            if "::" in s:
+                                syms.update(p for p in s.split("::") if p)
                     for sym in syms:
                         self.def_index[sym].append(rel)
         self.n_docs = len(self.files)
@@ -492,9 +551,32 @@ _PY_PLAIN_IMPORT_RE = re.compile(r"^\s*import\s+([\w\., ]+)", re.M)
 _JS_IMPORT_RE = re.compile(
     r"""(?:from\s+['"]([^'"]+)['"]|require\(\s*['"]([^'"]+)['"]\s*\)|import\s*\(\s*['"]([^'"]+)['"])"""
 )
+# `export * from './x'` / `export * as ns from './x'` -- re-export barrels.
+# Matched separately from _JS_IMPORT_RE (which also matches these lines, so
+# the barrel<->target edge already exists) so build_import_graph can follow
+# ONE further hop: an importer of the barrel also gets linked to whatever the
+# barrel re-exports, since the barrel's own text may never become a ranking
+# "source" (see module docstring / _js_reexport_map).
+_JS_REEXPORT_STAR_RE = re.compile(
+    r"""export\s*\*\s*(?:as\s+\w+\s+)?from\s+['"]([^'"]+)['"]"""
+)
+# Extensionless-import / directory-import resolution order: plain extensions
+# first (most specific), then directory-index files. Applied both to normal
+# relative imports and to tsconfig path-alias targets.
+_JS_RESOLVE_SUFFIXES = (
+    "", ".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs",
+    "/index.js", "/index.ts", "/index.jsx", "/index.tsx", "/index.mjs", "/index.cjs",
+)
 _RS_MOD_RE = re.compile(r"^\s*(?:pub\s+)?mod\s+(\w+)\s*;", re.M)
 _RS_USE_RE = re.compile(r"^\s*(?:pub\s+)?use\s+(?:crate|super|self)::([\w:]+)", re.M)
 _GO_IMPORT_RE = re.compile(r'"([\w\./\-]+)"')
+_RB_REQUIRE_RELATIVE_RE = re.compile(r"""require_relative\s+['"]([^'"]+)['"]""")
+_RB_REQUIRE_RE = re.compile(r"""^\s*require\s+['"]([^'"]+)['"]""", re.M)
+# Only SCOPED constant references (containing "::") are resolved to files --
+# a bare capitalized word (String, Error, Base, ...) matches far too many
+# stdlib/gem/vendor names to be safe evidence; a qualified reference like
+# `Foo::BarBaz` is specific enough to be worth the lookup.
+_RB_CONST_REF_RE = re.compile(r"\b[A-Z][A-Za-z0-9_]*(?:::[A-Z][A-Za-z0-9_]*)+\b")
 
 
 def _py_module_index(files: list[str]) -> dict[str, str]:
@@ -509,12 +591,189 @@ def _py_module_index(files: list[str]) -> dict[str, str]:
     return idx
 
 
+# ---------------------------------------------------------------- Ruby require/autoload indexes
+
+def _rb_require_index(files: list[str]) -> dict[str, str]:
+    """`require "x"` resolution: gem-style convention, the whole subtree under
+    ANY lib/ directory in the repo is one flat require-path namespace (so
+    lib/my_gem/thing.rb is required as "my_gem/thing"). Best-effort -- no
+    gemspec/$LOAD_PATH parsing, just the lib/ convention every packaged gem
+    follows. Multiple lib/ roots (monorepo of gems) are all indexed; first
+    (sorted-path) writer wins on key collision."""
+    idx: dict[str, str] = {}
+    for rel in files:
+        if not rel.endswith(".rb"):
+            continue
+        parts = rel.split("/")
+        for i, p in enumerate(parts):
+            if p == "lib":
+                tail = parts[i + 1:]
+                if tail:
+                    key = "/".join(tail)
+                    if key.endswith(".rb"):
+                        key = key[:-3]
+                    if key:
+                        idx.setdefault(key, rel)
+                break
+    return idx
+
+
+def _rb_snake(name: str) -> str:
+    """ActiveSupport-style underscore: CamelCase -> snake_case (simplified,
+    no acronym special-casing -- good enough for a lookup key)."""
+    s1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", name)
+    s2 = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1)
+    return s2.lower()
+
+
+def _rb_autoload_key(rel: str) -> str | None:
+    """Rails/gem autoload convention: file path -> expected snake_case
+    constant path. Rooted at the nearest lib/ (gem convention: the whole
+    lib/ subtree is one namespace, so lib/my_gem/thing.rb -> MyGem::Thing)
+    or app/<component>/ (Rails convention: each app/* subdirectory --
+    app/models, app/controllers, ... -- is its OWN autoload root, so the
+    component name itself is not part of the constant path, e.g.
+    app/models/foo/bar_baz.rb -> Foo::BarBaz, not Models::Foo::BarBaz)."""
+    if not rel.endswith(".rb"):
+        return None
+    parts = rel.split("/")
+    tail: list[str] | None = None
+    for i, p in enumerate(parts):
+        if p == "lib":
+            tail = parts[i + 1:]
+            break
+        if p == "app" and i + 1 < len(parts):
+            tail = parts[i + 2:]
+            break
+    if not tail:
+        return None
+    tail = list(tail)
+    if tail[-1].endswith(".rb"):
+        tail[-1] = tail[-1][:-3]
+    if not tail[-1]:
+        return None
+    return "/".join(tail)
+
+
+def _rb_const_index(files: list[str]) -> tuple[dict[str, str], dict[str, str]]:
+    """snake_case(namespace/path) -> file (full, namespace-qualified), plus a
+    leaf-only (last path segment) fallback for references that omit the
+    namespace prefix -- e.g. `Bar` used inside `module Foo` to mean
+    `Foo::Bar`, which a regex-only reference scan can't disambiguate from
+    context. The leaf index only keeps segments unique across the whole repo
+    (ambiguous leaves are dropped) to bound false-positive edges."""
+    full: dict[str, str] = {}
+    leaf_counts: Counter[str] = Counter()
+    leaf_file: dict[str, str] = {}
+    for rel in files:
+        key = _rb_autoload_key(rel)
+        if not key:
+            continue
+        full.setdefault(key, rel)
+        leafname = key.rsplit("/", 1)[-1]
+        leaf_counts[leafname] += 1
+        leaf_file.setdefault(leafname, rel)
+    leaf = {k: v for k, v in leaf_file.items() if leaf_counts[k] == 1}
+    return full, leaf
+
+
+def _rb_snake_const(name: str) -> str:
+    return "/".join(_rb_snake(seg) for seg in name.split("::") if seg)
+
+
+# ---------------------------------------------------------------- JS/TS re-export + tsconfig paths
+
+def _js_reexport_map(files: list[str], text_of: dict[str, str], fileset: set[str]) -> dict[str, set[str]]:
+    """barrel file -> its `export * from` resolved targets (see
+    _JS_REEXPORT_STAR_RE). Consumed by build_import_graph to add a second-hop
+    edge from a barrel's IMPORTERS straight to what the barrel re-exports,
+    since the barrel file itself may never become a ranking source."""
+    out: dict[str, set[str]] = defaultdict(set)
+    for rel in files:
+        if not rel.endswith((".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs")):
+            continue
+        base = Path(rel).parent
+        for m in _JS_REEXPORT_STAR_RE.finditer(text_of[rel]):
+            spec = m.group(1)
+            if not spec.startswith("."):
+                continue
+            cand = os.path.normpath(str(base / spec))
+            for suffix in _JS_RESOLVE_SUFFIXES:
+                if cand + suffix in fileset:
+                    out[rel].add(cand + suffix)
+                    break
+    return out
+
+
+def _load_tsconfig_paths(repo_path: Path) -> dict[str, list[str]]:
+    """Best-effort parse of compilerOptions.paths from a root tsconfig.json
+    (or tsconfig.base.json). Returns {prefix: [target_prefix, ...]} with the
+    trailing '/*' stripped from both pattern and targets (the overwhelmingly
+    common case, e.g. "@/*": ["src/*"]); baseUrl is applied to targets when
+    present. Not a full TS resolver (no monorepo-subpackage tsconfig
+    discovery, no `extends` chain, comments/trailing-commas stripped with a
+    regex rather than a real JSONC parser) -- malformed or absent config is
+    silently ignored, matching this module's best-effort-everywhere policy."""
+    for name in ("tsconfig.json", "tsconfig.base.json"):
+        p = repo_path / name
+        if not p.exists():
+            continue
+        try:
+            raw = p.read_text(encoding="utf-8", errors="replace")
+            cleaned = re.sub(r"(?<!:)//.*", "", raw)
+            cleaned = re.sub(r",(\s*[}\]])", r"\1", cleaned)
+            data = json.loads(cleaned)
+        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+            continue
+        opts = data.get("compilerOptions") or {}
+        paths = opts.get("paths") or {}
+        base_url = opts.get("baseUrl") or "."
+        out: dict[str, list[str]] = {}
+        for pattern, targets in paths.items():
+            if not isinstance(targets, list):
+                continue
+            key = pattern[:-2] if pattern.endswith("/*") else pattern
+            vals: list[str] = []
+            for t in targets:
+                if not isinstance(t, str):
+                    continue
+                t = t[:-2] if t.endswith("/*") else t
+                vals.append(os.path.normpath(str(Path(base_url) / t)) if base_url != "." else t)
+            if vals:
+                out[key] = vals
+        if out:
+            return out
+    return {}
+
+
+def _resolve_js_alias(spec: str, alias_map: dict[str, list[str]], fileset: set[str]) -> str | None:
+    """Resolve a non-relative import spec against tsconfig path aliases."""
+    for prefix, targets in alias_map.items():
+        if spec != prefix and not spec.startswith(prefix + "/"):
+            continue
+        rest = spec[len(prefix):].lstrip("/")
+        for target_base in targets:
+            cand = os.path.normpath(f"{target_base}/{rest}" if rest else target_base)
+            for suffix in _JS_RESOLVE_SUFFIXES:
+                if cand + suffix in fileset:
+                    return cand + suffix
+    return None
+
+
 def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
     """Undirected import edges between repo files, plus same-directory edges added
     separately by the diffusion step. Best-effort per language; unresolved imports ignored."""
     edges: dict[str, set[str]] = defaultdict(set)
     pyidx = _py_module_index(corpus.files)
     fileset = set(corpus.files)
+    # Ruby-only indexes (cheap to build unconditionally: a no-op single pass
+    # over corpus.files when there are no .rb files at all).
+    rb_require_idx = _rb_require_index(corpus.files)
+    rb_const_idx, rb_const_leaf_idx = _rb_const_index(corpus.files)
+    # JS/TS-only: re-export barrels (see _js_reexport_map) and tsconfig path
+    # aliases (see _load_tsconfig_paths), both best-effort/no-op when absent.
+    js_reexport = _js_reexport_map(corpus.files, corpus.text, fileset)
+    js_alias_map = _load_tsconfig_paths(corpus.repo_path)
 
     def add(a: str, b: str) -> None:
         if a != b and b in fileset:
@@ -559,17 +818,31 @@ def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
                     mod = spec.strip().split(" as ")[0].strip()
                     if mod:
                         add_module(rel, mod)
-        elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
+        elif rel.endswith((".js", ".ts", ".jsx", ".tsx", ".mjs", ".cjs")):
             base = Path(rel).parent
             for m in _JS_IMPORT_RE.finditer(text):
                 spec = next(g for g in m.groups() if g)
                 if not spec.startswith("."):
+                    # non-relative: try tsconfig path aliases (best-effort;
+                    # no-op if the repo has no tsconfig.json paths section).
+                    hit = _resolve_js_alias(spec, js_alias_map, fileset) if js_alias_map else None
+                    if hit:
+                        add(rel, hit)
                     continue
                 cand = os.path.normpath(str(base / spec))
-                for suffix in ("", ".js", ".ts", ".jsx", ".tsx", "/index.js", "/index.ts"):
+                target = None
+                for suffix in _JS_RESOLVE_SUFFIXES:
                     if cand + suffix in fileset:
-                        add(rel, cand + suffix)
+                        target = cand + suffix
                         break
+                if target:
+                    add(rel, target)
+                    # re-export chain, 1 hop: if `target` is itself a barrel
+                    # (`export * from './y'`), link straight to what it
+                    # re-exports too -- `target` may never become a ranking
+                    # source on its own, so without this the chain dead-ends.
+                    for further in js_reexport.get(target, ()):
+                        add(rel, further)
         elif rel.endswith(".rs"):
             base = Path(rel).parent
             for m in _RS_MOD_RE.finditer(text):
@@ -591,6 +864,25 @@ def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
                 for other in corpus.files:
                     if other.endswith(".go") and Path(other).parent.name == tail:
                         add(rel, other)
+        elif rel.endswith(".rb"):
+            base = Path(rel).parent
+            for m in _RB_REQUIRE_RELATIVE_RE.finditer(text):
+                cand = os.path.normpath(str(base / m.group(1)))
+                for suffix in ("", ".rb"):
+                    if cand + suffix in fileset:
+                        add(rel, cand + suffix)
+                        break
+            for m in _RB_REQUIRE_RE.finditer(text):
+                hit = rb_require_idx.get(m.group(1))
+                if hit:
+                    add(rel, hit)
+            for m in _RB_CONST_REF_RE.finditer(text):
+                key = _rb_snake_const(m.group(0))
+                hit = rb_const_idx.get(key)
+                if not hit:
+                    hit = rb_const_leaf_idx.get(key.rsplit("/", 1)[-1])
+                if hit:
+                    add(rel, hit)
     return edges
 
 
@@ -1126,14 +1418,35 @@ def _python_blocks(text: str) -> list[tuple[int, int]]:
     return [(a, b) for a, b in spans if b >= a]
 
 
-def _window_blocks(text: str, hit_lines: list[int], radius: int = 30) -> list[tuple[int, int]]:
-    """Language-agnostic fallback: merged +-radius windows around hit lines."""
+def _window_blocks(
+    text: str, hit_lines: list[int], radius: int = 30, pref_starts: list[int] | None = None
+) -> list[tuple[int, int]]:
+    """Language-agnostic fallback: merged +-radius windows around hit lines.
+
+    pref_starts (optional, e.g. Ruby def/class/module line numbers -- true
+    def/class...end nesting is hard to parse with regex, so this is a cheap
+    proxy rather than real block extraction): each window's start snaps back
+    to the nearest preferred-start line at or before `h - radius` .. `h`
+    instead of the raw `h - radius` cut, so the packed region begins at a
+    method/class boundary instead of mid-body; the window's end likewise
+    snaps to just before the next preferred-start line if that falls before
+    `h + radius`. Default (pref_starts absent/None) is byte-identical to the
+    original radius-only behavior -- every other language's callsite is
+    unaffected."""
     n = len(text.splitlines())
     if not hit_lines:
         return [(1, min(n, 2 * radius))]
+    starts_sorted = sorted(pref_starts) if pref_starts else None
     spans: list[tuple[int, int]] = []
     for h in sorted(hit_lines):
         a, b = max(1, h - radius), min(n, h + radius)
+        if starts_sorted:
+            back = [s for s in starts_sorted if a <= s <= h]
+            if back:
+                a = back[-1]
+            fwd = [s for s in starts_sorted if h < s <= b]
+            if fwd:
+                b = fwd[0] - 1
         if spans and a <= spans[-1][1] + 5:
             spans[-1] = (spans[-1][0], b)
         else:
@@ -1148,6 +1461,16 @@ def _hit_lines(text: str, terms: set[str]) -> list[int]:
         if any(t in low for t in terms):
             hits.append(i)
     return hits
+
+
+_RB_BLOCK_START_RE = re.compile(r"^[ \t]*(?:def|class|module)\s+\S", re.M)
+
+
+def _rb_block_starts(text: str) -> list[int]:
+    """Line numbers of Ruby def/class/module starts at any indentation
+    (Ruby methods nest under class/module, not column-0 like Python) --
+    used as _window_blocks' pref_starts for region-packing preference."""
+    return [text.count("\n", 0, m.start()) + 1 for m in _RB_BLOCK_START_RE.finditer(text)]
 
 
 def pack_regions(
@@ -1171,7 +1494,12 @@ def pack_regions(
         text = corpus.text[rel]
         lines = text.splitlines()
         hits = _hit_lines(text, tset)
-        spans = _python_blocks(text) if rel.endswith(".py") else _window_blocks(text, hits)
+        if rel.endswith(".py"):
+            spans = _python_blocks(text)
+        elif rel.endswith(".rb"):
+            spans = _window_blocks(text, hits, pref_starts=_rb_block_starts(text))
+        else:
+            spans = _window_blocks(text, hits)
         hitset = set(hits)
         for a, b in spans:
             seg = "\n".join(lines[a - 1: b])

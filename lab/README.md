@@ -188,13 +188,24 @@ recovered -- see `errors="replace"` hardening in `history.py`):
 | Go | 41 | .537 | .683 | .780 |
 | Rust | 43 | .465 | .628 | .767 |
 | JS/TS | 43 | .256 | .535 | .744 |
-| Ruby | 44 | .591 | .682 | .705 |
+| Ruby | 44 | .591 | .705 | .795 |
 | ALL | 300 | .537 | .663 | .773 |
 
 The language-agnostic lexical core carries .78 all-gold across nine languages.
 Tree-sitter priority, from measured gaps: Ruby (no .rb parsing exists at all),
 JS/TS (worst @5; re-export-heavy import graphs), Rust (@1 .163). Java and C
 nearly match Python with lexical signals alone.
+
+Ruby regex-tier support (2026-07-12): require_relative + lib-root require +
+Rails-autoload constant resolution + Ruby def-index. @all .705->.795 (+4/-0);
+adding .gemspec/.rake to the corpus initially cost @1 (project-name-dense
+metadata outranking code) — fixed with a 0.5 metadata prior; one residual @1
+instance (.erb site-template scaffold) accepted rather than tuned away. JS/TS
+import-resolution improvements (re-export chains, tsconfig aliases, index
+files) measured FLAT on the 43-instance slice — an 11-miss study shows JS/TS
+failures are selection-scheduling and monorepo-seeding problems, not parsing
+problems; the dominant lever is the per-source additions cap starving pooled
+gold files (adaptive selection scheduling queued).
 
 ## Region-quality baseline and channel-aware packing (2026-07-11)
 
