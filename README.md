@@ -17,9 +17,9 @@ disciplined `grep` session, compressed into one process call.
 From source, until the PyPI release lands:
 
 ```bash
-uv tool install git+https://github.com/USER/bgrep
+uv tool install git+https://github.com/narehart/bgrep
 # or, for local development:
-git clone https://github.com/USER/bgrep && cd bgrep && pip install -e .
+git clone https://github.com/narehart/bgrep && cd bgrep && pip install -e .
 ```
 
 Once published:
