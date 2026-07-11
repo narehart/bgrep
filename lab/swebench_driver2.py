@@ -100,6 +100,7 @@ def repo_clone(slug: str) -> Path:
     r = subprocess.run(
         ["git", "clone", "--quiet", f"https://github.com/{slug}.git", str(dest)],
         capture_output=True, text=True, timeout=3600,
+        encoding="utf-8", errors="replace",
     )
     if r.returncode != 0:
         raise RuntimeError(f"clone {slug} failed: {r.stderr.strip()[:300]}")
@@ -108,11 +109,12 @@ def repo_clone(slug: str) -> Path:
 
 def checkout(repo: Path, sha: str) -> None:
     r = subprocess.run(["git", "checkout", "-f", "-q", sha], cwd=repo,
-                       capture_output=True, text=True, timeout=300)
+                       capture_output=True, text=True, timeout=300,
+                       encoding="utf-8", errors="replace")
     if r.returncode != 0:
         raise RuntimeError(f"checkout {sha} failed: {r.stderr.strip()[:300]}")
     subprocess.run(["git", "clean", "-fdq"], cwd=repo, capture_output=True,
-                   text=True, timeout=300)
+                   text=True, timeout=300, encoding="utf-8", errors="replace")
 
 
 def _list_current_files(repo_path: Path, extensions: tuple = L.CODE_EXTENSIONS) -> set[str]:

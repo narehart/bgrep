@@ -176,18 +176,20 @@ robustness), `results_weighted_pack/` (allocation ablation).
 
 Frozen v7 pipeline + extension-visibility fix only (no language-specific
 engineering beyond existing regexes). First non-LLM localization numbers on
-this benchmark. n=283 evaluated (17 harness errors):
+this benchmark. n=300 evaluated (0 harness errors; the 17 lombok instances
+that previously errored on a non-UTF-8 byte in `git log` output are now
+recovered -- see `errors="replace"` hardening in `history.py`):
 
 | language | n | @5 | @10 | @all |
 |---|---|---|---|---|
-| Java | 26 | .769 | .846 | .885 |
+| Java | 43 | .558 | .651 | .767 |
 | C | 41 | .732 | .756 | .878 |
 | PHP | 43 | .628 | .721 | .791 |
 | Go | 41 | .537 | .683 | .780 |
 | Rust | 43 | .465 | .628 | .767 |
 | JS/TS | 43 | .256 | .535 | .744 |
 | Ruby | 44 | .591 | .682 | .705 |
-| ALL | 283 | .555 | .682 | .784 |
+| ALL | 300 | .537 | .663 | .773 |
 
 The language-agnostic lexical core carries .78 all-gold across nine languages.
 Tree-sitter priority, from measured gaps: Ruby (no .rb parsing exists at all),

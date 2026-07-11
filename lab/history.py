@@ -175,6 +175,7 @@ def mine_history(
             "--name-only",
         ],
         cwd=repo_path, capture_output=True, text=True, timeout=600,
+        encoding="utf-8", errors="replace",
     )
     if r.returncode != 0 or not r.stdout:
         return {}, {}, {}
