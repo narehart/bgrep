@@ -196,6 +196,31 @@ def extract_comments(rel: str, text: str) -> str:
     return "\n".join(parts)
 
 
+def _def_re_for(rel: str) -> re.Pattern | None:
+    """Which definition-symbol regex (if any) applies to `rel`, by extension --
+    factored out of Corpus.__init__'s per-file if/elif chain so Corpus.
+    update_files() (incremental patch) can reuse the identical mapping when
+    subtracting/re-adding a modified file's def_index contributions."""
+    if rel.endswith(".py"):
+        return _PY_DEF_RE
+    elif rel.endswith(".go"):
+        return _GO_DEF_RE
+    elif rel.endswith(".rs"):
+        return _RS_DEF_RE
+    elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
+        return _JS_DEF_RE
+    return None
+
+
+def _def_syms(def_re: re.Pattern, text: str) -> set[str]:
+    syms: set[str] = set()
+    for m in def_re.finditer(text):
+        for g in m.groups():
+            if g:
+                syms.add(g)
+    return syms
+
+
 class Corpus:
     def __init__(
         self,
@@ -251,23 +276,9 @@ class Corpus:
                     for term in ctf:
                         self.com_df[term] += 1
             if impl_prior(rel) == 1.0:
-                if rel.endswith(".py"):
-                    def_re = _PY_DEF_RE
-                elif rel.endswith(".go"):
-                    def_re = _GO_DEF_RE
-                elif rel.endswith(".rs"):
-                    def_re = _RS_DEF_RE
-                elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
-                    def_re = _JS_DEF_RE
-                else:
-                    def_re = None
+                def_re = _def_re_for(rel)
                 if def_re is not None:
-                    syms: set[str] = set()
-                    for m in def_re.finditer(text):
-                        for g in m.groups():
-                            if g:
-                                syms.add(g)
-                    for sym in syms:
+                    for sym in _def_syms(def_re, text):
                         self.def_index[sym].append(rel)
         self.n_docs = len(self.files)
         self.avg_len = (sum(self.doclen.values()) / self.n_docs) if self.n_docs else 1.0
@@ -340,6 +351,138 @@ class Corpus:
                     self.docs_df[term] += 1
         self.n_docs_files = len(self.docs_files)
         self.docs_avg_len = (sum(self.docs_len.values()) / self.n_docs_files) if self.n_docs_files else 1.0
+
+    # ------------------------------------------------------------ incremental update
+    #
+    # Both methods below exist for bgrep.cache's incremental-update path (the
+    # common agent edit-loop case: a file's CONTENT changed but its relpath
+    # set did not -- no add/remove). Each re-derives a modified file's
+    # contribution to the corpus from scratch (subtract old, add new) using
+    # the identical per-file logic __init__ uses, so a successfully patched
+    # Corpus is observationally identical to a fresh build over the same
+    # on-disk content. Neither method touches ptoks (the path, and therefore
+    # path_tokens, is unchanged by a content-only edit) or the msg_* fields
+    # (commit history is keyed on git HEAD, which incremental updates require
+    # to be unchanged -- see bgrep.cache).
+    #
+    # Both are all-or-nothing: every file is pre-checked against __init__'s
+    # own inclusion criteria BEFORE any mutation happens, so a False return
+    # leaves the Corpus completely unmodified and the caller is free to
+    # discard it and fall back to a full rebuild.
+
+    def update_files(self, rels: list[str]) -> bool:
+        """Patch this Corpus in place for `rels` -- files already present in
+        self.files whose on-disk content has changed. Re-reads each file
+        directly from self.repo_path and applies exactly __init__'s
+        per-file inclusion criteria (MAX_FILE_BYTES, _MAX_LINE_CHARS,
+        non-empty tokenization) to the new content; if any file's new
+        content fails a criterion (or can no longer be read), this is
+        shaped like an add/remove (the file would enter/leave the corpus
+        under a fresh build) and this method makes NO changes and returns
+        False -- callers must fall back to a full rebuild. Returns True,
+        having refreshed df/tf/doclen/text/def_index (and com_tf/com_df if
+        use_comments) plus avg_len/n_com_docs, on full success."""
+        new_text: dict[str, str] = {}
+        new_toks: dict[str, list[str]] = {}
+        for rel in rels:
+            p = self.repo_path / rel
+            try:
+                if p.stat().st_size > MAX_FILE_BYTES:
+                    return False
+                text = p.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                return False
+            lines = text.splitlines()
+            if lines and max(len(ln) for ln in lines) > _MAX_LINE_CHARS:
+                return False
+            toks = tokenize(text)
+            if not toks:
+                return False
+            new_text[rel] = text
+            new_toks[rel] = toks
+
+        for rel in rels:
+            # --- subtract old contributions (self.text[rel] is still old here)
+            for term in self.tf[rel]:
+                self.df[term] -= 1
+                if self.df[term] <= 0:
+                    del self.df[term]
+            del self.tf[rel]
+            del self.doclen[rel]
+            if self.use_comments:
+                old_ctf = self.com_tf.pop(rel, None)
+                if old_ctf:
+                    for term in old_ctf:
+                        self.com_df[term] -= 1
+                        if self.com_df[term] <= 0:
+                            del self.com_df[term]
+            def_re = _def_re_for(rel) if impl_prior(rel) == 1.0 else None
+            if def_re is not None:
+                for sym in _def_syms(def_re, self.text[rel]):
+                    lst = self.def_index.get(sym)
+                    if lst and rel in lst:
+                        lst.remove(rel)
+
+            # --- add new contributions
+            counts = Counter(new_toks[rel])
+            self.tf[rel] = counts
+            self.doclen[rel] = len(new_toks[rel])
+            for term in counts:
+                self.df[term] += 1
+            self.text[rel] = new_text[rel]
+            if self.use_comments:
+                com_toks = tokenize(extract_comments(rel, new_text[rel]))
+                if com_toks:
+                    ctf = Counter(com_toks)
+                    self.com_tf[rel] = ctf
+                    for term in ctf:
+                        self.com_df[term] += 1
+            if def_re is not None:
+                for sym in _def_syms(def_re, new_text[rel]):
+                    self.def_index[sym].append(rel)
+
+        self.n_com_docs = len(self.com_tf)
+        self.avg_len = (sum(self.doclen.values()) / self.n_docs) if self.n_docs else 1.0
+        return True
+
+    def update_docs_files(self, rels: list[str]) -> bool:
+        """Analogous to update_files() but for the docs field (*.rst/*.txt/
+        *.md pages collected when this Corpus was built with
+        build_docs=True). Every rel must already be a member of
+        self.docs_files. Returns False (no changes) if any file's new
+        content would flip its __init__ inclusion verdict (now oversized, or
+        now tokenizes to nothing) or can no longer be read -- callers must
+        fall back to a full rebuild."""
+        new_text: dict[str, str] = {}
+        new_toks: dict[str, list[str]] = {}
+        for rel in rels:
+            p = self.repo_path / rel
+            try:
+                if p.stat().st_size > _MAX_DOCS_FILE_BYTES:
+                    return False
+                text = p.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                return False
+            toks = tokenize(text)
+            if not toks:
+                return False
+            new_text[rel] = text
+            new_toks[rel] = toks
+
+        for rel in rels:
+            for term in self.docs_tf[rel]:
+                self.docs_df[term] -= 1
+                if self.docs_df[term] <= 0:
+                    del self.docs_df[term]
+            counts = Counter(new_toks[rel])
+            self.docs_tf[rel] = counts
+            self.docs_len[rel] = len(new_toks[rel])
+            for term in counts:
+                self.docs_df[term] += 1
+            self.docs_text[rel] = new_text[rel]
+
+        self.docs_avg_len = (sum(self.docs_len.values()) / self.n_docs_files) if self.n_docs_files else 1.0
+        return True
 
     def bm25(
         self,
@@ -511,19 +654,19 @@ def _py_module_index(files: list[str]) -> dict[str, str]:
     return idx
 
 
-def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
-    """Undirected import edges between repo files, plus same-directory edges added
-    separately by the diffusion step. Best-effort per language; unresolved imports ignored."""
-    edges: dict[str, set[str]] = defaultdict(set)
-    pyidx = _py_module_index(corpus.files)
-    fileset = set(corpus.files)
+def _file_import_targets(
+    rel: str, text: str, pyidx: dict[str, str], fileset: set[str]
+) -> set[str]:
+    """The set of files that `rel`'s OWN text authors an import edge to
+    (pre-symmetrization) -- i.e. the per-file body of build_import_graph's
+    main loop, factored out so bgrep.cache's incremental-update path
+    (update_import_graph_for_files) can recompute a single changed file's
+    authored edges without re-parsing the whole corpus. Must stay exactly in
+    sync with build_import_graph's loop body -- best-effort per language,
+    unresolved imports ignored."""
+    targets: set[str] = set()
 
-    def add(a: str, b: str) -> None:
-        if a != b and b in fileset:
-            edges[a].add(b)
-            edges[b].add(a)
-
-    def resolve_py_module(mod: str, rel: str) -> str:
+    def resolve_py_module(mod: str) -> str:
         """Resolve a possibly-relative module spec to an absolute dotted path."""
         if not mod.startswith("."):
             return mod
@@ -534,66 +677,128 @@ def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
         pkg_parts = pkg_parts[: len(pkg_parts) - (level - 1)] if level > 1 else pkg_parts
         return ".".join([*pkg_parts, *(rest.split(".") if rest else [])])
 
-    def add_module(rel: str, mod: str) -> None:
+    def add_module(mod: str) -> None:
         # exact, then progressively shorter prefixes (import x.y.z -> x/y.py etc.)
         parts = [p for p in mod.split(".") if p]
         for i in range(len(parts), 0, -1):
             hit = pyidx.get(".".join(parts[:i]))
             if hit:
-                add(rel, hit)
+                if hit != rel:
+                    targets.add(hit)
                 return
 
+    if rel.endswith(".py"):
+        for m in _PY_FROM_RE.finditer(text):
+            mod = resolve_py_module(m.group(1))
+            add_module(mod)
+            # `from X import y` where y is itself a submodule
+            for name in m.group(2).strip("()").replace("\n", " ").split(","):
+                name = name.strip().split(" as ")[0].strip("*# \t")
+                if name and "." not in name:
+                    sub = pyidx.get(f"{mod}.{name}")
+                    if sub and sub != rel:
+                        targets.add(sub)
+        for m in _PY_PLAIN_IMPORT_RE.finditer(text):
+            for spec in m.group(1).split(","):
+                mod = spec.strip().split(" as ")[0].strip()
+                if mod:
+                    add_module(mod)
+    elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
+        base = Path(rel).parent
+        for m in _JS_IMPORT_RE.finditer(text):
+            spec = next(g for g in m.groups() if g)
+            if not spec.startswith("."):
+                continue
+            cand = os.path.normpath(str(base / spec))
+            for suffix in ("", ".js", ".ts", ".jsx", ".tsx", "/index.js", "/index.ts"):
+                if cand + suffix in fileset:
+                    if cand + suffix != rel:
+                        targets.add(cand + suffix)
+                    break
+    elif rel.endswith(".rs"):
+        base = Path(rel).parent
+        for m in _RS_MOD_RE.finditer(text):
+            name = m.group(1)
+            for cand in (str(base / f"{name}.rs"), str(base / name / "mod.rs")):
+                if cand in fileset and cand != rel:
+                    targets.add(cand)
+        for m in _RS_USE_RE.finditer(text):
+            head = m.group(1).split("::")[0]
+            for cand in (str(base / f"{head}.rs"), str(base / head / "mod.rs"),
+                         f"src/{head}.rs", f"src/{head}/mod.rs"):
+                if cand in fileset and cand != rel:
+                    targets.add(cand)
+    elif rel.endswith(".go"):
+        # Go: same-package (same dir) linkage dominates; imports resolved by dir suffix.
+        for m in _GO_IMPORT_RE.finditer(text):
+            pkg = m.group(1)
+            tail = pkg.rsplit("/", 1)[-1]
+            for other in fileset:
+                if other != rel and other.endswith(".go") and Path(other).parent.name == tail:
+                    targets.add(other)
+    return targets
+
+
+def build_import_graph(corpus: Corpus) -> dict[str, set[str]]:
+    """Undirected import edges between repo files, plus same-directory edges added
+    separately by the diffusion step. Best-effort per language; unresolved imports ignored."""
+    edges: dict[str, set[str]] = defaultdict(set)
+    pyidx = _py_module_index(corpus.files)
+    fileset = set(corpus.files)
     for rel in corpus.files:
-        text = corpus.text[rel]
-        if rel.endswith(".py"):
-            for m in _PY_FROM_RE.finditer(text):
-                mod = resolve_py_module(m.group(1), rel)
-                add_module(rel, mod)
-                # `from X import y` where y is itself a submodule
-                for name in m.group(2).strip("()").replace("\n", " ").split(","):
-                    name = name.strip().split(" as ")[0].strip("*# \t")
-                    if name and "." not in name:
-                        sub = pyidx.get(f"{mod}.{name}")
-                        if sub:
-                            add(rel, sub)
-            for m in _PY_PLAIN_IMPORT_RE.finditer(text):
-                for spec in m.group(1).split(","):
-                    mod = spec.strip().split(" as ")[0].strip()
-                    if mod:
-                        add_module(rel, mod)
-        elif rel.endswith((".js", ".ts", ".jsx", ".tsx")):
-            base = Path(rel).parent
-            for m in _JS_IMPORT_RE.finditer(text):
-                spec = next(g for g in m.groups() if g)
-                if not spec.startswith("."):
-                    continue
-                cand = os.path.normpath(str(base / spec))
-                for suffix in ("", ".js", ".ts", ".jsx", ".tsx", "/index.js", "/index.ts"):
-                    if cand + suffix in fileset:
-                        add(rel, cand + suffix)
-                        break
-        elif rel.endswith(".rs"):
-            base = Path(rel).parent
-            for m in _RS_MOD_RE.finditer(text):
-                name = m.group(1)
-                for cand in (str(base / f"{name}.rs"), str(base / name / "mod.rs")):
-                    if cand in fileset:
-                        add(rel, cand)
-            for m in _RS_USE_RE.finditer(text):
-                head = m.group(1).split("::")[0]
-                for cand in (str(base / f"{head}.rs"), str(base / head / "mod.rs"),
-                             f"src/{head}.rs", f"src/{head}/mod.rs"):
-                    if cand in fileset:
-                        add(rel, cand)
-        elif rel.endswith(".go"):
-            # Go: same-package (same dir) linkage dominates; imports resolved by dir suffix.
-            for m in _GO_IMPORT_RE.finditer(text):
-                pkg = m.group(1)
-                tail = pkg.rsplit("/", 1)[-1]
-                for other in corpus.files:
-                    if other.endswith(".go") and Path(other).parent.name == tail:
-                        add(rel, other)
+        for target in _file_import_targets(rel, corpus.text[rel], pyidx, fileset):
+            edges[rel].add(target)
+            edges[target].add(rel)
     return edges
+
+
+def update_import_graph_for_files(
+    corpus: Corpus, edges: dict[str, set[str]], old_text: dict[str, str]
+) -> None:
+    """Incrementally patch `edges` (mutated in place) for a batch of files
+    whose content changed but whose relpath set is unchanged -- see
+    bgrep.cache's incremental-update path. `old_text` is {rel: text} holding
+    each changed file's PRE-edit text; corpus.text[rel] must already hold
+    the POST-edit text for every rel in `old_text` by the time this is
+    called (see Corpus.update_files, which must run first).
+
+    Recomputes each changed file's own authored-edge set
+    (_file_import_targets) from both its old and new text. An edge
+    (rel, t) is removed only if rel was its SOLE author -- t's own current
+    text, re-checked on demand, doesn't independently author it back -- so
+    an edge created by an UNCHANGED file Y importing a changed file rel is
+    left untouched even though rel's content changed, since Y's text (the
+    sole source of that edge) didn't."""
+    fileset = set(corpus.files)
+    pyidx = _py_module_index(corpus.files)
+
+    def authored(rel: str, text: str) -> set[str]:
+        return _file_import_targets(rel, text, pyidx, fileset)
+
+    new_authored = {rel: authored(rel, corpus.text[rel]) for rel in old_text}
+    old_authored = {rel: authored(rel, text) for rel, text in old_text.items()}
+
+    def other_authors(t: str, rel: str) -> bool:
+        if t in old_text:
+            return rel in new_authored[t]
+        return rel in authored(t, corpus.text[t])
+
+    touched: set[str] = set(old_text)
+    for rel in old_text:
+        removed = old_authored[rel] - new_authored[rel]
+        added = new_authored[rel] - old_authored[rel]
+        touched |= removed | added
+        for t in removed:
+            if not other_authors(t, rel):
+                edges.get(rel, set()).discard(t)
+                edges.get(t, set()).discard(rel)
+        for t in added:
+            edges[rel].add(t)
+            edges[t].add(rel)
+
+    for k in touched:
+        if k in edges and not edges[k]:
+            del edges[k]
 
 
 def personalized_pagerank(
