@@ -244,8 +244,7 @@ bgrep is the strongest training-free, model-free point on that curve.
 
 ## Roadmap
 
-- Rust port (`bgrep-rs/`), gated on a 300-task parity harness against this
-  Python implementation (`parity/`).
+- ~~Rust port~~ **Done**: `bgrep-rs/` — parity-proven against the Python reference (300/300 exact-match ranked lists on the SWE-bench Lite gate, report in `parity/rust_gate_300.json`), ~2.9× faster cold on large repos (django, 2,214 files: 1.6s vs 4.7s end-to-end). Build: `cd bgrep-rs && cargo build --release`. Prebuilt binaries / Homebrew: still to come.
 - MCP server.
 - Incremental index updates (avoid full reindex on every change).
 - Publish to PyPI and Homebrew.

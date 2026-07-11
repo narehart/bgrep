@@ -4,3 +4,4 @@ lab/repos/
 .venv/
 .bgrep/
 .venv-pkg/
+bgrep-rs/target/
