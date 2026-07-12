@@ -308,12 +308,18 @@ MaxEnt/statistical physics (reports in lab/research/wave1/). Diagnostics:
 Also shelved from recsys: stigmergy (per-repo co-access accumulation from agent
 sessions) as a v0.3+ product feedback loop — the only signal that grows with use.
 
-## Anchor-distance evidence term (2026-07-12, NULL in integration)
+## Anchor-distance evidence term (2026-07-12, REJECTED — scale-collapse)
 
-The wave-1 survivor (19/52 top-5 in an 11-doc minicorpus) converted 0/52 at
-@10 when integrated as an additive add_score term at any weight — discriminative
-power measured in a minicorpus dilutes at pool scale, where distance also boosts
-every other anchor-adjacent candidate. Regression-clean; code kept flag-gated
-(default off). METHODOLOGY LAW: measure discriminative headroom at POOL scale,
-never minicorpus scale. Wave-1 net verdict: six mechanisms killed; @k stands
-at .827/.923 (Lite) / .794/.921 (held-out).
+The wave-1 survivor (19/52 top-5 in an 11-doc minicorpus diagnostic) collapsed
+to 0/52 @10 conversions when integrated as an additive add_score term and
+evaluated in the real ~400-file pool, at every weight 0.3/0.6/1.0
+(regression-clean, +1 @all only). Root cause: distance discriminates in a tiny
+candidate set but boosts every anchor-adjacent file equally in the full pool,
+and dscore∈[0,1] is dominated by add_score's multiplicative bm/fb/pool terms.
+METHODOLOGY LESSON: discriminative headroom must be measured at full-pool scale,
+not minicorpus scale — the minicorpus diagnostic systematically overstated the
+signal. Wave-1 verdict: 0/6 mechanisms cleared (capacity, propagation,
+anchor-distance all killed; the theory arc that fixed caps/ordering/proximity
+would help is fully falsified). The gap is add_score's evidence quality on files
+that share neither vocabulary nor near-graph-distance with the issue — the
+genuinely semantic residual.
