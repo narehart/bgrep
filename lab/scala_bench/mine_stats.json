@@ -1,0 +1,62 @@
+{
+  "akka/akka-core": {
+    "scanned_prs": 28,
+    "no_issue_link": 11,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 3,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 4,
+    "accepted": 10
+  },
+  "typelevel/cats": {
+    "scanned_prs": 21,
+    "no_issue_link": 4,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 2,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 5,
+    "accepted": 10
+  },
+  "typelevel/cats-effect": {
+    "scanned_prs": 30,
+    "no_issue_link": 3,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 8,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 9,
+    "accepted": 10
+  },
+  "playframework/playframework": {
+    "scanned_prs": 13,
+    "no_issue_link": 0,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 0,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 3,
+    "accepted": 10
+  },
+  "scala/scala3": {
+    "scanned_prs": 13,
+    "no_issue_link": 0,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 0,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 3,
+    "accepted": 10
+  },
+  "zio/zio": {
+    "scanned_prs": 20,
+    "no_issue_link": 3,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 3,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 4,
+    "accepted": 10
+  }
+}

@@ -1,0 +1,137 @@
+mining akka/akka-core...
+  [akka/akka-core] accepted PR #32476 (issue #32475): 1 gold file(s)
+  [akka/akka-core] accepted PR #31436 (issue #31431): 1 gold file(s)
+  [akka/akka-core] accepted PR #31384 (issue #31266): 2 gold file(s)
+  [akka/akka-core] accepted PR #31025 (issue #31024): 1 gold file(s)
+  [akka/akka-core] accepted PR #30974 (issue #30973): 1 gold file(s)
+  [akka/akka-core] accepted PR #30960 (issue #30952): 2 gold file(s)
+  [akka/akka-core] accepted PR #30818 (issue #30805): 1 gold file(s)
+  [akka/akka-core] accepted PR #30811 (issue #30795): 4 gold file(s)
+  [akka/akka-core] accepted PR #30801 (issue #30800): 1 gold file(s)
+  [akka/akka-core] accepted PR #30750 (issue #30413): 1 gold file(s)
+  akka/akka-core: 10 instances
+mining typelevel/cats...
+  [typelevel/cats] accepted PR #4859 (issue #4858): 1 gold file(s)
+  [typelevel/cats] accepted PR #4790 (issue #4689): 1 gold file(s)
+  [typelevel/cats] accepted PR #4719 (issue #4716): 1 gold file(s)
+  [typelevel/cats] accepted PR #4632 (issue #4631): 1 gold file(s)
+  [typelevel/cats] accepted PR #4600 (issue #4449): 3 gold file(s)
+  [typelevel/cats] accepted PR #4576 (issue #4569): 1 gold file(s)
+  [typelevel/cats] accepted PR #4575 (issue #4574): 1 gold file(s)
+  [typelevel/cats] accepted PR #4477 (issue #4475): 4 gold file(s)
+  [typelevel/cats] accepted PR #4463 (issue #4461): 2 gold file(s)
+  [typelevel/cats] accepted PR #4320 (issue #4244): 1 gold file(s)
+  typelevel/cats: 10 instances
+mining typelevel/cats-effect...
+  [typelevel/cats-effect] accepted PR #4443 (issue #4357): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4407 (issue #4306): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4406 (issue #4405): 2 gold file(s)
+  [typelevel/cats-effect] accepted PR #4377 (issue #4328): 3 gold file(s)
+  [typelevel/cats-effect] accepted PR #4343 (issue #4329): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4247 (issue #4228): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4227 (issue #4225): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4143 (issue #4141): 2 gold file(s)
+  [typelevel/cats-effect] accepted PR #4139 (issue #4136): 1 gold file(s)
+  [typelevel/cats-effect] accepted PR #4121 (issue #4058): 1 gold file(s)
+  typelevel/cats-effect: 10 instances
+mining playframework/playframework...
+  [playframework/playframework] accepted PR #14078 (issue #8877): 2 gold file(s)
+  [playframework/playframework] accepted PR #14076 (issue #14074): 1 gold file(s)
+  [playframework/playframework] accepted PR #14075 (issue #4186): 2 gold file(s)
+  [playframework/playframework] accepted PR #14071 (issue #6845): 2 gold file(s)
+  [playframework/playframework] accepted PR #14011 (issue #7895): 5 gold file(s)
+  [playframework/playframework] accepted PR #13995 (issue #7258): 3 gold file(s)
+  [playframework/playframework] accepted PR #13994 (issue #11788): 2 gold file(s)
+  [playframework/playframework] accepted PR #13853 (issue #13852): 1 gold file(s)
+  [playframework/playframework] accepted PR #13842 (issue #13841): 1 gold file(s)
+  [playframework/playframework] accepted PR #13763 (issue #13744): 2 gold file(s)
+  playframework/playframework: 10 instances
+mining scala/scala3...
+  [scala/scala3] accepted PR #26515 (issue #20110): 1 gold file(s)
+  [scala/scala3] accepted PR #26510 (issue #18248): 1 gold file(s)
+  [scala/scala3] accepted PR #26506 (issue #21663): 2 gold file(s)
+  [scala/scala3] accepted PR #26496 (issue #21660): 2 gold file(s)
+  [scala/scala3] accepted PR #26493 (issue #21656): 2 gold file(s)
+  [scala/scala3] accepted PR #26484 (issue #15953): 2 gold file(s)
+  [scala/scala3] accepted PR #26452 (issue #26014): 1 gold file(s)
+  [scala/scala3] accepted PR #26446 (issue #26408): 5 gold file(s)
+  [scala/scala3] accepted PR #26443 (issue #26074): 1 gold file(s)
+  [scala/scala3] accepted PR #26441 (issue #26431): 2 gold file(s)
+  scala/scala3: 10 instances
+mining zio/zio...
+  [zio/zio] accepted PR #11028 (issue #10884): 1 gold file(s)
+  [zio/zio] accepted PR #11006 (issue #10936): 1 gold file(s)
+  [zio/zio] accepted PR #10760 (issue #10742): 1 gold file(s)
+  [zio/zio] accepted PR #10725 (issue #10721): 2 gold file(s)
+  [zio/zio] accepted PR #10693 (issue #10644): 1 gold file(s)
+  [zio/zio] accepted PR #10512 (issue #9084): 1 gold file(s)
+  [zio/zio] accepted PR #10367 (issue #10351): 1 gold file(s)
+  [zio/zio] accepted PR #10354 (issue #10283): 1 gold file(s)
+  [zio/zio] accepted PR #10343 (issue #10039): 1 gold file(s)
+  [zio/zio] accepted PR #10272 (issue #10195): 1 gold file(s)
+  zio/zio: 10 instances
+target of 60 reached, stopping repo scan
+
+wrote 60 instances to /Users/nicholasarehart/programming-projects/bgrep/lab/scala_bench/scala_loc.jsonl
+{
+  "akka/akka-core": {
+    "scanned_prs": 28,
+    "no_issue_link": 11,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 3,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 4,
+    "accepted": 10
+  },
+  "typelevel/cats": {
+    "scanned_prs": 21,
+    "no_issue_link": 4,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 2,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 5,
+    "accepted": 10
+  },
+  "typelevel/cats-effect": {
+    "scanned_prs": 30,
+    "no_issue_link": 3,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 8,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 9,
+    "accepted": 10
+  },
+  "playframework/playframework": {
+    "scanned_prs": 13,
+    "no_issue_link": 0,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 0,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 3,
+    "accepted": 10
+  },
+  "scala/scala3": {
+    "scanned_prs": 13,
+    "no_issue_link": 0,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 0,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 3,
+    "accepted": 10
+  },
+  "zio/zio": {
+    "scanned_prs": 20,
+    "no_issue_link": 3,
+    "issue_fetch_fail": 0,
+    "issue_body_short": 3,
+    "pr_fetch_fail": 0,
+    "not_merged_or_no_sha": 0,
+    "file_count_out_of_range": 4,
+    "accepted": 10
+  }
+}
