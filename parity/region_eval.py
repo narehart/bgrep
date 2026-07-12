@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import statistics
 import subprocess
@@ -72,6 +73,14 @@ PROGRESS_EVERY = 25
 
 
 def swebench_driver_guard() -> str | None:
+    # Additive opt-out: BGREP_REGION_EVAL_SKIP_DRIVER_GUARD=1 lets a caller
+    # who has independently confirmed the running swebench_driver process(es)
+    # operate on a disjoint repo set (e.g. multilingual repos under a
+    # different scratch tree) proceed anyway -- Part A only ever touches
+    # LITE_REPOS (SWE-bench Lite checkouts), so it cannot race a driver
+    # confined to other repos. Default behavior (guard active) is unchanged.
+    if os.environ.get("BGREP_REGION_EVAL_SKIP_DRIVER_GUARD"):
+        return None
     try:
         proc = subprocess.run(["pgrep", "-f", "swebench_driver"],
                                capture_output=True, text=True)
@@ -88,9 +97,16 @@ def swebench_driver_guard() -> str | None:
 # ---------------------------------------------------------------------------
 
 
-def run_bgrep(query: str, repo_path: Path, timeout: float) -> tuple[dict | None, str | None]:
-    """Runs the installed bgrep CLI in --json mode. Returns (parsed_json, error)."""
+def run_bgrep(
+    query: str, repo_path: Path, timeout: float, pack_uniform: bool = False
+) -> tuple[dict | None, str | None]:
+    """Runs the installed bgrep CLI in --json mode. Returns (parsed_json, error).
+    `pack_uniform` passes bgrep's --pack-uniform escape hatch through, for A/B
+    comparison against confidence-scheduled packing (additive; default False
+    preserves the exact invocation this function always used)."""
     argv = [str(BGREP_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path)]
+    if pack_uniform:
+        argv.insert(1, "--pack-uniform")
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -221,7 +237,7 @@ def load_lite_rows(limit: int, stride: int = 1, offset: int = 0) -> list[dict]:
     return rows
 
 
-def eval_lite_instance(row: dict, timeout: float) -> dict:
+def eval_lite_instance(row: dict, timeout: float, pack_uniform: bool = False) -> dict:
     instance_id = row["instance_id"]
     gold_hunks = parse_gold_hunks(row["patch"])
     gold_files = sorted(gold_hunks.keys())
@@ -244,7 +260,7 @@ def eval_lite_instance(row: dict, timeout: float) -> dict:
         rec["error"] = f"checkout failed: {exc}"
         return rec
 
-    obj, err = run_bgrep(row["problem_statement"], repo_path, timeout)
+    obj, err = run_bgrep(row["problem_statement"], repo_path, timeout, pack_uniform=pack_uniform)
     if err:
         rec["error"] = err
         return rec
@@ -282,7 +298,16 @@ def eval_lite_instance(row: dict, timeout: float) -> dict:
     rec["hunk_touched"] = touched_hunks / total_hunks if total_hunks else None
 
     # (4) tokens of bundle
-    rec["tokens"] = obj.get("stats", {}).get("bundle_tokens")
+    stats = obj.get("stats", {})
+    rec["tokens"] = stats.get("bundle_tokens")
+
+    # (5) confidence-scheduled packing diagnostics (additive; absent/None on
+    # a bgrep binary predating this stats field, handled as "flat" below by
+    # aggregate_lite's .get(..., "flat") default so old reports and new ones
+    # both aggregate without KeyErrors).
+    rec["schedule"] = stats.get("schedule")
+    rec["deep_files_count"] = stats.get("deep_files_count")
+    rec["skeleton_files_count"] = stats.get("skeleton_files_count")
 
     return rec
 
@@ -312,6 +337,18 @@ def aggregate_lite(records: list[dict]) -> dict:
             "hunk_line_recall_buckets": buckets,
         }
 
+    # Additive: peaked-vs-flat split of hunk_line_recall (confidence-scheduled
+    # packing diagnostics) plus mean deep/skeleton file counts per instance.
+    # `schedule` is None on a report predating this field, or "flat" whenever
+    # --pack-uniform was passed -- both grouped under "flat" here since
+    # neither ever ran the peaked packer.
+    peaked = [r for r in ok if r.get("schedule") == "peaked"]
+    flat = [r for r in ok if r.get("schedule") != "peaked"]
+    deep_counts = [r["deep_files_count"] for r in ok if r.get("deep_files_count") is not None]
+    skel_counts = [r["skeleton_files_count"] for r in ok if r.get("skeleton_files_count") is not None]
+    deep_m, deep_med = mean_median(deep_counts)
+    skel_m, skel_med = mean_median(skel_counts)
+
     return {
         "n_total_instances": len(records),
         "n_ok": len(ok),
@@ -319,10 +356,21 @@ def aggregate_lite(records: list[dict]) -> dict:
         "n_all_gold_files_retrieved": len(subset),
         "all_instances": metric_block(ok),
         "all_gold_files_retrieved_subset": metric_block(subset),
+        "confidence_schedule_split": {
+            "n_peaked": len(peaked),
+            "n_flat": len(flat),
+            "peaked": metric_block(peaked),
+            "flat": metric_block(flat),
+            "deep_files_count": {"mean": deep_m, "median": deep_med},
+            "skeleton_files_count": {"mean": skel_m, "median": skel_med},
+        },
     }
 
 
-def run_part_a(limit: int, timeout: float, quiet: bool, stride: int = 1, offset: int = 0) -> dict:
+def run_part_a(
+    limit: int, timeout: float, quiet: bool, stride: int = 1, offset: int = 0,
+    pack_uniform: bool = False,
+) -> dict:
     reason = swebench_driver_guard()
     if reason:
         print(f"REFUSED to run Part A: {reason}", file=sys.stderr)
@@ -332,7 +380,7 @@ def run_part_a(limit: int, timeout: float, quiet: bool, stride: int = 1, offset:
     records = []
     t0 = time.time()
     for i, row in enumerate(rows, 1):
-        rec = eval_lite_instance(row, timeout)
+        rec = eval_lite_instance(row, timeout, pack_uniform=pack_uniform)
         records.append(rec)
         if not quiet and (i % PROGRESS_EVERY == 0 or i == len(rows)):
             elapsed = time.time() - t0
@@ -370,6 +418,20 @@ def print_part_a_report(agg: dict) -> None:
         print("  hunk_line_recall distribution buckets:")
         for bkt in BUCKET_ORDER:
             print(f"    {bkt:12} {b['hunk_line_recall_buckets'][bkt]}")
+
+    split = agg.get("confidence_schedule_split")
+    if split:
+        print(f"\n--- confidence-scheduled packing split "
+              f"(peaked n={split['n_peaked']}, flat n={split['n_flat']}) ---")
+        dfc, sfc = split["deep_files_count"], split["skeleton_files_count"]
+        print(f"  deep_files_count      mean={dfc['mean']}  median={dfc['median']}")
+        print(f"  skeleton_files_count  mean={sfc['mean']}  median={sfc['median']}")
+        for label in ("peaked", "flat"):
+            b = split[label]
+            hlr = b["hunk_line_recall"]
+            mean_s = f"{hlr['mean']:.4f}" if hlr["mean"] is not None else "n/a"
+            med_s = f"{hlr['median']:.4f}" if hlr["median"] is not None else "n/a"
+            print(f"  {label:8} (n={b['n']:3}) hunk_line_recall mean={mean_s:>10}  median={med_s:>10}")
 
     errors = [r for r in agg["records"] if r["error"]]
     if errors:
@@ -521,6 +583,11 @@ def main() -> None:
                      help="per-task bgrep subprocess timeout in seconds")
     ap.add_argument("--report", type=Path, default=None, help="write full JSON report to PATH")
     ap.add_argument("--quiet", action="store_true", help="suppress per-task progress lines")
+    ap.add_argument("--pack-uniform", action="store_true",
+                     help="Part A: pass bgrep's --pack-uniform escape hatch through to every "
+                          "invocation, for A/B comparison against confidence-scheduled packing "
+                          "(default: off, i.e. confidence scheduling is exercised as bgrep's "
+                          "own default)")
     args = ap.parse_args()
 
     if not BGREP_BIN.exists():
@@ -529,7 +596,8 @@ def main() -> None:
     report: dict = {}
     if args.part in ("a", "all"):
         report["part_a"] = run_part_a(args.limit, args.timeout, args.quiet,
-                                       stride=args.stride, offset=args.offset)
+                                       stride=args.stride, offset=args.offset,
+                                       pack_uniform=args.pack_uniform)
         print_part_a_report(report["part_a"])
     if args.part in ("b", "all"):
         report["part_b"] = run_part_b(args.timeout, args.quiet)

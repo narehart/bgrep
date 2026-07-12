@@ -254,3 +254,15 @@ n=5 babel win was noise; the scale gate worked as designed. Salvage hypotheses
 expansion instead of fixed hop/cap truncation. SEPARATE FINDING: 3
 sub-threshold svelte instances returned non-identical lists flag-on vs
 flag-off (should be inert) — determinism investigation below.
+
+## Assembly-order scheduling (2026-07-12, NULL RESULT)
+
+Global score-ordering of the below-head segment (motivated by Go/JS-TS miss
+studies showing pool-ranked candidates starved by guarantee-phase assembly)
+moved NOTHING — Go 42 instances and Ruby/JS 87 instances identical at every k,
+zero gained/lost, despite 81/87 lists reordering below the head. Conclusion:
+membership, not order, binds — the misses sit at pool ranks 21-47, beyond any
+reordering's reach. The miss studies located the failures correctly but
+misattributed the mechanism. Live levers remain: additions capacity
+(Pandora-index roadmap item) and add_score evidence quality. lanes3.py
+preserved as the experiment artifact.
