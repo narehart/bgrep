@@ -266,3 +266,26 @@ reordering's reach. The miss studies located the failures correctly but
 misattributed the mechanism. Live levers remain: additions capacity
 (Pandora-index roadmap item) and add_score evidence quality. lanes3.py
 preserved as the experiment artifact.
+
+## The semantic-channel headroom survey (2026-07-12)
+
+Four imagined channels for the residual gap (within-subsystem discrimination on
+NL-only issues), each headroom-measured before building:
+- One-bit agent elicitation: oracle +4.0pp @10 (.827->.867); 44% of failures
+  are degenerate (right subsystem already — the miss is within-subsystem).
+  Verdict: worthwhile v0.3 interface feature, not a breakthrough.
+- Hunk-history index (vocabulary time-machine): 5/52 (+~1.7pp) — mechanism
+  confirmed (churny short files whose history holds symptom vocabulary),
+  coverage narrow.
+- Commit-message translation table (repo-native NL->code dictionary): 1/44 —
+  translations sane, file-level discrimination negligible.
+- Tracker k-NN (prior similar issues' fix-files): NOT DISCRIMINATIVE — control
+  files (already retrieved) match prior issues as strongly as missed files at
+  every threshold >= 0.30. The repo's own supervision cannot separate a missed
+  file from its retrieved siblings. (A tz-comparison bug that let an instance's
+  own fix PR leak as "prior" was caught and fixed mid-run.)
+
+Conclusion: the no-learning boundary at @1 .35 / @10 .83 held against every
+deterministic channel imagined, including the strongest hypothesis. Remaining
+deterministic stack (elicitation + hunks) is worth ~+5pp combined, pending a
+stacking measurement. Beyond that: learned semantics or nothing.

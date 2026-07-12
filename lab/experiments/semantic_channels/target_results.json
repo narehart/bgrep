@@ -1,0 +1,3000 @@
+[
+  {
+    "instance_id": "astropy__astropy-14182",
+    "tier": "@all",
+    "repo": "astropy/astropy",
+    "base_date": "2022-12-15T23:36:33-05:00",
+    "missing_files": [
+      "astropy/io/ascii/rst.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "astropy/io/ascii/rst.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          13956,
+          13253,
+          13700,
+          10715,
+          8255,
+          6556,
+          5933,
+          5095
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 8255,
+            "sim": 0.2906,
+            "closed_at": "2019-04-20T00:30:05Z",
+            "title": "Better docs and infrastructure for unified read/write functions",
+            "url": "https://github.com/astropy/astropy/pull/8255",
+            "is_pr": true
+          },
+          {
+            "ref": 13956,
+            "sim": 0.1391,
+            "closed_at": "2022-11-10T23:04:41Z",
+            "title": "Apply `black` to `astropy.io.ascii`",
+            "url": "https://github.com/astropy/astropy/pull/13956",
+            "is_pr": true
+          },
+          {
+            "ref": 13253,
+            "sim": 0.137,
+            "closed_at": "2022-11-01T17:15:46Z",
+            "title": "Add configuration for black autoformatter",
+            "url": "https://github.com/astropy/astropy/pull/13253",
+            "is_pr": true
+          },
+          {
+            "ref": 6556,
+            "sim": 0.1236,
+            "closed_at": "2017-09-22T01:33:14Z",
+            "title": "Remove python2 support from code",
+            "url": "https://github.com/astropy/astropy/pull/6556",
+            "is_pr": true
+          },
+          {
+            "ref": 13700,
+            "sim": 0.1153,
+            "closed_at": "2022-09-20T12:15:21Z",
+            "title": "isort io",
+            "url": "https://github.com/astropy/astropy/pull/13700",
+            "is_pr": true
+          },
+          {
+            "ref": 10715,
+            "sim": 0.0961,
+            "closed_at": "2020-09-08T16:36:05Z",
+            "title": "Fixing ADS URLs redirections",
+            "url": "https://github.com/astropy/astropy/pull/10715",
+            "is_pr": true
+          },
+          {
+            "ref": 5933,
+            "sim": 0.0296,
+            "closed_at": "2017-06-27T15:54:00Z",
+            "title": "Fixing PEP8 whitespace",
+            "url": "https://github.com/astropy/astropy/pull/5933",
+            "is_pr": true
+          },
+          {
+            "ref": 5095,
+            "sim": 0.0193,
+            "closed_at": "2016-06-18T06:20:22Z",
+            "title": "Fixing typos for 1.2",
+            "url": "https://github.com/astropy/astropy/pull/5095",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 8255,
+          "sim": 0.2906,
+          "closed_at": "2019-04-20T00:30:05Z",
+          "title": "Better docs and infrastructure for unified read/write functions",
+          "url": "https://github.com/astropy/astropy/pull/8255",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11283",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2019-04-27T07:47:42+02:00",
+    "missing_files": [
+      "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+        "n_commits_found": 1,
+        "refs_checked": [
+          10381,
+          11154,
+          22270,
+          4681,
+          30259
+        ],
+        "n_candidates": 3,
+        "candidates": [
+          {
+            "ref": 10381,
+            "sim": 0.4182,
+            "closed_at": "2019-01-16T15:07:29Z",
+            "title": "Fixed #11154, #22270 -- Made proxy model permissions use correct content type.",
+            "url": "https://github.com/django/django/pull/10381",
+            "is_pr": true
+          },
+          {
+            "ref": 4681,
+            "sim": 0.2138,
+            "closed_at": "2015-12-29T23:31:49Z",
+            "title": "Fixed #11154, #17904 -- Added creation of proxy model permissions",
+            "url": "https://github.com/django/django/pull/4681",
+            "is_pr": true
+          },
+          {
+            "ref": 11154,
+            "sim": 0.0635,
+            "closed_at": "2019-04-01T13:11:55Z",
+            "title": "Fixed #30259 -- Fixed crash of admin views when properties don't have admin_order_field attribute.",
+            "url": "https://github.com/django/django/pull/11154",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 10381,
+          "sim": 0.4182,
+          "closed_at": "2019-01-16T15:07:29Z",
+          "title": "Fixed #11154, #22270 -- Made proxy model permissions use correct content type.",
+          "url": "https://github.com/django/django/pull/10381",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11815",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2019-09-30T09:24:11+02:00",
+    "missing_files": [
+      "django/db/migrations/serializer.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/migrations/serializer.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          11815,
+          30774,
+          11540,
+          27910,
+          11214,
+          30350,
+          10945,
+          30159
+        ],
+        "n_candidates": 3,
+        "candidates": [
+          {
+            "ref": 11540,
+            "sim": 0.3264,
+            "closed_at": "2019-09-04T13:04:45Z",
+            "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+            "url": "https://github.com/django/django/pull/11540",
+            "is_pr": true
+          },
+          {
+            "ref": 11214,
+            "sim": 0.142,
+            "closed_at": "2019-04-14T10:54:44Z",
+            "title": "Fixed #30350 -- Prevented recreation of migration for operations with a range object.",
+            "url": "https://github.com/django/django/pull/11214",
+            "is_pr": true
+          },
+          {
+            "ref": 10945,
+            "sim": 0.0672,
+            "closed_at": "2019-02-06T19:12:27Z",
+            "title": "Fixed #30159 -- Removed obsolete use of OrderedDict with Python 3.6+.",
+            "url": "https://github.com/django/django/pull/10945",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11540,
+          "sim": 0.3264,
+          "closed_at": "2019-09-04T13:04:45Z",
+          "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+          "url": "https://github.com/django/django/pull/11540",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-12113",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2019-11-21T15:14:03+01:00",
+    "missing_files": [
+      "django/db/backends/sqlite3/creation.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/backends/sqlite3/creation.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          12042,
+          29983,
+          10989,
+          30184,
+          29654,
+          10430,
+          29784,
+          10325
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 12042,
+            "sim": 0.0696,
+            "closed_at": "2019-11-07T09:26:23Z",
+            "title": "Refs #29983 -- Added support for using pathlib.Path in all settings.",
+            "url": "https://github.com/django/django/pull/12042",
+            "is_pr": true
+          },
+          {
+            "ref": 10430,
+            "sim": 0.0023,
+            "closed_at": "2018-09-26T06:48:47Z",
+            "title": "Refs #29784 -- Switched to https:// links where available.",
+            "url": "https://github.com/django/django/pull/10430",
+            "is_pr": true
+          },
+          {
+            "ref": 10989,
+            "sim": 0.0,
+            "closed_at": "2019-02-13T18:59:44Z",
+            "title": "Fixed #30184 -- Removed ellipsis characters from shell output strings.",
+            "url": "https://github.com/django/django/pull/10989",
+            "is_pr": true
+          },
+          {
+            "ref": 10325,
+            "sim": 0.0,
+            "closed_at": "2018-08-22T13:13:59Z",
+            "title": "Refs #29654 -- Replaced three dots with ellipsis character in output strings.",
+            "url": "https://github.com/django/django/pull/10325",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 12042,
+          "sim": 0.0696,
+          "closed_at": "2019-11-07T09:26:23Z",
+          "title": "Refs #29983 -- Added support for using pathlib.Path in all settings.",
+          "url": "https://github.com/django/django/pull/12042",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-12125",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2019-11-25T10:33:33+01:00",
+    "missing_files": [
+      "django/db/migrations/serializer.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/migrations/serializer.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          11858,
+          27914,
+          11815,
+          30774,
+          11540,
+          27910,
+          11214,
+          30350
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 11540,
+            "sim": 0.4163,
+            "closed_at": "2019-09-04T13:04:45Z",
+            "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+            "url": "https://github.com/django/django/pull/11540",
+            "is_pr": true
+          },
+          {
+            "ref": 11858,
+            "sim": 0.2349,
+            "closed_at": "2019-10-03T07:08:12Z",
+            "title": "Refs #27914 -- Fixed serialization of nested enum.Enum classes in migrations.",
+            "url": "https://github.com/django/django/pull/11858",
+            "is_pr": true
+          },
+          {
+            "ref": 11815,
+            "sim": 0.1475,
+            "closed_at": "2019-09-30T08:52:23Z",
+            "title": "Fixed #30774 -- Made serialization in migrations use members names for Enums.",
+            "url": "https://github.com/django/django/pull/11815",
+            "is_pr": true
+          },
+          {
+            "ref": 11214,
+            "sim": 0.0648,
+            "closed_at": "2019-04-14T10:54:44Z",
+            "title": "Fixed #30350 -- Prevented recreation of migration for operations with a range object.",
+            "url": "https://github.com/django/django/pull/11214",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11540,
+          "sim": 0.4163,
+          "closed_at": "2019-09-04T13:04:45Z",
+          "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+          "url": "https://github.com/django/django/pull/11540",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-14997",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2021-10-18T07:27:00+02:00",
+    "missing_files": [
+      "django/db/backends/ddl_references.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/backends/ddl_references.py",
+        "n_commits_found": 8,
+        "refs_checked": [
+          14997,
+          33194,
+          11929,
+          26167,
+          12039,
+          30961,
+          11966,
+          30903
+        ],
+        "n_candidates": 3,
+        "candidates": [
+          {
+            "ref": 11929,
+            "sim": 0.2719,
+            "closed_at": "2021-01-13T11:09:00Z",
+            "title": "Fixed #26167 -- Added support for functional indexes.",
+            "url": "https://github.com/django/django/pull/11929",
+            "is_pr": true
+          },
+          {
+            "ref": 11966,
+            "sim": 0.059,
+            "closed_at": "2019-10-24T07:53:02Z",
+            "title": "Fixed #30903 -- Fixed migrations crash on PostgreSQL when adding Index with opclasses and ordering.",
+            "url": "https://github.com/django/django/pull/11966",
+            "is_pr": true
+          },
+          {
+            "ref": 12039,
+            "sim": 0.0192,
+            "closed_at": "2019-11-08T08:11:06Z",
+            "title": "Fixed #30961 -- Fixed spaces in columns list SQL generated for indexes.",
+            "url": "https://github.com/django/django/pull/12039",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11929,
+          "sim": 0.2719,
+          "closed_at": "2021-01-13T11:09:00Z",
+          "title": "Fixed #26167 -- Added support for functional indexes.",
+          "url": "https://github.com/django/django/pull/11929",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-15388",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2022-02-03T11:20:46+01:00",
+    "missing_files": [
+      "django/template/autoreload.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/template/autoreload.py",
+        "n_commits_found": 3,
+        "refs_checked": [
+          15220,
+          14407,
+          32744,
+          12928,
+          25791
+        ],
+        "n_candidates": 3,
+        "candidates": [
+          {
+            "ref": 15220,
+            "sim": 0.2292,
+            "closed_at": "2021-12-21T07:39:40Z",
+            "title": "Optimized django.template.autoreload.get_template_directories() a bit.",
+            "url": "https://github.com/django/django/pull/15220",
+            "is_pr": true
+          },
+          {
+            "ref": 14407,
+            "sim": 0.0678,
+            "closed_at": "2021-05-26T08:08:40Z",
+            "title": "Fixed #32744 -- Normalized to pathlib.Path in autoreloader check for template changes.",
+            "url": "https://github.com/django/django/pull/14407",
+            "is_pr": true
+          },
+          {
+            "ref": 12928,
+            "sim": 0.0315,
+            "closed_at": "2020-11-05T14:30:54Z",
+            "title": " Fixed #25791 -- Implement autoreload behaviour for cached template loader",
+            "url": "https://github.com/django/django/pull/12928",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 15220,
+          "sim": 0.2292,
+          "closed_at": "2021-12-21T07:39:40Z",
+          "title": "Optimized django.template.autoreload.get_template_directories() a bit.",
+          "url": "https://github.com/django/django/pull/15220",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-16229",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2022-11-18T10:13:31+01:00",
+    "missing_files": [
+      "django/forms/boundfield.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/forms/boundfield.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          15317,
+          32339,
+          15387,
+          33476,
+          15069,
+          32338,
+          14903,
+          33134
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 14903,
+            "sim": 0.1533,
+            "closed_at": "2021-09-29T08:54:54Z",
+            "title": "Fixed #33134 -- Fixed recursion depth error when rendering Form with BoundFields.",
+            "url": "https://github.com/django/django/pull/14903",
+            "is_pr": true
+          },
+          {
+            "ref": 15317,
+            "sim": 0.0719,
+            "closed_at": "2022-03-30T14:28:15Z",
+            "title": "Refs #32339 -- Added use_fieldset to Widget.",
+            "url": "https://github.com/django/django/pull/15317",
+            "is_pr": true
+          },
+          {
+            "ref": 15069,
+            "sim": 0.0159,
+            "closed_at": "2021-12-09T08:23:08Z",
+            "title": "Refs #32338 -- Added Boundfield.legend_tag().",
+            "url": "https://github.com/django/django/pull/15069",
+            "is_pr": true
+          },
+          {
+            "ref": 15387,
+            "sim": 0.005,
+            "closed_at": "2022-02-08T06:09:51Z",
+            "title": "Refs #33476 -- Reformatted code with Black.",
+            "url": "https://github.com/django/django/pull/15387",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 14903,
+          "sim": 0.1533,
+          "closed_at": "2021-09-29T08:54:54Z",
+          "title": "Fixed #33134 -- Fixed recursion depth error when rendering Form with BoundFields.",
+          "url": "https://github.com/django/django/pull/14903",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-16400",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2022-12-22T10:41:12+01:00",
+    "missing_files": [
+      "django/contrib/auth/management/__init__.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/contrib/auth/management/__init__.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          15387,
+          33476,
+          13301,
+          31878,
+          10381,
+          11154,
+          22270,
+          10446,
+          28909
+        ],
+        "n_candidates": 5,
+        "candidates": [
+          {
+            "ref": 10381,
+            "sim": 0.1154,
+            "closed_at": "2019-01-16T15:07:29Z",
+            "title": "Fixed #11154, #22270 -- Made proxy model permissions use correct content type.",
+            "url": "https://github.com/django/django/pull/10381",
+            "is_pr": true
+          },
+          {
+            "ref": 13301,
+            "sim": 0.1138,
+            "closed_at": "2020-08-14T09:45:58Z",
+            "title": "Fixed #31878 -- Made createsuperuser respect --database option in default usernames. ",
+            "url": "https://github.com/django/django/pull/13301",
+            "is_pr": true
+          },
+          {
+            "ref": 15387,
+            "sim": 0.0394,
+            "closed_at": "2022-02-08T06:09:51Z",
+            "title": "Refs #33476 -- Reformatted code with Black.",
+            "url": "https://github.com/django/django/pull/15387",
+            "is_pr": true
+          },
+          {
+            "ref": 10446,
+            "sim": 0.0337,
+            "closed_at": "2018-09-28T13:57:13Z",
+            "title": "Refs #28909 -- Simplifed code using unpacking generalizations.",
+            "url": "https://github.com/django/django/pull/10446",
+            "is_pr": true
+          },
+          {
+            "ref": 11154,
+            "sim": 0.0306,
+            "closed_at": "2019-04-01T13:11:55Z",
+            "title": "Fixed #30259 -- Fixed crash of admin views when properties don't have admin_order_field attribute.",
+            "url": "https://github.com/django/django/pull/11154",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 10381,
+          "sim": 0.1154,
+          "closed_at": "2019-01-16T15:07:29Z",
+          "title": "Fixed #11154, #22270 -- Made proxy model permissions use correct content type.",
+          "url": "https://github.com/django/django/pull/10381",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-17087",
+    "tier": "@all",
+    "repo": "django/django",
+    "base_date": "2023-07-17T20:26:37+02:00",
+    "missing_files": [
+      "django/db/migrations/serializer.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/migrations/serializer.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          17066,
+          34697,
+          16481,
+          34233,
+          15996,
+          33916,
+          15535,
+          32365
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 15996,
+            "sim": 0.0812,
+            "closed_at": "2022-08-25T05:24:00Z",
+            "title": "Fixed #33916 -- Added support for serialization of enum.Flag in migrations.",
+            "url": "https://github.com/django/django/pull/15996",
+            "is_pr": true
+          },
+          {
+            "ref": 17066,
+            "sim": 0.0313,
+            "closed_at": "2023-07-12T12:32:05Z",
+            "title": "Fixed #34697 -- Fixed non-deterministic order of dependencies and sets/frozensets in migrations.",
+            "url": "https://github.com/django/django/pull/17066",
+            "is_pr": true
+          },
+          {
+            "ref": 15535,
+            "sim": 0.0296,
+            "closed_at": "2022-03-23T13:33:12Z",
+            "title": "Refs #32365 -- Made migration writer use datetime.timezone.utc.",
+            "url": "https://github.com/django/django/pull/15535",
+            "is_pr": true
+          },
+          {
+            "ref": 16481,
+            "sim": 0.0136,
+            "closed_at": "2023-01-18T16:27:24Z",
+            "title": "Refs #34233 -- Used types.NoneType.",
+            "url": "https://github.com/django/django/pull/16481",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 15996,
+          "sim": 0.0812,
+          "closed_at": "2022-08-25T05:24:00Z",
+          "title": "Fixed #33916 -- Added support for serialization of enum.Flag in migrations.",
+          "url": "https://github.com/django/django/pull/15996",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-23314",
+    "tier": "@all",
+    "repo": "matplotlib/matplotlib",
+    "base_date": "2022-06-20T18:18:00+02:00",
+    "missing_files": [
+      "lib/mpl_toolkits/mplot3d/axes3d.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "lib/mpl_toolkits/mplot3d/axes3d.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          22745,
+          23038,
+          22802,
+          21425,
+          22148,
+          22508,
+          22366,
+          22484
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 22366,
+            "sim": 0.1301,
+            "closed_at": "2022-02-23T08:06:38Z",
+            "title": "Deprecation removal/updates in axes3d",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22366",
+            "is_pr": true
+          },
+          {
+            "ref": 22745,
+            "sim": 0.127,
+            "closed_at": "2022-06-03T13:09:40Z",
+            "title": "MNT: Don't require renderer for window_extent and tightbbox",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22745",
+            "is_pr": true
+          },
+          {
+            "ref": 21425,
+            "sim": 0.1147,
+            "closed_at": "2022-03-23T04:31:03Z",
+            "title": "Make Axis3D constructor signature closer to the one of 2D axis.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/21425",
+            "is_pr": true
+          },
+          {
+            "ref": 22508,
+            "sim": 0.1031,
+            "closed_at": "2022-03-06T22:48:00Z",
+            "title": "Move tracking of autoscale status to Axis.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22508",
+            "is_pr": true
+          },
+          {
+            "ref": 23038,
+            "sim": 0.1014,
+            "closed_at": "2022-05-14T10:05:16Z",
+            "title": "Factor out errorevery parsing for 2D and 3D errorbars.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/23038",
+            "is_pr": true
+          },
+          {
+            "ref": 22148,
+            "sim": 0.0972,
+            "closed_at": "2022-03-15T20:46:30Z",
+            "title": "MNT: Deprecate `docstring`",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22148",
+            "is_pr": true
+          },
+          {
+            "ref": 22484,
+            "sim": 0.0966,
+            "closed_at": "2022-02-23T01:13:45Z",
+            "title": "Simplify the internal API to connect picklable callbacks.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22484",
+            "is_pr": true
+          },
+          {
+            "ref": 22802,
+            "sim": 0.0877,
+            "closed_at": "2022-04-17T09:00:48Z",
+            "title": "MNT: make Axes.cla an alias for Axes.clear in all cases",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22802",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 22366,
+          "sim": 0.1301,
+          "closed_at": "2022-02-23T08:06:38Z",
+          "title": "Deprecation removal/updates in axes3d",
+          "url": "https://github.com/matplotlib/matplotlib/pull/22366",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7080",
+    "tier": "@all",
+    "repo": "pylint-dev/pylint",
+    "base_date": "2022-06-27T21:20:09+02:00",
+    "missing_files": [
+      "pylint/lint/expand_modules.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "pylint/lint/expand_modules.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          6528,
+          6469,
+          6425,
+          6376,
+          6313,
+          6310,
+          5877,
+          5910
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 5877,
+            "sim": 0.039,
+            "closed_at": "2022-03-24T12:06:16Z",
+            "title": "Simplify hard to maintain copyright notice ",
+            "url": "https://github.com/pylint-dev/pylint/pull/5877",
+            "is_pr": true
+          },
+          {
+            "ref": 6528,
+            "sim": 0.0331,
+            "closed_at": "2022-05-13T06:06:04Z",
+            "title": "Respect ignore configuration options when --recursive=y.",
+            "url": "https://github.com/pylint-dev/pylint/pull/6528",
+            "is_pr": true
+          },
+          {
+            "ref": 6310,
+            "sim": 0.0173,
+            "closed_at": "2022-04-14T09:27:54Z",
+            "title": "Use ``python-typing-update`` on ``pylint/lint`` directory",
+            "url": "https://github.com/pylint-dev/pylint/pull/6310",
+            "is_pr": true
+          },
+          {
+            "ref": 6313,
+            "sim": 0.0134,
+            "closed_at": "2022-04-14T16:28:49Z",
+            "title": "Use ``--py39-plus`` and ``--full-reorder`` in ``python-typing-update``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6313",
+            "is_pr": true
+          },
+          {
+            "ref": 6469,
+            "sim": 0.0122,
+            "closed_at": "2022-04-28T21:22:09Z",
+            "title": "Some formatting of docstrings with ``pydocstringformatter``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6469",
+            "is_pr": true
+          },
+          {
+            "ref": 6425,
+            "sim": 0.0056,
+            "closed_at": "2022-04-21T10:48:45Z",
+            "title": "Add typing to methods of ``PyLinter`` and related functions",
+            "url": "https://github.com/pylint-dev/pylint/pull/6425",
+            "is_pr": true
+          },
+          {
+            "ref": 6376,
+            "sim": 0.0022,
+            "closed_at": "2022-04-18T12:59:55Z",
+            "title": "Add some typing to ``pylint/lint``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6376",
+            "is_pr": true
+          },
+          {
+            "ref": 5910,
+            "sim": 0.0008,
+            "closed_at": "2022-03-13T12:15:46Z",
+            "title": "Upgrade ``pydocstringformatter`` to ``0.5.0``",
+            "url": "https://github.com/pylint-dev/pylint/pull/5910",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 5877,
+          "sim": 0.039,
+          "closed_at": "2022-03-24T12:06:16Z",
+          "title": "Simplify hard to maintain copyright notice ",
+          "url": "https://github.com/pylint-dev/pylint/pull/5877",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-8273",
+    "tier": "@all",
+    "repo": "sphinx-doc/sphinx",
+    "base_date": "2020-10-03T21:42:53+09:00",
+    "missing_files": [
+      "sphinx/builders/manpage.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sphinx/builders/manpage.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          8273,
+          7996,
+          6980,
+          6976,
+          6972,
+          6461,
+          6121,
+          6055
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 6121,
+            "sim": 0.0697,
+            "closed_at": "2019-03-03T07:09:36Z",
+            "title": "refactor: move NoUri to sphinx.errors",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6121",
+            "is_pr": true
+          },
+          {
+            "ref": 6461,
+            "sim": 0.0576,
+            "closed_at": "2019-06-15T05:08:25Z",
+            "title": "Migrate to py3 style type annotation: sphinx.builders",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6461",
+            "is_pr": true
+          },
+          {
+            "ref": 6976,
+            "sim": 0.0214,
+            "closed_at": "2020-01-01T02:28:58Z",
+            "title": "A happy new year!",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6976",
+            "is_pr": true
+          },
+          {
+            "ref": 6055,
+            "sim": 0.0102,
+            "closed_at": "2019-02-11T06:54:21Z",
+            "title": "refactoring with progress_message()",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6055",
+            "is_pr": true
+          },
+          {
+            "ref": 6980,
+            "sim": 0.0,
+            "closed_at": "2020-01-01T12:53:42Z",
+            "title": "Be precise about which document is missing.",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6980",
+            "is_pr": true
+          },
+          {
+            "ref": 6972,
+            "sim": 0.0,
+            "closed_at": "2019-12-30T08:33:52Z",
+            "title": "mypy: Enable disallow_incomplete_defs flag for type checking",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/6972",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 6121,
+          "sim": 0.0697,
+          "closed_at": "2019-03-03T07:09:36Z",
+          "title": "refactor: move NoUri to sphinx.errors",
+          "url": "https://github.com/sphinx-doc/sphinx/pull/6121",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-8627",
+    "tier": "@all",
+    "repo": "sphinx-doc/sphinx",
+    "base_date": "2020-12-31T10:57:40+09:00",
+    "missing_files": [
+      "sphinx/util/typing.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sphinx/util/typing.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          8627,
+          8315,
+          8564,
+          8559,
+          8537,
+          8291,
+          8465,
+          8458
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 8559,
+            "sim": 0.3301,
+            "closed_at": "2020-12-21T15:51:04Z",
+            "title": "3.4.0 - 'ForwardRef' object has no attribute '__name__'",
+            "url": "https://github.com/sphinx-doc/sphinx/issues/8559",
+            "is_pr": false
+          },
+          {
+            "ref": 8291,
+            "sim": 0.1434,
+            "closed_at": "2020-11-28T09:11:31Z",
+            "title": "Fix #8285: napoleon can use PEP526 annotations",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/8291",
+            "is_pr": true
+          },
+          {
+            "ref": 8458,
+            "sim": 0.0958,
+            "closed_at": "2020-11-20T16:43:46Z",
+            "title": "Remove code for python3.5",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/8458",
+            "is_pr": true
+          },
+          {
+            "ref": 8465,
+            "sim": 0.0381,
+            "closed_at": "2020-11-22T04:47:39Z",
+            "title": "Fix #8460: autodoc: Support custom types defined by typing.NewType",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/8465",
+            "is_pr": true
+          },
+          {
+            "ref": 8564,
+            "sim": 0.0106,
+            "closed_at": "2020-12-21T15:50:22Z",
+            "title": "Fix #8559: AttributeError is raised when using ForwardRef",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/8564",
+            "is_pr": true
+          },
+          {
+            "ref": 8537,
+            "sim": 0.0,
+            "closed_at": "2020-12-13T17:11:19Z",
+            "title": "Merge 3.x to master",
+            "url": "https://github.com/sphinx-doc/sphinx/pull/8537",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 8559,
+          "sim": 0.3301,
+          "closed_at": "2020-12-21T15:51:04Z",
+          "title": "3.4.0 - 'ForwardRef' object has no attribute '__name__'",
+          "url": "https://github.com/sphinx-doc/sphinx/issues/8559",
+          "is_pr": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-12236",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2017-02-26T12:48:20+01:00",
+    "missing_files": [
+      "sympy/polys/domains/polynomialring.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/polys/domains/polynomialring.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          12088,
+          2318,
+          2273,
+          2126,
+          166,
+          3930,
+          1921
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 2318,
+            "sim": 0.3035,
+            "closed_at": "2013-07-28T19:06:11Z",
+            "title": "Single Python 2 and 3 compatible codebase",
+            "url": "https://github.com/sympy/sympy/pull/2318",
+            "is_pr": true
+          },
+          {
+            "ref": 1921,
+            "sim": 0.2848,
+            "closed_at": "2013-05-12T20:03:24Z",
+            "title": "Improved support for reals in polys",
+            "url": "https://github.com/sympy/sympy/pull/1921",
+            "is_pr": true
+          },
+          {
+            "ref": 2273,
+            "sim": 0.2499,
+            "closed_at": "2013-07-12T18:12:10Z",
+            "title": "Remove Python 2.5 stuff (#3930)",
+            "url": "https://github.com/sympy/sympy/pull/2273",
+            "is_pr": true
+          },
+          {
+            "ref": 3930,
+            "sim": 0.1076,
+            "closed_at": "2008-05-02T11:42:02Z",
+            "title": "sympy.physics.units uses from sympy import *",
+            "url": "https://github.com/sympy/sympy/issues/3930",
+            "is_pr": false
+          },
+          {
+            "ref": 166,
+            "sim": 0.0313,
+            "closed_at": "2011-04-01T07:26:02Z",
+            "title": "Issue828: Triangle docstrings",
+            "url": "https://github.com/sympy/sympy/pull/166",
+            "is_pr": true
+          },
+          {
+            "ref": 2126,
+            "sim": 0.0303,
+            "closed_at": "2013-07-11T13:50:26Z",
+            "title": "WIP: Incremental progress on sparse polynomials",
+            "url": "https://github.com/sympy/sympy/pull/2126",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 2318,
+          "sim": 0.3035,
+          "closed_at": "2013-07-28T19:06:11Z",
+          "title": "Single Python 2 and 3 compatible codebase",
+          "url": "https://github.com/sympy/sympy/pull/2318",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-13146",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2017-08-17T23:56:53-04:00",
+    "missing_files": [
+      "sympy/core/operations.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/operations.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          12508,
+          10879,
+          10636,
+          10602,
+          10468,
+          9553,
+          9293,
+          7067,
+          10956
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 9553,
+            "sim": 0.148,
+            "closed_at": "2015-06-25T07:30:56Z",
+            "title": "splitting simplify.py",
+            "url": "https://github.com/sympy/sympy/pull/9553",
+            "is_pr": true
+          },
+          {
+            "ref": 9293,
+            "sim": 0.1432,
+            "closed_at": "2015-04-14T21:38:14Z",
+            "title": "Removed last traces of sympy.core.core.C from SymPy",
+            "url": "https://github.com/sympy/sympy/pull/9293",
+            "is_pr": true
+          },
+          {
+            "ref": 12508,
+            "sim": 0.1177,
+            "closed_at": "2017-06-24T20:16:45Z",
+            "title": "Initial proposal for Expr construction postprocessors",
+            "url": "https://github.com/sympy/sympy/pull/12508",
+            "is_pr": true
+          },
+          {
+            "ref": 10468,
+            "sim": 0.0716,
+            "closed_at": "2016-01-26T10:41:06Z",
+            "title": "watch for AssocOp Function in _eval_evalf",
+            "url": "https://github.com/sympy/sympy/pull/10468",
+            "is_pr": true
+          },
+          {
+            "ref": 7067,
+            "sim": 0.0593,
+            "closed_at": "2016-04-04T16:57:06Z",
+            "title": "factor_list() error Python3",
+            "url": "https://github.com/sympy/sympy/issues/7067",
+            "is_pr": false
+          },
+          {
+            "ref": 10636,
+            "sim": 0.0453,
+            "closed_at": "2016-02-29T15:50:27Z",
+            "title": "10395: watch for non-Add/Mul AssocOp during evalf",
+            "url": "https://github.com/sympy/sympy/pull/10636",
+            "is_pr": true
+          },
+          {
+            "ref": 10879,
+            "sim": 0.0,
+            "closed_at": "2016-04-04T16:57:06Z",
+            "title": "fancysets changes",
+            "url": "https://github.com/sympy/sympy/pull/10879",
+            "is_pr": true
+          },
+          {
+            "ref": 10602,
+            "sim": 0.0,
+            "closed_at": "2016-02-17T16:24:13Z",
+            "title": "remove unused imports in core",
+            "url": "https://github.com/sympy/sympy/pull/10602",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 9553,
+          "sim": 0.148,
+          "closed_at": "2015-06-25T07:30:56Z",
+          "title": "splitting simplify.py",
+          "url": "https://github.com/sympy/sympy/pull/9553",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-13895",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2018-01-11T09:49:09-06:00",
+    "missing_files": [
+      "sympy/core/numbers.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/numbers.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          13530,
+          13429,
+          13471,
+          13081,
+          12583,
+          12534,
+          12537,
+          13470
+        ],
+        "n_candidates": 5,
+        "candidates": [
+          {
+            "ref": 13470,
+            "sim": 0.1018,
+            "closed_at": "2017-10-18T22:28:49Z",
+            "title": "Python 2->3 pickle fails with float-containing expressions",
+            "url": "https://github.com/sympy/sympy/issues/13470",
+            "is_pr": false
+          },
+          {
+            "ref": 13081,
+            "sim": 0.098,
+            "closed_at": "2017-10-23T10:54:54Z",
+            "title": "Some comparisons between rational and irrational numbers are incorrect",
+            "url": "https://github.com/sympy/sympy/issues/13081",
+            "is_pr": false
+          },
+          {
+            "ref": 13471,
+            "sim": 0.0668,
+            "closed_at": "2017-10-18T22:28:49Z",
+            "title": "Fix python2->3 pickle bug for exprs with floats",
+            "url": "https://github.com/sympy/sympy/pull/13471",
+            "is_pr": true
+          },
+          {
+            "ref": 13530,
+            "sim": 0.0,
+            "closed_at": "2017-11-11T07:42:37Z",
+            "title": "Fix pickling/deepcopying of floats when using gmpy2 backend",
+            "url": "https://github.com/sympy/sympy/pull/13530",
+            "is_pr": true
+          },
+          {
+            "ref": 13429,
+            "sim": 0.0,
+            "closed_at": "2017-10-23T10:54:55Z",
+            "title": "fix comparisons involving numbers",
+            "url": "https://github.com/sympy/sympy/pull/13429",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 13470,
+          "sim": 0.1018,
+          "closed_at": "2017-10-18T22:28:49Z",
+          "title": "Python 2->3 pickle fails with float-containing expressions",
+          "url": "https://github.com/sympy/sympy/issues/13470",
+          "is_pr": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-13915",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2018-01-13T13:20:52-06:00",
+    "missing_files": [
+      "sympy/core/mul.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/mul.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          13892,
+          13685,
+          13357,
+          13279,
+          13281,
+          13236,
+          1234,
+          65740442
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 13281,
+            "sim": 0.1287,
+            "closed_at": "2017-09-08T23:25:47Z",
+            "title": "Fix Mul.expand(deep=True)",
+            "url": "https://github.com/sympy/sympy/pull/13281",
+            "is_pr": true
+          },
+          {
+            "ref": 13357,
+            "sim": 0.0742,
+            "closed_at": "2017-09-30T12:56:09Z",
+            "title": "convert expr.func is xyz to isinstance(expr,xyz)",
+            "url": "https://github.com/sympy/sympy/pull/13357",
+            "is_pr": true
+          },
+          {
+            "ref": 13279,
+            "sim": 0.0578,
+            "closed_at": "2017-09-09T02:51:51Z",
+            "title": "make Mul.flatten aware of MatrixExpr",
+            "url": "https://github.com/sympy/sympy/pull/13279",
+            "is_pr": true
+          },
+          {
+            "ref": 13685,
+            "sim": 0.0,
+            "closed_at": "2017-12-07T03:05:26Z",
+            "title": "Misc. trivial typo fixes",
+            "url": "https://github.com/sympy/sympy/pull/13685",
+            "is_pr": true
+          },
+          {
+            "ref": 13236,
+            "sim": 0.0,
+            "closed_at": "2017-09-05T14:16:07Z",
+            "title": "Improve integer assumptions, Mod, and prime factorization of factorial",
+            "url": "https://github.com/sympy/sympy/pull/13236",
+            "is_pr": true
+          },
+          {
+            "ref": 1234,
+            "sim": 0.0,
+            "closed_at": "2012-04-14T16:37:39Z",
+            "title": "Fix test failure in beginner/precision.py example",
+            "url": "https://github.com/sympy/sympy/pull/1234",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 13281,
+          "sim": 0.1287,
+          "closed_at": "2017-09-08T23:25:47Z",
+          "title": "Fix Mul.expand(deep=True)",
+          "url": "https://github.com/sympy/sympy/pull/13281",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-18087",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2019-12-19T22:51:49-05:00",
+    "missing_files": [
+      "sympy/core/exprtools.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/exprtools.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          17495,
+          16666,
+          16088,
+          16527,
+          1234,
+          16603,
+          16655,
+          15965,
+          15968
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 16603,
+            "sim": 0.1799,
+            "closed_at": "2019-05-30T17:47:28Z",
+            "title": "[WIP] Assumptions: make real -> finite",
+            "url": "https://github.com/sympy/sympy/pull/16603",
+            "is_pr": true
+          },
+          {
+            "ref": 16088,
+            "sim": 0.1504,
+            "closed_at": "2019-05-01T05:14:06Z",
+            "title": "simplify pulls constants out of integral",
+            "url": "https://github.com/sympy/sympy/pull/16088",
+            "is_pr": true
+          },
+          {
+            "ref": 15965,
+            "sim": 0.1238,
+            "closed_at": "2019-05-01T05:14:06Z",
+            "title": "Integral.simplify should extract constants",
+            "url": "https://github.com/sympy/sympy/issues/15965",
+            "is_pr": false
+          },
+          {
+            "ref": 16666,
+            "sim": 0.1043,
+            "closed_at": "2019-05-28T08:19:51Z",
+            "title": "Make positive -> finite with new facts like is_extended_positive",
+            "url": "https://github.com/sympy/sympy/pull/16666",
+            "is_pr": true
+          },
+          {
+            "ref": 16655,
+            "sim": 0.0971,
+            "closed_at": "2019-05-30T17:47:05Z",
+            "title": "[WIP] Make positive imply finite without new facts",
+            "url": "https://github.com/sympy/sympy/pull/16655",
+            "is_pr": true
+          },
+          {
+            "ref": 17495,
+            "sim": 0.0903,
+            "closed_at": "2019-09-25T09:51:13Z",
+            "title": "Change S(0) to S.Zero etc",
+            "url": "https://github.com/sympy/sympy/pull/17495",
+            "is_pr": true
+          },
+          {
+            "ref": 16527,
+            "sim": 0.0729,
+            "closed_at": "2019-04-11T10:13:36Z",
+            "title": "Breaking up the Rational Factors",
+            "url": "https://github.com/sympy/sympy/pull/16527",
+            "is_pr": true
+          },
+          {
+            "ref": 1234,
+            "sim": 0.0,
+            "closed_at": "2012-04-14T16:37:39Z",
+            "title": "Fix test failure in beginner/precision.py example",
+            "url": "https://github.com/sympy/sympy/pull/1234",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 16603,
+          "sim": 0.1799,
+          "closed_at": "2019-05-30T17:47:28Z",
+          "title": "[WIP] Assumptions: make real -> finite",
+          "url": "https://github.com/sympy/sympy/pull/16603",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-20590",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2020-12-12T18:00:56Z",
+    "missing_files": [
+      "sympy/core/_print_helpers.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/_print_helpers.py",
+        "n_commits_found": 5,
+        "refs_checked": [
+          19944,
+          19425,
+          1234,
+          10062
+        ],
+        "n_candidates": 3,
+        "candidates": [
+          {
+            "ref": 19944,
+            "sim": 0.0914,
+            "closed_at": "2020-08-11T23:57:26Z",
+            "title": "Allow subclasses of sympy objects to override `_repr_latex_`",
+            "url": "https://github.com/sympy/sympy/pull/19944",
+            "is_pr": true
+          },
+          {
+            "ref": 19425,
+            "sim": 0.0502,
+            "closed_at": "2020-06-22T00:41:12Z",
+            "title": "printing.latex: Move duplicated code to a mixin class",
+            "url": "https://github.com/sympy/sympy/pull/19425",
+            "is_pr": true
+          },
+          {
+            "ref": 1234,
+            "sim": 0.0,
+            "closed_at": "2012-04-14T16:37:39Z",
+            "title": "Fix test failure in beginner/precision.py example",
+            "url": "https://github.com/sympy/sympy/pull/1234",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 19944,
+          "sim": 0.0914,
+          "closed_at": "2020-08-11T23:57:26Z",
+          "title": "Allow subclasses of sympy objects to override `_repr_latex_`",
+          "url": "https://github.com/sympy/sympy/pull/19944",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-21055",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2021-03-07T19:30:28Z",
+    "missing_files": [
+      "sympy/assumptions/refine.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/assumptions/refine.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          21055,
+          20965,
+          20763,
+          20656,
+          20419,
+          19406,
+          18681,
+          21054
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 20763,
+            "sim": 0.2798,
+            "closed_at": "2021-01-18T01:02:40Z",
+            "title": "Add _eval_refine method to Boolean",
+            "url": "https://github.com/sympy/sympy/pull/20763",
+            "is_pr": true
+          },
+          {
+            "ref": 20656,
+            "sim": 0.1419,
+            "closed_at": "2021-01-01T16:40:31Z",
+            "title": "Introduce polyadic predicate based on multipledispatch",
+            "url": "https://github.com/sympy/sympy/pull/20656",
+            "is_pr": true
+          },
+          {
+            "ref": 18681,
+            "sim": 0.1131,
+            "closed_at": "2020-03-26T11:45:42Z",
+            "title": "Added Refine function for symmetric matrices",
+            "url": "https://github.com/sympy/sympy/pull/18681",
+            "is_pr": true
+          },
+          {
+            "ref": 20419,
+            "sim": 0.0921,
+            "closed_at": "2020-11-19T21:13:17Z",
+            "title": "Added required sections in sympy.assumptions",
+            "url": "https://github.com/sympy/sympy/pull/20419",
+            "is_pr": true
+          },
+          {
+            "ref": 20965,
+            "sim": 0.0714,
+            "closed_at": "2021-02-25T10:03:35Z",
+            "title": "feat(assumptions) : introduce Q.eq and Q.ne",
+            "url": "https://github.com/sympy/sympy/pull/20965",
+            "is_pr": true
+          },
+          {
+            "ref": 19406,
+            "sim": 0.0566,
+            "closed_at": "2020-05-28T00:27:42Z",
+            "title": "Clean up flake8 warnings from doctests",
+            "url": "https://github.com/sympy/sympy/pull/19406",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 20763,
+          "sim": 0.2798,
+          "closed_at": "2021-01-18T01:02:40Z",
+          "title": "Add _eval_refine method to Boolean",
+          "url": "https://github.com/sympy/sympy/pull/20763",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-21379",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2021-04-24T14:58:57+01:00",
+    "missing_files": [
+      "sympy/core/mod.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/core/mod.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          20549,
+          20164,
+          19741,
+          18877,
+          18722,
+          18286,
+          17495,
+          16864
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 17495,
+            "sim": 0.1107,
+            "closed_at": "2019-09-25T09:51:13Z",
+            "title": "Change S(0) to S.Zero etc",
+            "url": "https://github.com/sympy/sympy/pull/17495",
+            "is_pr": true
+          },
+          {
+            "ref": 20549,
+            "sim": 0.1044,
+            "closed_at": "2020-12-24T03:06:36Z",
+            "title": "Introduce kind",
+            "url": "https://github.com/sympy/sympy/pull/20549",
+            "is_pr": true
+          },
+          {
+            "ref": 18722,
+            "sim": 0.0989,
+            "closed_at": "2020-03-02T16:10:56Z",
+            "title": "test(dsolve): reorganise XFAIL tests in test_ode.py",
+            "url": "https://github.com/sympy/sympy/pull/18722",
+            "is_pr": true
+          },
+          {
+            "ref": 16864,
+            "sim": 0.0949,
+            "closed_at": "2019-05-23T17:51:51Z",
+            "title": "Sets containment and simplification",
+            "url": "https://github.com/sympy/sympy/pull/16864",
+            "is_pr": true
+          },
+          {
+            "ref": 19741,
+            "sim": 0.0942,
+            "closed_at": "2020-07-13T21:17:10Z",
+            "title": "[GSoC] Functions: Fixes periodicity of trigonometric function",
+            "url": "https://github.com/sympy/sympy/pull/19741",
+            "is_pr": true
+          },
+          {
+            "ref": 18286,
+            "sim": 0.0901,
+            "closed_at": "2020-01-11T05:00:24Z",
+            "title": "[WIP] Removing Python 2 related things from the entire codebase",
+            "url": "https://github.com/sympy/sympy/pull/18286",
+            "is_pr": true
+          },
+          {
+            "ref": 20164,
+            "sim": 0.0852,
+            "closed_at": "2020-10-01T18:31:37Z",
+            "title": "Added required sections in function.py.",
+            "url": "https://github.com/sympy/sympy/pull/20164",
+            "is_pr": true
+          },
+          {
+            "ref": 18877,
+            "sim": 0.0742,
+            "closed_at": "2020-04-10T20:04:15Z",
+            "title": "Upgrading to Python3 (2) (pyupgrade to files from benchmarks to crypto)",
+            "url": "https://github.com/sympy/sympy/pull/18877",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 17495,
+          "sim": 0.1107,
+          "closed_at": "2019-09-25T09:51:13Z",
+          "title": "Change S(0) to S.Zero etc",
+          "url": "https://github.com/sympy/sympy/pull/17495",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-21627",
+    "tier": "@all",
+    "repo": "sympy/sympy",
+    "base_date": "2021-06-16T06:27:22-05:00",
+    "missing_files": [
+      "sympy/functions/elementary/complexes.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "sympy/functions/elementary/complexes.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          21452,
+          21462,
+          21432,
+          20754,
+          20950,
+          20775,
+          21392,
+          1234,
+          19627
+        ],
+        "n_candidates": 7,
+        "candidates": [
+          {
+            "ref": 20754,
+            "sim": 0.049,
+            "closed_at": "2021-02-16T16:22:09Z",
+            "title": "Added checks in _eval_as_leading_term and _eval_nseries",
+            "url": "https://github.com/sympy/sympy/pull/20754",
+            "is_pr": true
+          },
+          {
+            "ref": 21432,
+            "sim": 0.0325,
+            "closed_at": "2021-05-08T17:36:03Z",
+            "title": "`force=True` is more comprehensive for `powdenest`",
+            "url": "https://github.com/sympy/sympy/pull/21432",
+            "is_pr": true
+          },
+          {
+            "ref": 20775,
+            "sim": 0.0199,
+            "closed_at": "2021-01-11T17:02:36Z",
+            "title": "Added _eval_nseries support to sign",
+            "url": "https://github.com/sympy/sympy/pull/20775",
+            "is_pr": true
+          },
+          {
+            "ref": 21452,
+            "sim": 0.0,
+            "closed_at": "2021-05-13T23:20:09Z",
+            "title": "Modified Heaviside(t) to have a standard value at Heaviside(0)=1/2",
+            "url": "https://github.com/sympy/sympy/pull/21452",
+            "is_pr": true
+          },
+          {
+            "ref": 21462,
+            "sim": 0.0,
+            "closed_at": "2021-05-12T22:04:21Z",
+            "title": "document complex argument range as (-pi,pi]",
+            "url": "https://github.com/sympy/sympy/pull/21462",
+            "is_pr": true
+          },
+          {
+            "ref": 20950,
+            "sim": 0.0,
+            "closed_at": "2021-02-15T09:05:40Z",
+            "title": "more work on transitioning from exp(x) to Pow(E, x)",
+            "url": "https://github.com/sympy/sympy/pull/20950",
+            "is_pr": true
+          },
+          {
+            "ref": 1234,
+            "sim": 0.0,
+            "closed_at": "2012-04-14T16:37:39Z",
+            "title": "Fix test failure in beginner/precision.py example",
+            "url": "https://github.com/sympy/sympy/pull/1234",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 20754,
+          "sim": 0.049,
+          "closed_at": "2021-02-16T16:22:09Z",
+          "title": "Added checks in _eval_as_leading_term and _eval_nseries",
+          "url": "https://github.com/sympy/sympy/pull/20754",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11564",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2019-09-25T12:32:24+02:00",
+    "missing_files": [
+      "django/conf/__init__.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/conf/__init__.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          11705,
+          28622,
+          11745,
+          29817,
+          11053,
+          30234,
+          10798,
+          27829
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 11745,
+            "sim": 0.0704,
+            "closed_at": "2019-09-10T10:20:11Z",
+            "title": "Bootstrapped Django 3.1.",
+            "url": "https://github.com/django/django/pull/11745",
+            "is_pr": true
+          },
+          {
+            "ref": 10798,
+            "sim": 0.0652,
+            "closed_at": "2019-01-17T17:31:23Z",
+            "title": "Bootstrapped Django 3.0.",
+            "url": "https://github.com/django/django/pull/10798",
+            "is_pr": true
+          },
+          {
+            "ref": 11053,
+            "sim": 0.0261,
+            "closed_at": "2019-03-05T15:18:21Z",
+            "title": "Fixed #30234 -- Disallowed non-upper settings in settings.configure().",
+            "url": "https://github.com/django/django/pull/11053",
+            "is_pr": true
+          },
+          {
+            "ref": 11705,
+            "sim": 0.0181,
+            "closed_at": "2019-09-20T12:15:25Z",
+            "title": "Fixed #28622 -- Allowed specifying password reset link expiration in seconds and deprecated PASSWORD_RESET_TIMEOUT_DAYS.",
+            "url": "https://github.com/django/django/pull/11705",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11745,
+          "sim": 0.0704,
+          "closed_at": "2019-09-10T10:20:11Z",
+          "title": "Bootstrapped Django 3.1.",
+          "url": "https://github.com/django/django/pull/11745",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11797",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2019-09-20T08:17:27+02:00",
+    "missing_files": [
+      "django/db/models/lookups.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/models/lookups.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          11797,
+          30771,
+          11725,
+          25367,
+          11652,
+          11510,
+          30477,
+          11393,
+          29396,
+          30494
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 11652,
+            "sim": 0.039,
+            "closed_at": "2019-08-13T06:15:24Z",
+            "title": "Refs #25367 -- Moved Oracle Exists() handling to contextual methods. ",
+            "url": "https://github.com/django/django/pull/11652",
+            "is_pr": true
+          },
+          {
+            "ref": 11510,
+            "sim": 0.0171,
+            "closed_at": "2019-06-25T09:09:19Z",
+            "title": "Fixed #30477 -- Made reverse lookup use Field.get_db_prep_value() from the target field.",
+            "url": "https://github.com/django/django/pull/11510",
+            "is_pr": true
+          },
+          {
+            "ref": 11393,
+            "sim": 0.0127,
+            "closed_at": "2019-05-21T05:53:34Z",
+            "title": "Fixed #29396, #30494 -- Added indirect values support to __year lookups.",
+            "url": "https://github.com/django/django/pull/11393",
+            "is_pr": true
+          },
+          {
+            "ref": 11725,
+            "sim": 0.0,
+            "closed_at": "2019-08-29T09:56:13Z",
+            "title": "Refs #25367 -- Simplified OrderBy and Lookup by using Case() instead of RawSQL() on Oracle.",
+            "url": "https://github.com/django/django/pull/11725",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11652,
+          "sim": 0.039,
+          "closed_at": "2019-08-13T06:15:24Z",
+          "title": "Refs #25367 -- Moved Oracle Exists() handling to contextual methods. ",
+          "url": "https://github.com/django/django/pull/11652",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11964",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2019-10-25T08:34:06+02:00",
+    "missing_files": [
+      "django/db/models/enums.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/models/enums.py",
+        "n_commits_found": 2,
+        "refs_checked": [
+          11964,
+          30902,
+          11540,
+          27910,
+          11223
+        ],
+        "n_candidates": 2,
+        "candidates": [
+          {
+            "ref": 11540,
+            "sim": 0.3821,
+            "closed_at": "2019-09-04T13:04:45Z",
+            "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+            "url": "https://github.com/django/django/pull/11540",
+            "is_pr": true
+          },
+          {
+            "ref": 11223,
+            "sim": 0.2948,
+            "closed_at": "2019-07-05T05:12:26Z",
+            "title": "Fixed #27910: Added a ChoiceEnum class for use in field choices",
+            "url": "https://github.com/django/django/pull/11223",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 11540,
+          "sim": 0.3821,
+          "closed_at": "2019-09-04T13:04:45Z",
+          "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+          "url": "https://github.com/django/django/pull/11540",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-12747",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2020-04-20T09:09:26+02:00",
+    "missing_files": [
+      "django/db/models/deletion.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/models/deletion.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          12747,
+          31474,
+          12394,
+          31219,
+          12376,
+          27852,
+          12372,
+          7364,
+          27272
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 12394,
+            "sim": 0.1366,
+            "closed_at": "2020-01-31T08:39:12Z",
+            "title": "Fixed #31219 -- Fixed object deletion crash for nested protected related objects.",
+            "url": "https://github.com/django/django/pull/12394",
+            "is_pr": true
+          },
+          {
+            "ref": 12376,
+            "sim": 0.1273,
+            "closed_at": "2020-01-29T08:32:57Z",
+            "title": "Refs #27852 -- Fixed object deletion to show all restricted related objects rather than just the first one.",
+            "url": "https://github.com/django/django/pull/12376",
+            "is_pr": true
+          },
+          {
+            "ref": 12372,
+            "sim": 0.1039,
+            "closed_at": "2020-01-27T11:40:31Z",
+            "title": "Refs #27852 -- Fixed object deletion to show all protected related objects rather than just the first one.",
+            "url": "https://github.com/django/django/pull/12372",
+            "is_pr": true
+          },
+          {
+            "ref": 7364,
+            "sim": 0.1006,
+            "closed_at": "2019-11-19T10:37:01Z",
+            "title": "Fixed #27272 -- Added an on_delete RESTRICT handler to allow cascading deletions while protecting direct ones.",
+            "url": "https://github.com/django/django/pull/7364",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 12394,
+          "sim": 0.1366,
+          "closed_at": "2020-01-31T08:39:12Z",
+          "title": "Fixed #31219 -- Fixed object deletion crash for nested protected related objects.",
+          "url": "https://github.com/django/django/pull/12394",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-14016",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2021-02-18T09:18:19+01:00",
+    "missing_files": [
+      "django/db/models/query_utils.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/models/query_utils.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          13845,
+          30988,
+          13036,
+          31680,
+          12298,
+          12185,
+          31060,
+          12073
+        ],
+        "n_candidates": 5,
+        "candidates": [
+          {
+            "ref": 13036,
+            "sim": 0.0822,
+            "closed_at": "2020-06-10T10:55:38Z",
+            "title": "Fixed #31680 -- Removed unnecessary getattr() call in DeferredAttribute.__get__().",
+            "url": "https://github.com/django/django/pull/13036",
+            "is_pr": true
+          },
+          {
+            "ref": 13845,
+            "sim": 0.047,
+            "closed_at": "2021-01-14T19:12:12Z",
+            "title": "Bootstrapped Django 4.0.",
+            "url": "https://github.com/django/django/pull/13845",
+            "is_pr": true
+          },
+          {
+            "ref": 12185,
+            "sim": 0.0319,
+            "closed_at": "2019-12-06T14:24:39Z",
+            "title": "Fixed #31060 -- Reallowed window expressions to be used in conditions outside of queryset filters.",
+            "url": "https://github.com/django/django/pull/12185",
+            "is_pr": true
+          },
+          {
+            "ref": 12298,
+            "sim": 0.0,
+            "closed_at": "2020-01-29T15:06:57Z",
+            "title": "Simplified DeferredAttribute.__get__() a bit.",
+            "url": "https://github.com/django/django/pull/12298",
+            "is_pr": true
+          },
+          {
+            "ref": 12073,
+            "sim": 0.0,
+            "closed_at": "2019-11-18T13:56:55Z",
+            "title": "Fixed #30988 -- Deprecated the InvalidQuery exception class.",
+            "url": "https://github.com/django/django/pull/12073",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 13036,
+          "sim": 0.0822,
+          "closed_at": "2020-06-10T10:55:38Z",
+          "title": "Fixed #31680 -- Removed unnecessary getattr() call in DeferredAttribute.__get__().",
+          "url": "https://github.com/django/django/pull/13036",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-14580",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2021-07-01T12:13:19+02:00",
+    "missing_files": [
+      "django/db/migrations/serializer.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/migrations/serializer.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          31529,
+          12125,
+          27914,
+          11858,
+          11815,
+          30774,
+          11540,
+          27910
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 12125,
+            "sim": 0.3068,
+            "closed_at": "2019-11-25T10:30:43Z",
+            "title": "Fixed #27914 -- Fixed serialization of nested classes in migrations.",
+            "url": "https://github.com/django/django/pull/12125",
+            "is_pr": true
+          },
+          {
+            "ref": 11540,
+            "sim": 0.2535,
+            "closed_at": "2019-09-04T13:04:45Z",
+            "title": "Fixed #27910 -- Added enumeration helpers for use in Field.choices",
+            "url": "https://github.com/django/django/pull/11540",
+            "is_pr": true
+          },
+          {
+            "ref": 11815,
+            "sim": 0.1796,
+            "closed_at": "2019-09-30T08:52:23Z",
+            "title": "Fixed #30774 -- Made serialization in migrations use members names for Enums.",
+            "url": "https://github.com/django/django/pull/11815",
+            "is_pr": true
+          },
+          {
+            "ref": 11858,
+            "sim": 0.153,
+            "closed_at": "2019-10-03T07:08:12Z",
+            "title": "Refs #27914 -- Fixed serialization of nested enum.Enum classes in migrations.",
+            "url": "https://github.com/django/django/pull/11858",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 12125,
+          "sim": 0.3068,
+          "closed_at": "2019-11-25T10:30:43Z",
+          "title": "Fixed #27914 -- Fixed serialization of nested classes in migrations.",
+          "url": "https://github.com/django/django/pull/12125",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-15213",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2021-12-20T11:11:39+01:00",
+    "missing_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/models/fields/__init__.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          14785,
+          33033,
+          14886,
+          33133,
+          14717,
+          32966,
+          14173,
+          32508
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 14886,
+            "sim": 0.1108,
+            "closed_at": "2021-09-23T08:36:30Z",
+            "title": "Fixed #33133 -- Fixed handling NullBooleanField in historical migrations.",
+            "url": "https://github.com/django/django/pull/14886",
+            "is_pr": true
+          },
+          {
+            "ref": 14785,
+            "sim": 0.1038,
+            "closed_at": "2021-09-28T11:58:01Z",
+            "title": "Fixed #33033 -- Prevented models.DecimalField from accepting NaN values.",
+            "url": "https://github.com/django/django/pull/14785",
+            "is_pr": true
+          },
+          {
+            "ref": 14717,
+            "sim": 0.0822,
+            "closed_at": "2021-07-30T08:52:17Z",
+            "title": "Fixed #32966 -- Fixed TimeField.check() crash for timezone-aware times in default when USE_TZ = True.",
+            "url": "https://github.com/django/django/pull/14717",
+            "is_pr": true
+          },
+          {
+            "ref": 14173,
+            "sim": 0.0435,
+            "closed_at": "2021-07-15T10:37:49Z",
+            "title": "Refs #32508 -- Raised Type/ValueError instead of using \"assert\" in django.db.models.",
+            "url": "https://github.com/django/django/pull/14173",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 14886,
+          "sim": 0.1108,
+          "closed_at": "2021-09-23T08:36:30Z",
+          "title": "Fixed #33133 -- Fixed handling NullBooleanField in historical migrations.",
+          "url": "https://github.com/django/django/pull/14886",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-15851",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2022-07-17T13:23:53+02:00",
+    "missing_files": [
+      "django/db/backends/postgresql/client.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/db/backends/postgresql/client.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          15387,
+          33476,
+          14315,
+          32687,
+          14043,
+          32456,
+          14054,
+          32292
+        ],
+        "n_candidates": 4,
+        "candidates": [
+          {
+            "ref": 14054,
+            "sim": 0.168,
+            "closed_at": "2021-02-26T19:53:01Z",
+            "title": "Refs #32292 -- Made dbshell do not use 'postgres' database when service name is set.",
+            "url": "https://github.com/django/django/pull/14054",
+            "is_pr": true
+          },
+          {
+            "ref": 14043,
+            "sim": 0.1261,
+            "closed_at": "2021-03-01T09:44:59Z",
+            "title": "Fixed #32456 -- Added dbshell support for specifying a password file on PostgreSQL.",
+            "url": "https://github.com/django/django/pull/14043",
+            "is_pr": true
+          },
+          {
+            "ref": 14315,
+            "sim": 0.0895,
+            "closed_at": "2021-04-27T10:01:44Z",
+            "title": "Fixed #32687 -- Restored passing process\u2019 environment to underlying tool in dbshell on PostgreSQL.",
+            "url": "https://github.com/django/django/pull/14315",
+            "is_pr": true
+          },
+          {
+            "ref": 15387,
+            "sim": 0.0117,
+            "closed_at": "2022-02-08T06:09:51Z",
+            "title": "Refs #33476 -- Reformatted code with Black.",
+            "url": "https://github.com/django/django/pull/15387",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 14054,
+          "sim": 0.168,
+          "closed_at": "2021-02-26T19:53:01Z",
+          "title": "Refs #32292 -- Made dbshell do not use 'postgres' database when service name is set.",
+          "url": "https://github.com/django/django/pull/14054",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-16816",
+    "tier": "@10-only",
+    "repo": "django/django",
+    "base_date": "2023-05-01T18:57:24+02:00",
+    "missing_files": [
+      "django/contrib/admin/checks.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "django/contrib/admin/checks.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          16757,
+          34481,
+          16475,
+          34233,
+          15440,
+          2259,
+          32728,
+          15387,
+          33476
+        ],
+        "n_candidates": 5,
+        "candidates": [
+          {
+            "ref": 16757,
+            "sim": 0.0698,
+            "closed_at": "2023-04-24T11:14:35Z",
+            "title": "Fixed #34481 -- Added system check for reverse related fields in ModelAdmin.list_display.",
+            "url": "https://github.com/django/django/pull/16757",
+            "is_pr": true
+          },
+          {
+            "ref": 15440,
+            "sim": 0.0668,
+            "closed_at": "2022-04-25T11:40:43Z",
+            "title": "Refs #2259 -- Disallowed primary keys in ModelAdmin.list_editable.",
+            "url": "https://github.com/django/django/pull/15440",
+            "is_pr": true
+          },
+          {
+            "ref": 15387,
+            "sim": 0.047,
+            "closed_at": "2022-02-08T06:09:51Z",
+            "title": "Refs #33476 -- Reformatted code with Black.",
+            "url": "https://github.com/django/django/pull/15387",
+            "is_pr": true
+          },
+          {
+            "ref": 16475,
+            "sim": 0.0051,
+            "closed_at": "2023-01-18T18:11:18Z",
+            "title": "Refs #34233 -- Used str.removeprefix()/removesuffix().",
+            "url": "https://github.com/django/django/pull/16475",
+            "is_pr": true
+          },
+          {
+            "ref": 2259,
+            "sim": 0.0,
+            "closed_at": "2014-09-10T12:40:17Z",
+            "title": "[BROKEN] Add --use-fuzzy option to compilemessages command.",
+            "url": "https://github.com/django/django/pull/2259",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 16757,
+          "sim": 0.0698,
+          "closed_at": "2023-04-24T11:14:35Z",
+          "title": "Fixed #34481 -- Added system check for reverse related fields in ModelAdmin.list_display.",
+          "url": "https://github.com/django/django/pull/16757",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-23476",
+    "tier": "@10-only",
+    "repo": "matplotlib/matplotlib",
+    "base_date": "2022-07-22T09:29:17-07:00",
+    "missing_files": [
+      "lib/matplotlib/figure.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "lib/matplotlib/figure.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          16931,
+          23462,
+          23448,
+          20752,
+          22820,
+          22452,
+          23191,
+          9814,
+          6159,
+          8576
+        ],
+        "n_candidates": 5,
+        "candidates": [
+          {
+            "ref": 9814,
+            "sim": 0.2308,
+            "closed_at": "2018-03-05T00:32:51Z",
+            "title": "figure_enter_event uses now LocationEvent instead of Event. Fix issue #9812.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/9814",
+            "is_pr": true
+          },
+          {
+            "ref": 23191,
+            "sim": 0.1327,
+            "closed_at": "2022-06-28T01:02:38Z",
+            "title": "ENH: add width_ratios and height_ratios to subplots",
+            "url": "https://github.com/matplotlib/matplotlib/pull/23191",
+            "is_pr": true
+          },
+          {
+            "ref": 20752,
+            "sim": 0.1096,
+            "closed_at": "2022-07-20T14:44:17Z",
+            "title": "Set norms using scale names.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/20752",
+            "is_pr": true
+          },
+          {
+            "ref": 23448,
+            "sim": 0.1049,
+            "closed_at": "2022-07-21T19:55:22Z",
+            "title": "Tweak callbacks to generate pick events.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/23448",
+            "is_pr": true
+          },
+          {
+            "ref": 22820,
+            "sim": 0.0884,
+            "closed_at": "2022-07-01T07:29:54Z",
+            "title": "[Doc] consolidate `rect` documentation",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22820",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 9814,
+          "sim": 0.2308,
+          "closed_at": "2018-03-05T00:32:51Z",
+          "title": "figure_enter_event uses now LocationEvent instead of Event. Fix issue #9812.",
+          "url": "https://github.com/matplotlib/matplotlib/pull/9814",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-24265",
+    "tier": "@10-only",
+    "repo": "matplotlib/matplotlib",
+    "base_date": "2022-10-25T00:14:44-04:00",
+    "missing_files": [
+      "lib/matplotlib/style/core.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "lib/matplotlib/style/core.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          24125,
+          23674,
+          23337,
+          22148,
+          22317,
+          20857,
+          20812,
+          20822,
+          20733,
+          12038
+        ],
+        "n_candidates": 7,
+        "candidates": [
+          {
+            "ref": 20822,
+            "sim": 0.2847,
+            "closed_at": "2021-08-10T23:09:39Z",
+            "title": "BUG: __getattr__ must raise AttributeError if name not found",
+            "url": "https://github.com/matplotlib/matplotlib/pull/20822",
+            "is_pr": true
+          },
+          {
+            "ref": 22317,
+            "sim": 0.2687,
+            "closed_at": "2022-01-26T08:18:12Z",
+            "title": "Rename outdated seaborn styles.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22317",
+            "is_pr": true
+          },
+          {
+            "ref": 20812,
+            "sim": 0.2508,
+            "closed_at": "2021-08-18T06:36:43Z",
+            "title": "Clarify tutorial \"Customizing Matplotlib with style sheets and rcParams\"",
+            "url": "https://github.com/matplotlib/matplotlib/pull/20812",
+            "is_pr": true
+          },
+          {
+            "ref": 23674,
+            "sim": 0.1825,
+            "closed_at": "2022-08-26T00:41:07Z",
+            "title": "Re-rename builtin seaborn styles to not include a dot.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/23674",
+            "is_pr": true
+          },
+          {
+            "ref": 23337,
+            "sim": 0.1549,
+            "closed_at": "2022-06-24T03:04:54Z",
+            "title": "Remove now inexistent \"datapath\" rcParam from style blacklist.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/23337",
+            "is_pr": true
+          },
+          {
+            "ref": 22148,
+            "sim": 0.1536,
+            "closed_at": "2022-03-15T20:46:30Z",
+            "title": "MNT: Deprecate `docstring`",
+            "url": "https://github.com/matplotlib/matplotlib/pull/22148",
+            "is_pr": true
+          },
+          {
+            "ref": 20857,
+            "sim": 0.1493,
+            "closed_at": "2021-08-20T22:12:05Z",
+            "title": "Propose a less error-prone helper for module-level getattrs.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/20857",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 20822,
+          "sim": 0.2847,
+          "closed_at": "2021-08-10T23:09:39Z",
+          "title": "BUG: __getattr__ must raise AttributeError if name not found",
+          "url": "https://github.com/matplotlib/matplotlib/pull/20822",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-25311",
+    "tier": "@10-only",
+    "repo": "matplotlib/matplotlib",
+    "base_date": "2023-02-24T11:26:30-08:00",
+    "missing_files": [
+      "lib/matplotlib/offsetbox.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "lib/matplotlib/offsetbox.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          24980,
+          24465,
+          24637,
+          20044,
+          24652,
+          24664,
+          24643,
+          24570
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 20044,
+            "sim": 0.1994,
+            "closed_at": "2022-12-22T20:35:31Z",
+            "title": "AnnotationBbox gid not passed to renderer",
+            "url": "https://github.com/matplotlib/matplotlib/issues/20044",
+            "is_pr": false
+          },
+          {
+            "ref": 24980,
+            "sim": 0.0749,
+            "closed_at": "2023-01-21T04:56:09Z",
+            "title": "Python 3.9 upgrade",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24980",
+            "is_pr": true
+          },
+          {
+            "ref": 24643,
+            "sim": 0.0645,
+            "closed_at": "2022-12-06T20:04:57Z",
+            "title": "DOC: annotation coords are not floats",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24643",
+            "is_pr": true
+          },
+          {
+            "ref": 24637,
+            "sim": 0.0497,
+            "closed_at": "2022-12-22T20:35:29Z",
+            "title": "Fixes #20044 pass AnnotationBbox to renderer",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24637",
+            "is_pr": true
+          },
+          {
+            "ref": 24465,
+            "sim": 0.0474,
+            "closed_at": "2022-12-23T19:02:30Z",
+            "title": "Reparametrize offsetbox calculations in terms of bboxes.",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24465",
+            "is_pr": true
+          },
+          {
+            "ref": 24664,
+            "sim": 0.0473,
+            "closed_at": "2022-12-09T18:14:19Z",
+            "title": "Deprecate offsetbox.bbox_artist",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24664",
+            "is_pr": true
+          },
+          {
+            "ref": 24570,
+            "sim": 0.047,
+            "closed_at": "2022-12-01T00:28:35Z",
+            "title": "FIX: VPacker and HPacker bottom/top alignment",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24570",
+            "is_pr": true
+          },
+          {
+            "ref": 24652,
+            "sim": 0.0454,
+            "closed_at": "2022-12-14T16:53:23Z",
+            "title": "Offsetbox default arguments",
+            "url": "https://github.com/matplotlib/matplotlib/pull/24652",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 20044,
+          "sim": 0.1994,
+          "closed_at": "2022-12-22T20:35:31Z",
+          "title": "AnnotationBbox gid not passed to renderer",
+          "url": "https://github.com/matplotlib/matplotlib/issues/20044",
+          "is_pr": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7228",
+    "tier": "@10-only",
+    "repo": "pylint-dev/pylint",
+    "base_date": "2022-07-31T19:11:20+02:00",
+    "missing_files": [
+      "pylint/config/argument.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "pylint/config/argument.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          6672,
+          6517,
+          6494,
+          6386,
+          6313,
+          6307,
+          6300,
+          6207
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 6307,
+            "sim": 0.1641,
+            "closed_at": "2022-04-14T08:50:51Z",
+            "title": "Use ``python-typing-update`` on ``pylint/config`` directory",
+            "url": "https://github.com/pylint-dev/pylint/pull/6307",
+            "is_pr": true
+          },
+          {
+            "ref": 6313,
+            "sim": 0.1123,
+            "closed_at": "2022-04-14T16:28:49Z",
+            "title": "Use ``--py39-plus`` and ``--full-reorder`` in ``python-typing-update``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6313",
+            "is_pr": true
+          },
+          {
+            "ref": 6494,
+            "sim": 0.104,
+            "closed_at": "2022-05-03T13:27:59Z",
+            "title": "Create a path type of argument that automatically expand user/var",
+            "url": "https://github.com/pylint-dev/pylint/pull/6494",
+            "is_pr": true
+          },
+          {
+            "ref": 6517,
+            "sim": 0.0612,
+            "closed_at": "2022-05-05T22:31:19Z",
+            "title": "Fix behavior of empty `--confidence` option",
+            "url": "https://github.com/pylint-dev/pylint/pull/6517",
+            "is_pr": true
+          },
+          {
+            "ref": 6672,
+            "sim": 0.051,
+            "closed_at": "2022-05-23T13:36:55Z",
+            "title": "Some initial line wrapping of docstrings",
+            "url": "https://github.com/pylint-dev/pylint/pull/6672",
+            "is_pr": true
+          },
+          {
+            "ref": 6300,
+            "sim": 0.0225,
+            "closed_at": "2022-04-14T08:35:21Z",
+            "title": "Create ``_ExtendArgument``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6300",
+            "is_pr": true
+          },
+          {
+            "ref": 6386,
+            "sim": 0.0173,
+            "closed_at": "2022-04-19T08:45:36Z",
+            "title": "Fix short ``-v`` flag",
+            "url": "https://github.com/pylint-dev/pylint/pull/6386",
+            "is_pr": true
+          },
+          {
+            "ref": 6207,
+            "sim": 0.0072,
+            "closed_at": "2022-04-06T16:29:08Z",
+            "title": "Handle ``group`` in optdicts and ``option_groups``",
+            "url": "https://github.com/pylint-dev/pylint/pull/6207",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 6307,
+          "sim": 0.1641,
+          "closed_at": "2022-04-14T08:50:51Z",
+          "title": "Use ``python-typing-update`` on ``pylint/config`` directory",
+          "url": "https://github.com/pylint-dev/pylint/pull/6307",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "pytest-dev__pytest-11148",
+    "tier": "@10-only",
+    "repo": "pytest-dev/pytest",
+    "base_date": "2023-07-01T15:12:41Z",
+    "missing_files": [
+      "src/_pytest/pathlib.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "src/_pytest/pathlib.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          10338,
+          10337,
+          11026,
+          10911,
+          10896,
+          10893,
+          10890,
+          10747
+        ],
+        "n_candidates": 6,
+        "candidates": [
+          {
+            "ref": 10911,
+            "sim": 0.1339,
+            "closed_at": "2023-04-14T16:24:13Z",
+            "title": "Fix tmp_path regression introduced in 7.3.0",
+            "url": "https://github.com/pytest-dev/pytest/pull/10911",
+            "is_pr": true
+          },
+          {
+            "ref": 10890,
+            "sim": 0.1201,
+            "closed_at": "2023-04-11T20:54:48Z",
+            "title": "Use of `rmtree` causes `DeprecationWarning` on Python 3.12 alpha",
+            "url": "https://github.com/pytest-dev/pytest/issues/10890",
+            "is_pr": false
+          },
+          {
+            "ref": 10747,
+            "sim": 0.1133,
+            "closed_at": "2023-02-18T21:55:46Z",
+            "title": "Update import mode documentation to not refer to __import__() anymore.",
+            "url": "https://github.com/pytest-dev/pytest/pull/10747",
+            "is_pr": true
+          },
+          {
+            "ref": 10893,
+            "sim": 0.1103,
+            "closed_at": "2023-04-11T20:54:47Z",
+            "title": "Python 3.12 alpha fixes",
+            "url": "https://github.com/pytest-dev/pytest/pull/10893",
+            "is_pr": true
+          },
+          {
+            "ref": 10896,
+            "sim": 0.0918,
+            "closed_at": "2023-04-14T16:24:14Z",
+            "title": "Major pytest 7.3.0 performance regression on Windows",
+            "url": "https://github.com/pytest-dev/pytest/issues/10896",
+            "is_pr": false
+          },
+          {
+            "ref": 11026,
+            "sim": 0.0269,
+            "closed_at": "2023-05-24T18:44:04Z",
+            "title": "Small fixes and improvements",
+            "url": "https://github.com/pytest-dev/pytest/pull/11026",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 10911,
+          "sim": 0.1339,
+          "closed_at": "2023-04-14T16:24:13Z",
+          "title": "Fix tmp_path regression introduced in 7.3.0",
+          "url": "https://github.com/pytest-dev/pytest/pull/10911",
+          "is_pr": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "pytest-dev__pytest-6116",
+    "tier": "@10-only",
+    "repo": "pytest-dev/pytest",
+    "base_date": "2019-11-07T17:11:01+02:00",
+    "missing_files": [
+      "src/_pytest/main.py"
+    ],
+    "file_results": [
+      {
+        "missing_path": "src/_pytest/main.py",
+        "n_commits_found": 10,
+        "refs_checked": [
+          6120,
+          6111,
+          6129,
+          6112,
+          5990,
+          5966,
+          5698,
+          5697
+        ],
+        "n_candidates": 8,
+        "candidates": [
+          {
+            "ref": 5697,
+            "sim": 0.1391,
+            "closed_at": "2019-08-05T16:20:29Z",
+            "title": "Fix RuntimeError when trying to collect package with \"__init__.py\" only",
+            "url": "https://github.com/pytest-dev/pytest/pull/5697",
+            "is_pr": true
+          },
+          {
+            "ref": 5990,
+            "sim": 0.1071,
+            "closed_at": "2019-10-28T16:03:16Z",
+            "title": "Plurality matching",
+            "url": "https://github.com/pytest-dev/pytest/pull/5990",
+            "is_pr": true
+          },
+          {
+            "ref": 6120,
+            "sim": 0.0863,
+            "closed_at": "2019-11-07T10:16:25Z",
+            "title": "Session: collect: keep/use already parsed initialpart",
+            "url": "https://github.com/pytest-dev/pytest/pull/6120",
+            "is_pr": true
+          },
+          {
+            "ref": 5966,
+            "sim": 0.0711,
+            "closed_at": "2019-10-16T13:43:46Z",
+            "title": "Add missing version added/changed markers to docs",
+            "url": "https://github.com/pytest-dev/pytest/pull/5966",
+            "is_pr": true
+          },
+          {
+            "ref": 6112,
+            "sim": 0.0671,
+            "closed_at": "2019-11-01T10:18:08Z",
+            "title": "typos",
+            "url": "https://github.com/pytest-dev/pytest/pull/6112",
+            "is_pr": true
+          },
+          {
+            "ref": 6111,
+            "sim": 0.0,
+            "closed_at": "2019-11-07T11:31:34Z",
+            "title": "Merge master into features",
+            "url": "https://github.com/pytest-dev/pytest/pull/6111",
+            "is_pr": true
+          },
+          {
+            "ref": 6129,
+            "sim": 0.0,
+            "closed_at": "2019-11-05T17:29:30Z",
+            "title": "typing around Node.location, reportinfo, repr_excinfo etc",
+            "url": "https://github.com/pytest-dev/pytest/pull/6129",
+            "is_pr": true
+          },
+          {
+            "ref": 5698,
+            "sim": 0.0,
+            "closed_at": "2019-08-05T18:20:55Z",
+            "title": "Merge master into features",
+            "url": "https://github.com/pytest-dev/pytest/pull/5698",
+            "is_pr": true
+          }
+        ],
+        "best": {
+          "ref": 5697,
+          "sim": 0.1391,
+          "closed_at": "2019-08-05T16:20:29Z",
+          "title": "Fix RuntimeError when trying to collect package with \"__init__.py\" only",
+          "url": "https://github.com/pytest-dev/pytest/pull/5697",
+          "is_pr": true
+        }
+      }
+    ]
+  }
+]

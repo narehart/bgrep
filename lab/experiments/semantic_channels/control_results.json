@@ -1,0 +1,767 @@
+[
+  {
+    "instance_id": "astropy__astropy-12907",
+    "repo": "astropy/astropy",
+    "base_date": "2022-03-03T13:21:56-05:00",
+    "file": "astropy/modeling/separable.py",
+    "file_result": {
+      "missing_path": "astropy/modeling/separable.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        12900,
+        9526,
+        6603,
+        8769,
+        8958,
+        8917,
+        7803,
+        6746
+      ],
+      "n_candidates": 7,
+      "candidates": [
+        {
+          "ref": 7803,
+          "sim": 0.3973,
+          "closed_at": "2018-09-26T11:49:11Z",
+          "title": "models inputs, outputs correlation matrix",
+          "url": "https://github.com/astropy/astropy/pull/7803",
+          "is_pr": true
+        },
+        {
+          "ref": 6746,
+          "sim": 0.3787,
+          "closed_at": "2017-12-21T18:18:16Z",
+          "title": "Add model separability test",
+          "url": "https://github.com/astropy/astropy/pull/6746",
+          "is_pr": true
+        },
+        {
+          "ref": 8769,
+          "sim": 0.3584,
+          "closed_at": "2019-07-24T07:35:07Z",
+          "title": "Updating modeling to use new Compound Models and new Parameter behavior",
+          "url": "https://github.com/astropy/astropy/pull/8769",
+          "is_pr": true
+        },
+        {
+          "ref": 6603,
+          "sim": 0.1006,
+          "closed_at": "2017-09-28T18:07:47Z",
+          "title": "Remove unnessary numpy lookups for int, float, complex, bool and str",
+          "url": "https://github.com/astropy/astropy/pull/6603",
+          "is_pr": true
+        },
+        {
+          "ref": 9526,
+          "sim": 0.0847,
+          "closed_at": "2019-11-05T16:40:48Z",
+          "title": "Maintenance: Don't use NumPys re-exported Python built-ins.",
+          "url": "https://github.com/astropy/astropy/pull/9526",
+          "is_pr": true
+        },
+        {
+          "ref": 8958,
+          "sim": 0.0139,
+          "closed_at": "2019-07-11T20:22:30Z",
+          "title": "Convert format and % strings to  f-strings",
+          "url": "https://github.com/astropy/astropy/pull/8958",
+          "is_pr": true
+        },
+        {
+          "ref": 8917,
+          "sim": 0.0,
+          "closed_at": "2019-06-25T14:53:18Z",
+          "title": "Adding blank line checks to PEP8",
+          "url": "https://github.com/astropy/astropy/pull/8917",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 7803,
+        "sim": 0.3973,
+        "closed_at": "2018-09-26T11:49:11Z",
+        "title": "models inputs, outputs correlation matrix",
+        "url": "https://github.com/astropy/astropy/pull/7803",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-14365",
+    "repo": "astropy/astropy",
+    "base_date": "2023-04-18T11:56:24-04:00",
+    "file": "astropy/io/ascii/qdp.py",
+    "file_result": {
+      "missing_path": "astropy/io/ascii/qdp.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        14365,
+        14268,
+        14272,
+        13956,
+        13700,
+        12663,
+        10778,
+        11894
+      ],
+      "n_candidates": 7,
+      "candidates": [
+        {
+          "ref": 11894,
+          "sim": 0.1346,
+          "closed_at": "2021-06-26T23:23:55Z",
+          "title": "Fix QDP docstring example (missing a newline)",
+          "url": "https://github.com/astropy/astropy/pull/11894",
+          "is_pr": true
+        },
+        {
+          "ref": 13956,
+          "sim": 0.1172,
+          "closed_at": "2022-11-10T23:04:41Z",
+          "title": "Apply `black` to `astropy.io.ascii`",
+          "url": "https://github.com/astropy/astropy/pull/13956",
+          "is_pr": true
+        },
+        {
+          "ref": 12663,
+          "sim": 0.1145,
+          "closed_at": "2022-01-21T13:53:37Z",
+          "title": "Misc docstring fixes for io",
+          "url": "https://github.com/astropy/astropy/pull/12663",
+          "is_pr": true
+        },
+        {
+          "ref": 14268,
+          "sim": 0.1115,
+          "closed_at": "2023-01-21T15:59:37Z",
+          "title": "Fix D202 - NoBlankLineAfterFunction ",
+          "url": "https://github.com/astropy/astropy/pull/14268",
+          "is_pr": true
+        },
+        {
+          "ref": 14272,
+          "sim": 0.1083,
+          "closed_at": "2023-01-17T00:32:19Z",
+          "title": "fix D415 - EndsInPunctuation",
+          "url": "https://github.com/astropy/astropy/pull/14272",
+          "is_pr": true
+        },
+        {
+          "ref": 10778,
+          "sim": 0.0965,
+          "closed_at": "2021-09-23T19:14:03Z",
+          "title": "Changes for pylance/pyright correctness",
+          "url": "https://github.com/astropy/astropy/pull/10778",
+          "is_pr": true
+        },
+        {
+          "ref": 13700,
+          "sim": 0.0808,
+          "closed_at": "2022-09-20T12:15:21Z",
+          "title": "isort io",
+          "url": "https://github.com/astropy/astropy/pull/13700",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 11894,
+        "sim": 0.1346,
+        "closed_at": "2021-06-26T23:23:55Z",
+        "title": "Fix QDP docstring example (missing a newline)",
+        "url": "https://github.com/astropy/astropy/pull/11894",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-14995",
+    "repo": "astropy/astropy",
+    "base_date": "2023-06-27T12:14:24-04:00",
+    "file": "astropy/nddata/mixins/ndarithmetic.py",
+    "file_result": {
+      "missing_path": "astropy/nddata/mixins/ndarithmetic.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        14175,
+        14268,
+        14272,
+        13982,
+        13961,
+        3,
+        13814,
+        13945
+      ],
+      "n_candidates": 8,
+      "candidates": [
+        {
+          "ref": 14175,
+          "sim": 0.1726,
+          "closed_at": "2023-02-28T21:32:33Z",
+          "title": "ENH nddata: collapse operations on NDDataArray, improved Masked Quantity support",
+          "url": "https://github.com/astropy/astropy/pull/14175",
+          "is_pr": true
+        },
+        {
+          "ref": 13961,
+          "sim": 0.0679,
+          "closed_at": "2022-11-10T23:06:48Z",
+          "title": "Apply `black` to `astropy.nddata`",
+          "url": "https://github.com/astropy/astropy/pull/13961",
+          "is_pr": true
+        },
+        {
+          "ref": 13945,
+          "sim": 0.0666,
+          "closed_at": "2022-11-01T20:29:31Z",
+          "title": "Apply `black` to `astropy.nddata`",
+          "url": "https://github.com/astropy/astropy/issues/13945",
+          "is_pr": false
+        },
+        {
+          "ref": 14272,
+          "sim": 0.0552,
+          "closed_at": "2023-01-17T00:32:19Z",
+          "title": "fix D415 - EndsInPunctuation",
+          "url": "https://github.com/astropy/astropy/pull/14272",
+          "is_pr": true
+        },
+        {
+          "ref": 14268,
+          "sim": 0.0542,
+          "closed_at": "2023-01-21T15:59:37Z",
+          "title": "Fix D202 - NoBlankLineAfterFunction ",
+          "url": "https://github.com/astropy/astropy/pull/14268",
+          "is_pr": true
+        },
+        {
+          "ref": 13982,
+          "sim": 0.0536,
+          "closed_at": "2022-12-16T03:14:46Z",
+          "title": "Add codespell configuration and fix associated spelling errors",
+          "url": "https://github.com/astropy/astropy/pull/13982",
+          "is_pr": true
+        },
+        {
+          "ref": 13814,
+          "sim": 0.0232,
+          "closed_at": "2022-12-16T03:14:47Z",
+          "title": "Catch common typos with codespell",
+          "url": "https://github.com/astropy/astropy/issues/13814",
+          "is_pr": false
+        },
+        {
+          "ref": 3,
+          "sim": 0.0104,
+          "closed_at": "2011-08-10T02:07:32Z",
+          "title": "Color and logo",
+          "url": "https://github.com/astropy/astropy/pull/3",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 14175,
+        "sim": 0.1726,
+        "closed_at": "2023-02-28T21:32:33Z",
+        "title": "ENH nddata: collapse operations on NDDataArray, improved Masked Quantity support",
+        "url": "https://github.com/astropy/astropy/pull/14175",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-6938",
+    "repo": "astropy/astropy",
+    "base_date": "2017-12-21T17:09:47-05:00",
+    "file": "astropy/io/fits/fitsrec.py",
+    "file_result": {
+      "missing_path": "astropy/io/fits/fitsrec.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        6920,
+        6966,
+        6955,
+        6932,
+        6821,
+        2102
+      ],
+      "n_candidates": 6,
+      "candidates": [
+        {
+          "ref": 6821,
+          "sim": 0.1813,
+          "closed_at": "2017-12-01T09:55:44Z",
+          "title": "Make it possible to use Table.read on FITS files with no copying",
+          "url": "https://github.com/astropy/astropy/pull/6821",
+          "is_pr": true
+        },
+        {
+          "ref": 6955,
+          "sim": 0.1402,
+          "closed_at": "2017-12-10T11:25:58Z",
+          "title": "Ensure FITS_rec can be indexed with a tuple even if it returns a scalar.",
+          "url": "https://github.com/astropy/astropy/pull/6955",
+          "is_pr": true
+        },
+        {
+          "ref": 6966,
+          "sim": 0.1276,
+          "closed_at": "2017-12-11T16:51:14Z",
+          "title": "Change way slicing of recarray is done to help numpy 1.9",
+          "url": "https://github.com/astropy/astropy/pull/6966",
+          "is_pr": true
+        },
+        {
+          "ref": 6920,
+          "sim": 0.1226,
+          "closed_at": "2017-12-18T10:20:16Z",
+          "title": "Speed up writing of FITS tables with string columns",
+          "url": "https://github.com/astropy/astropy/pull/6920",
+          "is_pr": true
+        },
+        {
+          "ref": 2102,
+          "sim": 0.0656,
+          "closed_at": "2017-12-06T14:32:04Z",
+          "title": "PEP 3151 for v3.0.0",
+          "url": "https://github.com/astropy/astropy/issues/2102",
+          "is_pr": false
+        },
+        {
+          "ref": 6932,
+          "sim": 0.0339,
+          "closed_at": "2017-12-06T14:32:04Z",
+          "title": "PEP 3151 ",
+          "url": "https://github.com/astropy/astropy/pull/6932",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 6821,
+        "sim": 0.1813,
+        "closed_at": "2017-12-01T09:55:44Z",
+        "title": "Make it possible to use Table.read on FITS files with no copying",
+        "url": "https://github.com/astropy/astropy/pull/6821",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-7746",
+    "repo": "astropy/astropy",
+    "base_date": "2018-08-15T16:36:50+01:00",
+    "file": "astropy/wcs/wcs.py",
+    "file_result": {
+      "missing_path": "astropy/wcs/wcs.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        7556,
+        6932,
+        6682,
+        6556,
+        6413,
+        2102
+      ],
+      "n_candidates": 6,
+      "candidates": [
+        {
+          "ref": 7556,
+          "sim": 0.4846,
+          "closed_at": "2018-06-12T16:06:30Z",
+          "title": "Fix incorrect WCS after slicing or making image cutouts when WCS has SIP",
+          "url": "https://github.com/astropy/astropy/pull/7556",
+          "is_pr": true
+        },
+        {
+          "ref": 6556,
+          "sim": 0.1254,
+          "closed_at": "2017-09-22T01:33:14Z",
+          "title": "Remove python2 support from code",
+          "url": "https://github.com/astropy/astropy/pull/6556",
+          "is_pr": true
+        },
+        {
+          "ref": 6413,
+          "sim": 0.0633,
+          "closed_at": "2017-08-03T15:58:20Z",
+          "title": "Remove useless backslashes (pep8 E502)",
+          "url": "https://github.com/astropy/astropy/pull/6413",
+          "is_pr": true
+        },
+        {
+          "ref": 6682,
+          "sim": 0.0376,
+          "closed_at": "2017-10-13T17:51:10Z",
+          "title": "Use Python3s named keyword-only arguments in some functions instead of popping from kwargs",
+          "url": "https://github.com/astropy/astropy/pull/6682",
+          "is_pr": true
+        },
+        {
+          "ref": 2102,
+          "sim": 0.0249,
+          "closed_at": "2017-12-06T14:32:04Z",
+          "title": "PEP 3151 for v3.0.0",
+          "url": "https://github.com/astropy/astropy/issues/2102",
+          "is_pr": false
+        },
+        {
+          "ref": 6932,
+          "sim": 0.0086,
+          "closed_at": "2017-12-06T14:32:04Z",
+          "title": "PEP 3151 ",
+          "url": "https://github.com/astropy/astropy/pull/6932",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 7556,
+        "sim": 0.4846,
+        "closed_at": "2018-06-12T16:06:30Z",
+        "title": "Fix incorrect WCS after slicing or making image cutouts when WCS has SIP",
+        "url": "https://github.com/astropy/astropy/pull/7556",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "django__django-10914",
+    "repo": "django/django",
+    "base_date": "2019-02-08T14:08:05-05:00",
+    "file": "django/conf/global_settings.py",
+    "file_result": {
+      "missing_path": "django/conf/global_settings.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        10798,
+        27829,
+        10830,
+        10430,
+        29784,
+        29324,
+        9876,
+        9860,
+        27863
+      ],
+      "n_candidates": 5,
+      "candidates": [
+        {
+          "ref": 10430,
+          "sim": 0.0389,
+          "closed_at": "2018-09-26T06:48:47Z",
+          "title": "Refs #29784 -- Switched to https:// links where available.",
+          "url": "https://github.com/django/django/pull/10430",
+          "is_pr": true
+        },
+        {
+          "ref": 10798,
+          "sim": 0.0275,
+          "closed_at": "2019-01-17T17:31:23Z",
+          "title": "Bootstrapped Django 3.0.",
+          "url": "https://github.com/django/django/pull/10798",
+          "is_pr": true
+        },
+        {
+          "ref": 9876,
+          "sim": 0.0125,
+          "closed_at": "2018-04-17T18:10:03Z",
+          "title": "Fixed #29324 -- Made Settings raise ImproperlyConfigured on SECRET_KEY access; not in init.",
+          "url": "https://github.com/django/django/pull/9876",
+          "is_pr": true
+        },
+        {
+          "ref": 10830,
+          "sim": 0.0,
+          "closed_at": "2019-01-10T09:50:43Z",
+          "title": "Added Armenian language",
+          "url": "https://github.com/django/django/pull/10830",
+          "is_pr": true
+        },
+        {
+          "ref": 9860,
+          "sim": 0.0,
+          "closed_at": "2018-04-14T00:58:32Z",
+          "title": "Fixed #27863 -- Added support for the SameSite cookie flag",
+          "url": "https://github.com/django/django/pull/9860",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 10430,
+        "sim": 0.0389,
+        "closed_at": "2018-09-26T06:48:47Z",
+        "title": "Refs #29784 -- Switched to https:// links where available.",
+        "url": "https://github.com/django/django/pull/10430",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "django__django-10924",
+    "repo": "django/django",
+    "base_date": "2019-05-02T09:13:20+02:00",
+    "file": "django/db/models/fields/__init__.py",
+    "file_result": {
+      "missing_path": "django/db/models/fields/__init__.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        11297,
+        11180,
+        30328,
+        11211,
+        30343,
+        11088,
+        28431,
+        11049,
+        30232
+      ],
+      "n_candidates": 5,
+      "candidates": [
+        {
+          "ref": 11180,
+          "sim": 0.0931,
+          "closed_at": "2019-04-19T06:21:54Z",
+          "title": "Fixed #30328 -- Fixed crash of IntegerField.validators when limit_value in a custom validator is callable.",
+          "url": "https://github.com/django/django/pull/11180",
+          "is_pr": true
+        },
+        {
+          "ref": 11049,
+          "sim": 0.0865,
+          "closed_at": "2019-03-05T00:25:28Z",
+          "title": "Fixed #30232 - Corrected error message for invalid DurationField",
+          "url": "https://github.com/django/django/pull/11049",
+          "is_pr": true
+        },
+        {
+          "ref": 11211,
+          "sim": 0.0852,
+          "closed_at": "2019-04-14T08:03:00Z",
+          "title": "Fixed #30343 -- Fixed prefetch_related() for GenericForeignKey when PK of related field is UUIDField.",
+          "url": "https://github.com/django/django/pull/11211",
+          "is_pr": true
+        },
+        {
+          "ref": 11297,
+          "sim": 0.0519,
+          "closed_at": "2019-04-29T05:54:33Z",
+          "title": "Simplified Field.contribute_to_class().",
+          "url": "https://github.com/django/django/pull/11297",
+          "is_pr": true
+        },
+        {
+          "ref": 11088,
+          "sim": 0.047,
+          "closed_at": "2019-03-25T19:22:48Z",
+          "title": "Fixed #28431 -- Added a system check for BinaryField to prevent strings defaults.",
+          "url": "https://github.com/django/django/pull/11088",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 11180,
+        "sim": 0.0931,
+        "closed_at": "2019-04-19T06:21:54Z",
+        "title": "Fixed #30328 -- Fixed crash of IntegerField.validators when limit_value in a custom validator is callable.",
+        "url": "https://github.com/django/django/pull/11180",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "django__django-11001",
+    "repo": "django/django",
+    "base_date": "2019-05-02T11:11:56+02:00",
+    "file": "django/db/models/sql/compiler.py",
+    "file_result": {
+      "missing_path": "django/db/models/sql/compiler.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        11079,
+        29810,
+        11181,
+        30335,
+        29139,
+        27149,
+        29542,
+        10737,
+        29619
+      ],
+      "n_candidates": 3,
+      "candidates": [
+        {
+          "ref": 11181,
+          "sim": 0.1251,
+          "closed_at": "2019-04-18T05:36:10Z",
+          "title": "Fixed #30335, #29139 -- Fixed crash when ordering or aggregating over a nested JSONField key transforms.",
+          "url": "https://github.com/django/django/pull/11181",
+          "is_pr": true
+        },
+        {
+          "ref": 11079,
+          "sim": 0.0298,
+          "closed_at": "2019-04-23T12:30:47Z",
+          "title": "Fixed #29810 -- Fixed crash of select_related() on FilteredRelation with empty result.",
+          "url": "https://github.com/django/django/pull/11079",
+          "is_pr": true
+        },
+        {
+          "ref": 10737,
+          "sim": 0.0238,
+          "closed_at": "2019-02-14T23:58:09Z",
+          "title": "Fixed #29619 -- Raised FieldError's should include the field that caused the error",
+          "url": "https://github.com/django/django/pull/10737",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 11181,
+        "sim": 0.1251,
+        "closed_at": "2019-04-18T05:36:10Z",
+        "title": "Fixed #30335, #29139 -- Fixed crash when ordering or aggregating over a nested JSONField key transforms.",
+        "url": "https://github.com/django/django/pull/11181",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "django__django-11019",
+    "repo": "django/django",
+    "base_date": "2019-02-27T16:17:10-05:00",
+    "file": "django/forms/widgets.py",
+    "file_result": {
+      "missing_path": "django/forms/widgets.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        10939,
+        30153,
+        10630,
+        17210,
+        9838,
+        29273,
+        9782,
+        29200
+      ],
+      "n_candidates": 4,
+      "candidates": [
+        {
+          "ref": 10939,
+          "sim": 0.2072,
+          "closed_at": "2019-02-09T14:38:53Z",
+          "title": "Fixed #30153 -- Fixed incorrect form Media asset ordering after three way merge.",
+          "url": "https://github.com/django/django/pull/10939",
+          "is_pr": true
+        },
+        {
+          "ref": 9838,
+          "sim": 0.0694,
+          "closed_at": "2018-04-02T13:34:49Z",
+          "title": "Fixed #29273 -- Prevented unwanted selection of empty choice in multiple-choice widgets",
+          "url": "https://github.com/django/django/pull/9838",
+          "is_pr": true
+        },
+        {
+          "ref": 9782,
+          "sim": 0.0555,
+          "closed_at": "2018-03-15T13:52:56Z",
+          "title": "Fixed #29200 -- Fixed label rendering when using RadioSelect and CheckboxSelectMultiple with MultiWidget.",
+          "url": "https://github.com/django/django/pull/9782",
+          "is_pr": true
+        },
+        {
+          "ref": 10630,
+          "sim": 0.0,
+          "closed_at": "2018-11-14T18:43:35Z",
+          "title": "Fixed #17210 -- Made `NullBooleanSelect` pass true/false as a GET param",
+          "url": "https://github.com/django/django/pull/10630",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 10939,
+        "sim": 0.2072,
+        "closed_at": "2019-02-09T14:38:53Z",
+        "title": "Fixed #30153 -- Fixed incorrect form Media asset ordering after three way merge.",
+        "url": "https://github.com/django/django/pull/10939",
+        "is_pr": true
+      }
+    }
+  },
+  {
+    "instance_id": "django__django-11039",
+    "repo": "django/django",
+    "base_date": "2019-03-07T10:02:18-05:00",
+    "file": "django/core/management/commands/sqlmigrate.py",
+    "file_result": {
+      "missing_path": "django/core/management/commands/sqlmigrate.py",
+      "n_commits_found": 10,
+      "refs_checked": [
+        10118,
+        10087,
+        29518,
+        8285,
+        7905,
+        23919,
+        7867,
+        6431
+      ],
+      "n_candidates": 6,
+      "candidates": [
+        {
+          "ref": 10087,
+          "sim": 0.1119,
+          "closed_at": "2018-06-25T14:43:13Z",
+          "title": "Fixed #29518 -- Added validation for sqlmigrate's app_label argument",
+          "url": "https://github.com/django/django/pull/10087",
+          "is_pr": true
+        },
+        {
+          "ref": 10118,
+          "sim": 0.0425,
+          "closed_at": "2018-07-02T21:54:57Z",
+          "title": "Removed parser.add_arguments() arguments that match the defaults.",
+          "url": "https://github.com/django/django/pull/10118",
+          "is_pr": true
+        },
+        {
+          "ref": 8285,
+          "sim": 0.0095,
+          "closed_at": "2017-04-02T00:03:56Z",
+          "title": "Removed implied default from strore_(true|false) argparse arguments",
+          "url": "https://github.com/django/django/pull/8285",
+          "is_pr": true
+        },
+        {
+          "ref": 7905,
+          "sim": 0.0,
+          "closed_at": "2017-01-25T18:37:14Z",
+          "title": "Refs #23919 -- Replaced super(ClassName, self) with super()",
+          "url": "https://github.com/django/django/pull/7905",
+          "is_pr": true
+        },
+        {
+          "ref": 7867,
+          "sim": 0.0,
+          "closed_at": "2017-01-18T12:31:00Z",
+          "title": "Refs #23919 -- Removed encoding preambles and future imports",
+          "url": "https://github.com/django/django/pull/7867",
+          "is_pr": true
+        },
+        {
+          "ref": 6431,
+          "sim": 0.0,
+          "closed_at": "2016-04-08T14:40:48Z",
+          "title": "Fixed E128 flake8 warnings.",
+          "url": "https://github.com/django/django/pull/6431",
+          "is_pr": true
+        }
+      ],
+      "best": {
+        "ref": 10087,
+        "sim": 0.1119,
+        "closed_at": "2018-06-25T14:43:13Z",
+        "title": "Fixed #29518 -- Added validation for sqlmigrate's app_label argument",
+        "url": "https://github.com/django/django/pull/10087",
+        "is_pr": true
+      }
+    }
+  }
+]

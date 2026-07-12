@@ -1,0 +1,2738 @@
+{
+  "n_failing_instances": 52,
+  "signal_a": {
+    "headroom_count": 5,
+    "headroom_pct_of_failing": 9.6,
+    "wall_s": 87.2,
+    "rows": [
+      {
+        "instance_id": "astropy__astropy-14182",
+        "repo": "astropy/astropy",
+        "gold": "astropy/io/ascii/rst.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 11.025,
+        "hunk_score": 16.56,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11283",
+        "repo": "django/django",
+        "gold": "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 11.931,
+        "hunk_score": 13.989,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11564",
+        "repo": "django/django",
+        "gold": "django/conf/__init__.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 10,
+        "content_score": 15.448,
+        "hunk_score": 14.989,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11797",
+        "repo": "django/django",
+        "gold": "django/db/models/lookups.py",
+        "n_candidates": 11,
+        "rank_content": 4,
+        "rank_hunk": 7,
+        "content_score": 10.839,
+        "hunk_score": 8.669,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11815",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 9,
+        "content_score": 14.583,
+        "hunk_score": 21.459,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11964",
+        "repo": "django/django",
+        "gold": "django/db/models/enums.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 10,
+        "content_score": 17.921,
+        "hunk_score": 21.025,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12113",
+        "repo": "django/django",
+        "gold": "django/db/backends/sqlite3/creation.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 18.259,
+        "hunk_score": 32.386,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12125",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "n_candidates": 11,
+        "rank_content": 8,
+        "rank_hunk": 4,
+        "content_score": 17.379,
+        "hunk_score": 29.188,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12747",
+        "repo": "django/django",
+        "gold": "django/db/models/deletion.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 7,
+        "content_score": 7.212,
+        "hunk_score": 18.187,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-14016",
+        "repo": "django/django",
+        "gold": "django/db/models/query_utils.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 3,
+        "content_score": 6.803,
+        "hunk_score": 17.699,
+        "hunk_doc_empty": false,
+        "headroom": true
+      },
+      {
+        "instance_id": "django__django-14580",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 7.911,
+        "hunk_score": 11.778,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-14997",
+        "repo": "django/django",
+        "gold": "django/db/backends/ddl_references.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 17.314,
+        "hunk_score": 19.046,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15213",
+        "repo": "django/django",
+        "gold": "django/db/models/fields/__init__.py",
+        "n_candidates": 11,
+        "rank_content": 4,
+        "rank_hunk": 4,
+        "content_score": 14.099,
+        "hunk_score": 12.287,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15388",
+        "repo": "django/django",
+        "gold": "django/template/autoreload.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 5.938,
+        "hunk_score": 7.659,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15851",
+        "repo": "django/django",
+        "gold": "django/db/backends/postgresql/client.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 3,
+        "content_score": 11.862,
+        "hunk_score": 19.435,
+        "hunk_doc_empty": false,
+        "headroom": true
+      },
+      {
+        "instance_id": "django__django-16229",
+        "repo": "django/django",
+        "gold": "django/forms/boundfield.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 10.537,
+        "hunk_score": 19.096,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-16400",
+        "repo": "django/django",
+        "gold": "django/contrib/auth/management/__init__.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 15.709,
+        "hunk_score": 29.235,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-16816",
+        "repo": "django/django",
+        "gold": "django/contrib/admin/checks.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 8,
+        "content_score": 37.255,
+        "hunk_score": 44.74,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-17087",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 11.245,
+        "hunk_score": 15.374,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-23314",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/mpl_toolkits/mplot3d/axes3d.py",
+        "n_candidates": 11,
+        "rank_content": 6,
+        "rank_hunk": 10,
+        "content_score": 18.246,
+        "hunk_score": 8.638,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-23476",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/figure.py",
+        "n_candidates": 11,
+        "rank_content": 5,
+        "rank_hunk": 10,
+        "content_score": 44.043,
+        "hunk_score": 19.009,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-24265",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/style/core.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 10,
+        "content_score": 12.849,
+        "hunk_score": 16.219,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-25311",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/offsetbox.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 11,
+        "content_score": 10.057,
+        "hunk_score": 9.307,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pylint-dev__pylint-7080",
+        "repo": "pylint-dev/pylint",
+        "gold": "pylint/lint/expand_modules.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 19.829,
+        "hunk_score": 25.189,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pylint-dev__pylint-7228",
+        "repo": "pylint-dev/pylint",
+        "gold": "pylint/config/argument.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 9,
+        "content_score": 23.864,
+        "hunk_score": 26.438,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-11148",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/pathlib.py",
+        "n_candidates": 11,
+        "rank_content": 8,
+        "rank_hunk": 2,
+        "content_score": 47.441,
+        "hunk_score": 67.289,
+        "hunk_doc_empty": false,
+        "headroom": true
+      },
+      {
+        "instance_id": "pytest-dev__pytest-6116",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/main.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 9,
+        "content_score": 6.366,
+        "hunk_score": 7.381,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-7220",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/nodes.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 16.427,
+        "hunk_score": 13.445,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-7490",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/skipping.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 7,
+        "content_score": 14.575,
+        "hunk_score": 41.186,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-9359",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/_code/source.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 9,
+        "content_score": 11.686,
+        "hunk_score": 22.026,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "scikit-learn__scikit-learn-25500",
+        "repo": "scikit-learn/scikit-learn",
+        "gold": "sklearn/isotonic.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 35.147,
+        "hunk_score": 38.333,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-11445",
+        "repo": "sphinx-doc/sphinx",
+        "gold": "sphinx/util/rst.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 7,
+        "content_score": 21.562,
+        "hunk_score": 26.871,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-7738",
+        "repo": "sphinx-doc/sphinx",
+        "gold": "sphinx/ext/napoleon/docstring.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 10,
+        "content_score": 9.735,
+        "hunk_score": 12.397,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-8273",
+        "repo": "sphinx-doc/sphinx",
+        "gold": "sphinx/builders/manpage.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 9,
+        "content_score": 7.428,
+        "hunk_score": 11.954,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sphinx-doc__sphinx-8627",
+        "repo": "sphinx-doc/sphinx",
+        "gold": "sphinx/util/typing.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 8,
+        "content_score": 10.134,
+        "hunk_score": 17.84,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-12236",
+        "repo": "sympy/sympy",
+        "gold": "sympy/polys/domains/polynomialring.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 5,
+        "content_score": 5.992,
+        "hunk_score": 14.312,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-13146",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/operations.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 2,
+        "content_score": 3.757,
+        "hunk_score": 8.054,
+        "hunk_doc_empty": false,
+        "headroom": true
+      },
+      {
+        "instance_id": "sympy__sympy-13895",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/numbers.py",
+        "n_candidates": 11,
+        "rank_content": 7,
+        "rank_hunk": 10,
+        "content_score": 0.755,
+        "hunk_score": 0.689,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-13915",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mul.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 9,
+        "content_score": 10.229,
+        "hunk_score": 7.326,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-14024",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/numbers.py",
+        "n_candidates": 11,
+        "rank_content": 5,
+        "rank_hunk": 8,
+        "content_score": 2.996,
+        "hunk_score": 2.658,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-15346",
+        "repo": "sympy/sympy",
+        "gold": "sympy/simplify/trigsimp.py",
+        "n_candidates": 11,
+        "rank_content": 8,
+        "rank_hunk": 5,
+        "content_score": 5.666,
+        "hunk_score": 8.324,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-17022",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/pycode.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 8,
+        "content_score": 9.529,
+        "hunk_score": 12.771,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-17630",
+        "repo": "sympy/sympy",
+        "gold": "sympy/matrices/expressions/matexpr.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 5,
+        "content_score": 24.751,
+        "hunk_score": 29.944,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-18087",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/exprtools.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 11,
+        "content_score": 1.944,
+        "hunk_score": 0.647,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-20322",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mul.py",
+        "n_candidates": 11,
+        "rank_content": 4,
+        "rank_hunk": 3,
+        "content_score": 7.752,
+        "hunk_score": 10.381,
+        "hunk_doc_empty": false,
+        "headroom": true
+      },
+      {
+        "instance_id": "sympy__sympy-20590",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/_print_helpers.py",
+        "n_candidates": 11,
+        "rank_content": 9,
+        "rank_hunk": 9,
+        "content_score": 6.424,
+        "hunk_score": 6.684,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-20639",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/pretty/pretty.py",
+        "n_candidates": 11,
+        "rank_content": 8,
+        "rank_hunk": 9,
+        "content_score": 4.309,
+        "hunk_score": 4.386,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21055",
+        "repo": "sympy/sympy",
+        "gold": "sympy/assumptions/refine.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 9,
+        "content_score": 5.194,
+        "hunk_score": 5.857,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21379",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mod.py",
+        "n_candidates": 11,
+        "rank_content": 11,
+        "rank_hunk": 10,
+        "content_score": 6.898,
+        "hunk_score": 14.883,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21612",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/str.py",
+        "n_candidates": 11,
+        "rank_content": 5,
+        "rank_hunk": 5,
+        "content_score": 12.715,
+        "hunk_score": 16.948,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21627",
+        "repo": "sympy/sympy",
+        "gold": "sympy/functions/elementary/complexes.py",
+        "n_candidates": 11,
+        "rank_content": 10,
+        "rank_hunk": 11,
+        "content_score": 5.015,
+        "hunk_score": 1.894,
+        "hunk_doc_empty": false,
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-22840",
+        "repo": "sympy/sympy",
+        "gold": "sympy/simplify/cse_main.py",
+        "n_candidates": 11,
+        "rank_content": 3,
+        "rank_hunk": 3,
+        "content_score": 21.17,
+        "hunk_score": 21.609,
+        "hunk_doc_empty": false,
+        "headroom": false
+      }
+    ]
+  },
+  "signal_b": {
+    "repos_evaluated": [
+      [
+        "django/django",
+        18
+      ],
+      [
+        "sympy/sympy",
+        17
+      ],
+      [
+        "pytest-dev/pytest",
+        5
+      ],
+      [
+        "matplotlib/matplotlib",
+        4
+      ]
+    ],
+    "n_instances_covered": 44,
+    "headroom_count": 1,
+    "headroom_pct_of_covered": 2.3,
+    "wall_s": 1.3,
+    "translation_examples": {
+      "django/django": [
+        {
+          "msg_token": "migrat",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.095,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "command",
+              "t_prob": 0.095,
+              "path_df_frac": 0.017,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "test_command",
+              "t_prob": 0.081,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "migration",
+              "t_prob": 0.081,
+              "path_df_frac": 0.049,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "django",
+              "t_prob": 0.081,
+              "path_df_frac": 0.547,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "migrat",
+              "t_prob": 0.068,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "management",
+              "t_prob": 0.054,
+              "path_df_frac": 0.014,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "core",
+              "t_prob": 0.054,
+              "path_df_frac": 0.016,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "serializ",
+          "top_translations": [
+            {
+              "code_token": "django",
+              "t_prob": 0.096,
+              "path_df_frac": 0.547,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.089,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "contrib",
+              "t_prob": 0.052,
+              "path_df_frac": 0.421,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "serializ",
+              "t_prob": 0.037,
+              "path_df_frac": 0.004,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "txt",
+              "t_prob": 0.037,
+              "path_df_frac": 0.093,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.037,
+              "path_df_frac": 0.097,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "releas",
+              "t_prob": 0.037,
+              "path_df_frac": 0.045,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "topic",
+              "t_prob": 0.03,
+              "path_df_frac": 0.01,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "deprecat",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.066,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "django",
+              "t_prob": 0.064,
+              "path_df_frac": 0.547,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "txt",
+              "t_prob": 0.06,
+              "path_df_frac": 0.093,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.06,
+              "path_df_frac": 0.097,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "internal",
+              "t_prob": 0.058,
+              "path_df_frac": 0.004,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "releas",
+              "t_prob": 0.057,
+              "path_df_frac": 0.045,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "deprecation",
+              "t_prob": 0.055,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "ref",
+              "t_prob": 0.03,
+              "path_df_frac": 0.021,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "regress",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.222,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "regress",
+              "t_prob": 0.222,
+              "path_df_frac": 0.012,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "model",
+              "t_prob": 0.056,
+              "path_df_frac": 0.06,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "relation",
+              "t_prob": 0.056,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "generic_relations_regress",
+              "t_prob": 0.056,
+              "path_df_frac": 0.0,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "generic",
+              "t_prob": 0.056,
+              "path_df_frac": 0.009,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "test_client_regress",
+              "t_prob": 0.056,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "client",
+              "t_prob": 0.056,
+              "path_df_frac": 0.004,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "queryset",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.096,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "model",
+              "t_prob": 0.093,
+              "path_df_frac": 0.06,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "django",
+              "t_prob": 0.088,
+              "path_df_frac": 0.547,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "queri",
+              "t_prob": 0.063,
+              "path_df_frac": 0.003,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "txt",
+              "t_prob": 0.052,
+              "path_df_frac": 0.093,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.052,
+              "path_df_frac": 0.097,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "sql",
+              "t_prob": 0.041,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "releas",
+              "t_prob": 0.034,
+              "path_df_frac": 0.045,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "widget",
+          "top_translations": [
+            {
+              "code_token": "django",
+              "t_prob": 0.085,
+              "path_df_frac": 0.547,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.067,
+              "path_df_frac": 0.366,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "widget",
+              "t_prob": 0.065,
+              "path_df_frac": 0.016,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "form",
+              "t_prob": 0.06,
+              "path_df_frac": 0.039,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "contrib",
+              "t_prob": 0.06,
+              "path_df_frac": 0.421,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "admin",
+              "t_prob": 0.044,
+              "path_df_frac": 0.122,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "static",
+              "t_prob": 0.036,
+              "path_df_frac": 0.027,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "txt",
+              "t_prob": 0.028,
+              "path_df_frac": 0.093,
+              "kept_by_gate": true
+            }
+          ]
+        }
+      ],
+      "sympy/sympy": [
+        {
+          "msg_token": "migrat",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.143,
+              "path_df_frac": 0.357,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "transform",
+              "t_prob": 0.143,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "test_laplac",
+              "t_prob": 0.143,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "test_transform",
+              "t_prob": 0.143,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "laplac",
+              "t_prob": 0.143,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "integral",
+              "t_prob": 0.143,
+              "path_df_frac": 0.024,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "sympi",
+              "t_prob": 0.143,
+              "path_df_frac": 0.756,
+              "kept_by_gate": false
+            }
+          ]
+        },
+        {
+          "msg_token": "deprecat",
+          "top_translations": [
+            {
+              "code_token": "sympi",
+              "t_prob": 0.133,
+              "path_df_frac": 0.756,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.069,
+              "path_df_frac": 0.357,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.047,
+              "path_df_frac": 0.185,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "src",
+              "t_prob": 0.044,
+              "path_df_frac": 0.173,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "deprecation",
+              "t_prob": 0.042,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "utiliti",
+              "t_prob": 0.039,
+              "path_df_frac": 0.034,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "explanation",
+              "t_prob": 0.036,
+              "path_df_frac": 0.005,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "activ",
+              "t_prob": 0.036,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "backend",
+          "top_translations": [
+            {
+              "code_token": "sympi",
+              "t_prob": 0.2,
+              "path_df_frac": 0.756,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.1,
+              "path_df_frac": 0.357,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test_lambdifi",
+              "t_prob": 0.1,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "utiliti",
+              "t_prob": 0.1,
+              "path_df_frac": 0.034,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "lambdifi",
+              "t_prob": 0.1,
+              "path_df_frac": 0.003,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "implicit",
+              "t_prob": 0.1,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "plott",
+              "t_prob": 0.1,
+              "path_df_frac": 0.022,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "plot_implicit",
+              "t_prob": 0.1,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            }
+          ]
+        }
+      ],
+      "pytest-dev/pytest": [
+        {
+          "msg_token": "migrat",
+          "top_translations": [
+            {
+              "code_token": "test",
+              "t_prob": 0.153,
+              "path_df_frac": 0.294,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "author",
+              "t_prob": 0.028,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "code",
+              "t_prob": 0.021,
+              "path_df_frac": 0.013,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "python",
+              "t_prob": 0.021,
+              "path_df_frac": 0.014,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "_pytest",
+              "t_prob": 0.021,
+              "path_df_frac": 0.105,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "src",
+              "t_prob": 0.021,
+              "path_df_frac": 0.111,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "pytest",
+              "t_prob": 0.021,
+              "path_df_frac": 0.135,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "excinfo",
+              "t_prob": 0.014,
+              "path_df_frac": 0.002,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "serializ",
+          "top_translations": [
+            {
+              "code_token": "pytest",
+              "t_prob": 0.115,
+              "path_df_frac": 0.135,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "report",
+              "t_prob": 0.115,
+              "path_df_frac": 0.006,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "_pytest",
+              "t_prob": 0.115,
+              "path_df_frac": 0.105,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "src",
+              "t_prob": 0.115,
+              "path_df_frac": 0.111,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.077,
+              "path_df_frac": 0.294,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test_report",
+              "t_prob": 0.077,
+              "path_df_frac": 0.003,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "code",
+              "t_prob": 0.038,
+              "path_df_frac": 0.013,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "_cod",
+              "t_prob": 0.038,
+              "path_df_frac": 0.005,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "deprecat",
+          "top_translations": [
+            {
+              "code_token": "pytest",
+              "t_prob": 0.078,
+              "path_df_frac": 0.135,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "_pytest",
+              "t_prob": 0.078,
+              "path_df_frac": 0.105,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "src",
+              "t_prob": 0.078,
+              "path_df_frac": 0.111,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.066,
+              "path_df_frac": 0.487,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "changelog",
+              "t_prob": 0.061,
+              "path_df_frac": 0.13,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.058,
+              "path_df_frac": 0.294,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "deprecat",
+              "t_prob": 0.055,
+              "path_df_frac": 0.003,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.043,
+              "path_df_frac": 0.431,
+              "kept_by_gate": false
+            }
+          ]
+        },
+        {
+          "msg_token": "signal",
+          "top_translations": [
+            {
+              "code_token": "doc",
+              "t_prob": 0.25,
+              "path_df_frac": 0.431,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "fixtur",
+              "t_prob": 0.25,
+              "path_df_frac": 0.085,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.25,
+              "path_df_frac": 0.487,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "explanation",
+              "t_prob": 0.25,
+              "path_df_frac": 0.01,
+              "kept_by_gate": true
+            }
+          ]
+        }
+      ],
+      "matplotlib/matplotlib": [
+        {
+          "msg_token": "migrat",
+          "top_translations": [
+            {
+              "code_token": "conf",
+              "t_prob": 0.054,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.054,
+              "path_df_frac": 0.083,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.054,
+              "path_df_frac": 0.119,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "yml",
+              "t_prob": 0.054,
+              "path_df_frac": 0.006,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "chang",
+              "t_prob": 0.027,
+              "path_df_frac": 0.03,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "api",
+              "t_prob": 0.027,
+              "path_df_frac": 0.05,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "prev_api_chang",
+              "t_prob": 0.027,
+              "path_df_frac": 0.018,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "backend_pdf",
+              "t_prob": 0.027,
+              "path_df_frac": 0.0,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "deprecat",
+          "top_translations": [
+            {
+              "code_token": "lib",
+              "t_prob": 0.073,
+              "path_df_frac": 0.674,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.061,
+              "path_df_frac": 0.083,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.061,
+              "path_df_frac": 0.119,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "matplotlib",
+              "t_prob": 0.061,
+              "path_df_frac": 0.645,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "api",
+              "t_prob": 0.06,
+              "path_df_frac": 0.05,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "chang",
+              "t_prob": 0.059,
+              "path_df_frac": 0.03,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "next_api_chang",
+              "t_prob": 0.058,
+              "path_df_frac": 0.011,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "next",
+              "t_prob": 0.058,
+              "path_df_frac": 0.015,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "widget",
+          "top_translations": [
+            {
+              "code_token": "widget",
+              "t_prob": 0.16,
+              "path_df_frac": 0.005,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "matplotlib",
+              "t_prob": 0.16,
+              "path_df_frac": 0.645,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "lib",
+              "t_prob": 0.16,
+              "path_df_frac": 0.674,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.08,
+              "path_df_frac": 0.577,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test_widget",
+              "t_prob": 0.072,
+              "path_df_frac": 0.0,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.032,
+              "path_df_frac": 0.083,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "next",
+              "t_prob": 0.032,
+              "path_df_frac": 0.015,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.032,
+              "path_df_frac": 0.119,
+              "kept_by_gate": false
+            }
+          ]
+        },
+        {
+          "msg_token": "backend",
+          "top_translations": [
+            {
+              "code_token": "lib",
+              "t_prob": 0.086,
+              "path_df_frac": 0.674,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "matplotlib",
+              "t_prob": 0.086,
+              "path_df_frac": 0.645,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "backend",
+              "t_prob": 0.078,
+              "path_df_frac": 0.028,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.033,
+              "path_df_frac": 0.083,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "doc",
+              "t_prob": 0.033,
+              "path_df_frac": 0.119,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.028,
+              "path_df_frac": 0.577,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "api",
+              "t_prob": 0.025,
+              "path_df_frac": 0.05,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "next",
+              "t_prob": 0.018,
+              "path_df_frac": 0.015,
+              "kept_by_gate": true
+            }
+          ]
+        },
+        {
+          "msg_token": "signal",
+          "top_translations": [
+            {
+              "code_token": "matplotlib",
+              "t_prob": 0.152,
+              "path_df_frac": 0.645,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "lib",
+              "t_prob": 0.152,
+              "path_df_frac": 0.674,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "test",
+              "t_prob": 0.091,
+              "path_df_frac": 0.577,
+              "kept_by_gate": false
+            },
+            {
+              "code_token": "backend",
+              "t_prob": 0.061,
+              "path_df_frac": 0.028,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "test_col",
+              "t_prob": 0.061,
+              "path_df_frac": 0.001,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "color",
+              "t_prob": 0.061,
+              "path_df_frac": 0.011,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "rst",
+              "t_prob": 0.03,
+              "path_df_frac": 0.083,
+              "kept_by_gate": true
+            },
+            {
+              "code_token": "chang",
+              "t_prob": 0.03,
+              "path_df_frac": 0.03,
+              "kept_by_gate": true
+            }
+          ]
+        }
+      ]
+    },
+    "rows": [
+      {
+        "instance_id": "django__django-11283",
+        "repo": "django/django",
+        "gold": "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "model",
+          "ref",
+          "migration",
+          "backend",
+          "base",
+          "util",
+          "queri",
+          "core",
+          "view",
+          "topic",
+          "sql",
+          "shell"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11564",
+        "repo": "django/django",
+        "gold": "django/conf/__init__.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "ref",
+          "model",
+          "view",
+          "core",
+          "util",
+          "backend",
+          "topic",
+          "base",
+          "templat",
+          "file",
+          "form",
+          "storag"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11797",
+        "repo": "django/django",
+        "gold": "django/db/models/lookups.py",
+        "rank_content_base": 4,
+        "rank_content_expanded": 5,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "model",
+          "releas",
+          "ref",
+          "topic",
+          "sql",
+          "queri",
+          "field",
+          "auth",
+          "backend",
+          "util",
+          "author",
+          "view",
+          "middlewar"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11815",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "model",
+          "ref",
+          "migration",
+          "csrf",
+          "backend",
+          "view",
+          "util",
+          "middlewar",
+          "topic",
+          "field",
+          "core",
+          "base"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-11964",
+        "repo": "django/django",
+        "gold": "django/db/models/enums.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "model",
+          "releas",
+          "util",
+          "ref",
+          "backend",
+          "base",
+          "topic",
+          "field",
+          "enum",
+          "queri",
+          "view",
+          "templat",
+          "core"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12113",
+        "repo": "django/django",
+        "gold": "django/db/backends/sqlite3/creation.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "model",
+          "releas",
+          "backend",
+          "ref",
+          "base",
+          "view",
+          "migration",
+          "util",
+          "sql",
+          "topic",
+          "queri",
+          "core",
+          "sqlit"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12125",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "rank_content_base": 8,
+        "rank_content_expanded": 7,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "model",
+          "releas",
+          "ref",
+          "migration",
+          "topic",
+          "backend",
+          "base",
+          "util",
+          "field",
+          "core",
+          "schema",
+          "management",
+          "gis"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-12747",
+        "repo": "django/django",
+        "gold": "django/db/models/deletion.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "model",
+          "releas",
+          "ref",
+          "util",
+          "backend",
+          "queri",
+          "base",
+          "templat",
+          "topic",
+          "view",
+          "field",
+          "sql",
+          "featur"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-14016",
+        "repo": "django/django",
+        "gold": "django/db/models/query_utils.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "releas",
+          "model",
+          "ref",
+          "backend",
+          "base",
+          "topic",
+          "view",
+          "util",
+          "queri",
+          "migration",
+          "core",
+          "templat",
+          "securiti"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-14580",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "model",
+          "migration",
+          "backend",
+          "base",
+          "ref",
+          "schema",
+          "util",
+          "topic",
+          "core",
+          "command",
+          "operation",
+          "field"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-14997",
+        "repo": "django/django",
+        "gold": "django/db/backends/ddl_references.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "model",
+          "releas",
+          "backend",
+          "migration",
+          "base",
+          "ref",
+          "core",
+          "sqlit",
+          "schema",
+          "operation",
+          "field",
+          "command",
+          "util"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15213",
+        "repo": "django/django",
+        "gold": "django/db/models/fields/__init__.py",
+        "rank_content_base": 4,
+        "rank_content_expanded": 4,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "model",
+          "releas",
+          "expression",
+          "ref",
+          "backend",
+          "queri",
+          "operation",
+          "migration",
+          "base",
+          "static",
+          "sql",
+          "field",
+          "queryset"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15388",
+        "repo": "django/django",
+        "gold": "django/template/autoreload.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "ref",
+          "model",
+          "core",
+          "backend",
+          "ini",
+          "tox",
+          "topic",
+          "templat",
+          "base",
+          "management",
+          "command",
+          "form"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-15851",
+        "repo": "django/django",
+        "gold": "django/db/backends/postgresql/client.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "backend",
+          "model",
+          "ref",
+          "base",
+          "util",
+          "topic",
+          "view",
+          "postgresql",
+          "core",
+          "management",
+          "mysql",
+          "featur"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-16229",
+        "repo": "django/django",
+        "gold": "django/forms/boundfield.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "model",
+          "releas",
+          "ref",
+          "field",
+          "form",
+          "backend",
+          "base",
+          "topic",
+          "view",
+          "templat",
+          "postgr",
+          "util",
+          "ini"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-16400",
+        "repo": "django/django",
+        "gold": "django/contrib/auth/management/__init__.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "releas",
+          "model",
+          "ref",
+          "backend",
+          "base",
+          "queri",
+          "migration",
+          "util",
+          "topic",
+          "view",
+          "core",
+          "field",
+          "postgresql"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-16816",
+        "repo": "django/django",
+        "gold": "django/contrib/admin/checks.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 8,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "txt",
+          "doc",
+          "releas",
+          "model",
+          "util",
+          "ref",
+          "base",
+          "templat",
+          "migration",
+          "view",
+          "backend",
+          "sql",
+          "form",
+          "queri",
+          "core"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "django__django-17087",
+        "repo": "django/django",
+        "gold": "django/db/migrations/serializer.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "doc",
+          "txt",
+          "model",
+          "releas",
+          "ref",
+          "field",
+          "backend",
+          "core",
+          "postgr",
+          "base",
+          "command",
+          "postgres_test",
+          "management",
+          "util",
+          "queri"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-12236",
+        "repo": "sympy/sympy",
+        "gold": "sympy/polys/domains/polynomialring.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "core",
+          "contribut",
+          "__init__",
+          "init",
+          "test_solv",
+          "index",
+          "mechanic",
+          "mailmap",
+          "print",
+          "algebraicalli",
+          "tensor",
+          "utiliti",
+          "equation"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-13146",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/operations.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 9,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "core",
+          "print",
+          "utiliti",
+          "equation",
+          "algebraicalli",
+          "exception",
+          "poly",
+          "explanation",
+          "test_exception",
+          "runtest",
+          "workflow",
+          "function",
+          "yml"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-13895",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/numbers.py",
+        "rank_content_base": 7,
+        "rank_content_expanded": 9,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "index",
+          "tensor",
+          "core",
+          "algebraicalli",
+          "equation",
+          "simplifi",
+          "expression",
+          "algebra",
+          "quaternion",
+          "cse",
+          "integral",
+          "print",
+          "system"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-13915",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mul.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 9,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "guid",
+          "solv",
+          "seri",
+          "print",
+          "utiliti",
+          "function",
+          "limit",
+          "latex",
+          "test_limit",
+          "__init__",
+          "init",
+          "core",
+          "lambdifi",
+          "integral",
+          "test_lambdifi"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-14024",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/numbers.py",
+        "rank_content_base": 5,
+        "rank_content_expanded": 2,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "core",
+          "algebraicalli",
+          "equation",
+          "print",
+          "matric",
+          "expression",
+          "symbol",
+          "diophantin",
+          "tensor",
+          "test_derivativ",
+          "derivativ",
+          "index",
+          "latex"
+        ],
+        "headroom": true
+      },
+      {
+        "instance_id": "sympy__sympy-15346",
+        "repo": "sympy/sympy",
+        "gold": "sympy/simplify/trigsimp.py",
+        "rank_content_base": 8,
+        "rank_content_expanded": 6,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "guid",
+          "solv",
+          "print",
+          "matric",
+          "function",
+          "core",
+          "algebraicalli",
+          "test_matric",
+          "mechanic",
+          "elementari",
+          "equation",
+          "integral",
+          "utiliti",
+          "explanation",
+          "trigonometric"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-17022",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/pycode.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "equation",
+          "print",
+          "utiliti",
+          "algebraicalli",
+          "tensor",
+          "latex",
+          "test_latex",
+          "core",
+          "ext",
+          "docscrap",
+          "poly",
+          "explanation",
+          "matric"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-17630",
+        "repo": "sympy/sympy",
+        "gold": "sympy/matrices/expressions/matexpr.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 9,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "matric",
+          "core",
+          "print",
+          "tensor",
+          "algebraicalli",
+          "equation",
+          "expression",
+          "yml",
+          "integral",
+          "workflow",
+          "runtest",
+          "github",
+          "deprecation"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-18087",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/exprtools.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "function",
+          "integral",
+          "core",
+          "tensor",
+          "mechanic",
+          "simplifi",
+          "trigsimp",
+          "algebraicalli",
+          "elementari",
+          "laplac",
+          "equation",
+          "trigonometric",
+          "test_laplac"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-20322",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mul.py",
+        "rank_content_base": 4,
+        "rank_content_expanded": 6,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "algebraicalli",
+          "function",
+          "test_solv",
+          "core",
+          "makefil",
+          "pars",
+          "elementari",
+          "runtest",
+          "system",
+          "print",
+          "inequaliti",
+          "equation",
+          "yml"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-20590",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/_print_helpers.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 9,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "core",
+          "integral",
+          "tensor",
+          "poly",
+          "utiliti",
+          "matric",
+          "codegen",
+          "add",
+          "print",
+          "expr",
+          "guidanc",
+          "transform",
+          "node"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-20639",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/pretty/pretty.py",
+        "rank_content_base": 8,
+        "rank_content_expanded": 6,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "guid",
+          "print",
+          "utiliti",
+          "solv",
+          "iterabl",
+          "workflow",
+          "github",
+          "yml",
+          "latex",
+          "equation",
+          "tensor",
+          "runtest",
+          "smtlib",
+          "integral",
+          "test_latex"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21055",
+        "repo": "sympy/sympy",
+        "gold": "sympy/assumptions/refine.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "guid",
+          "solv",
+          "function",
+          "tensor",
+          "integral",
+          "core",
+          "mechanic",
+          "elementari",
+          "ode",
+          "utiliti",
+          "algebraicalli",
+          "contribut",
+          "equation",
+          "expr",
+          "github"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21379",
+        "repo": "sympy/sympy",
+        "gold": "sympy/core/mod.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "tensor",
+          "core",
+          "print",
+          "function",
+          "integral",
+          "yml",
+          "mailmap",
+          "utiliti",
+          "runtest",
+          "elementari",
+          "workflow",
+          "github",
+          "algebraicalli"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21612",
+        "repo": "sympy/sympy",
+        "gold": "sympy/printing/str.py",
+        "rank_content_base": 5,
+        "rank_content_expanded": 5,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "pars",
+          "tensor",
+          "guid",
+          "latex",
+          "solv",
+          "utiliti",
+          "iterabl",
+          "antlr",
+          "integral",
+          "test_latex",
+          "_antlr",
+          "latexpars",
+          "latexlex",
+          "poly",
+          "mechanic"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-21627",
+        "repo": "sympy/sympy",
+        "gold": "sympy/functions/elementary/complexes.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 8,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "core",
+          "solv",
+          "function",
+          "tensor",
+          "elementari",
+          "guid",
+          "equation",
+          "algebraicalli",
+          "poly",
+          "trigonometric",
+          "matric",
+          "hyperbolic",
+          "test_hyperbolic",
+          "integral",
+          "exponential"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "sympy__sympy-22840",
+        "repo": "sympy/sympy",
+        "gold": "sympy/simplify/cse_main.py",
+        "rank_content_base": 3,
+        "rank_content_expanded": 3,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "solv",
+          "guid",
+          "print",
+          "latex",
+          "equation",
+          "algebraicalli",
+          "tensor",
+          "core",
+          "matric",
+          "solveset",
+          "integral",
+          "index",
+          "poly",
+          "expression",
+          "ode"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-11148",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/pathlib.py",
+        "rank_content_base": 8,
+        "rank_content_expanded": 8,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "config",
+          "bugfix",
+          "yml",
+          "python",
+          "assertion",
+          "main",
+          "__init__",
+          "init",
+          "fixtur",
+          "terminal",
+          "node",
+          "featur",
+          "rewrit",
+          "ini",
+          "tox"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-6116",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/main.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 11,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "python",
+          "author",
+          "bugfix",
+          "fixtur",
+          "pdb",
+          "test_pdb",
+          "tidelift",
+          "node",
+          "config",
+          "__init__",
+          "init",
+          "yml",
+          "main",
+          "unittest",
+          "terminal"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-7220",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/nodes.py",
+        "rank_content_base": 11,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "python",
+          "bugfix",
+          "fixtur",
+          "main",
+          "assertion",
+          "terminal",
+          "config",
+          "ini",
+          "tox",
+          "yml",
+          "featur",
+          "setup",
+          "__init__",
+          "init",
+          "test_terminal"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-7490",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/skipping.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "config",
+          "python",
+          "yml",
+          "bugfix",
+          "fixtur",
+          "terminal",
+          "yaml",
+          "ini",
+          "pre",
+          "commit",
+          "tox",
+          "travi",
+          "gitignor",
+          "mark",
+          "assertion"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "pytest-dev__pytest-9359",
+        "repo": "pytest-dev/pytest",
+        "gold": "src/_pytest/_code/source.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "bugfix",
+          "config",
+          "python",
+          "terminal",
+          "ini",
+          "tox",
+          "author",
+          "assertion",
+          "mark",
+          "setup",
+          "pyproject",
+          "toml",
+          "main",
+          "__init__",
+          "init"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-23314",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/mpl_toolkits/mplot3d/axes3d.py",
+        "rank_content_base": 6,
+        "rank_content_expanded": 6,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "rst",
+          "api",
+          "backend",
+          "next",
+          "user",
+          "chang",
+          "widget",
+          "next_api_chang",
+          "yml",
+          "pyplot",
+          "figur",
+          "index",
+          "_axe",
+          "tutorial",
+          "test_ax"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-23476",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/figure.py",
+        "rank_content_base": 5,
+        "rank_content_expanded": 5,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "backend",
+          "rst",
+          "figur",
+          "user",
+          "next",
+          "src",
+          "api",
+          "yml",
+          "__init__",
+          "init",
+          "chang",
+          "macosx",
+          "next_api_chang",
+          "index",
+          "_macosx"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-24265",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/style/core.py",
+        "rank_content_base": 10,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "rst",
+          "yml",
+          "backend",
+          "user",
+          "api",
+          "github",
+          "next",
+          "figur",
+          "widget",
+          "chang",
+          "workflow",
+          "next_api_chang",
+          "index",
+          "install",
+          "pyplot"
+        ],
+        "headroom": false
+      },
+      {
+        "instance_id": "matplotlib__matplotlib-25311",
+        "repo": "matplotlib/matplotlib",
+        "gold": "lib/matplotlib/offsetbox.py",
+        "rank_content_base": 9,
+        "rank_content_expanded": 10,
+        "n_expansion_terms": 15,
+        "expansion_terms": [
+          "rst",
+          "yml",
+          "backend",
+          "legend",
+          "user",
+          "github",
+          "api",
+          "next",
+          "workflow",
+          "widget",
+          "index",
+          "pyplot",
+          "chang",
+          "install",
+          "sphinxext"
+        ],
+        "headroom": false
+      }
+    ]
+  }
+}

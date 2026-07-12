@@ -1,0 +1,181 @@
+Loaded 300 rows from /Users/nicholasarehart/programming-projects/bgrep/lab/results_swebench/abl_bridges_v7.jsonl
+
+======================================================================
+K = 4 offered choices
+======================================================================
+n = 300
+baseline @10  = 0.8267  (248/300 pass, 52 fail)
+baseline @all = 0.9233  (277/300 pass, 23 fail)
+
+(a) Elicitation ceiling (gold prefix among top-4 offered):
+  @10-failures:  42/52 = 0.8077  (multi-gold-prefix instances: 0)
+  @all-failures: 18/23 = 0.7826  (multi-gold-prefix instances: 0)  <- "second-shot reachable"
+
+(b) @10 after oracle-answer rerank (of @10-failures only):
+  baseline @10                 = 0.8267
+  @10 after oracle rerank       = 0.8667  (+12 instances converted, delta = +0.0400)
+  of the 52 @10-failures:
+    converted to pass by rerank         : 12
+    gold prefix not offered (no bit help): 10
+    gold prefix offered but still >10 after boost: 30
+
+(c) Degenerate offered-choice sets (bit adds nothing):
+  @10-fail (n=52):
+    all 4 offered prefixes identical      : 1
+    gold prefix already = rank-1 offered    : 23
+    both conditions                          : 1
+    either (degenerate, union)               : 23
+  @all-fail (n=23):
+    all 4 offered prefixes identical      : 0
+    gold prefix already = rank-1 offered    : 5
+    both conditions                          : 0
+    either (degenerate, union)               : 5
+
+  -- @10-failure detail (k=4) --
+    astropy__astropy-14182                        choices=['astropy/io', 'astropy/utils', 'astropy/wcs', 'astropy/table'] gold=['astropy/io'] reachable=True
+    django__django-11283                          choices=['django/db', 'django/contrib', 'js_tests/qunit', 'django/core'] gold=['django/contrib'] reachable=True
+    django__django-11564                          choices=['django/conf', 'django/contrib', 'django/templatetags', 'django/core'] gold=['django/conf'] reachable=True
+    django__django-11797                          choices=['django/contrib', 'django/db', 'django/apps'] gold=['django/db'] reachable=True
+    django__django-11815                          choices=['django/db', 'django/utils', 'django/contrib', 'django/http'] gold=['django/db'] reachable=True
+    django__django-11964                          choices=['django/db', 'js_tests/qunit', 'django/core', 'django/conf'] gold=['django/db'] reachable=True
+    django__django-12113                          choices=['django/contrib', 'django/db', 'django/core', 'django/views'] gold=['django/db'] reachable=True
+    django__django-12125                          choices=['django/db', 'django/contrib', 'js_tests/qunit', 'django/forms'] gold=['django/db'] reachable=True
+    django__django-12747                          choices=['django/db', 'django/template', 'django/forms', 'django/contrib'] gold=['django/db'] reachable=True
+    django__django-14016                          choices=['django/db', 'django/utils', 'django/views', 'django/contrib'] gold=['django/db'] reachable=True
+    django__django-14580                          choices=['django/db', 'django/core', 'django/contrib', 'django/utils'] gold=['django/db'] reachable=True
+    django__django-14997                          choices=['django/db', 'django/core', 'django/utils', 'django/contrib'] gold=['django/db'] reachable=True
+    django__django-15213                          choices=['django/db', 'django/contrib', 'django/forms', 'django/utils'] gold=['django/db'] reachable=True
+    django__django-15388                          choices=['django/utils', 'django/core', 'django/contrib', 'django/db'] gold=['django/template'] reachable=False
+    django__django-15851                          choices=['django/core', 'django/db', 'django/contrib', 'django/utils'] gold=['django/db'] reachable=True
+    django__django-16229                          choices=['django/contrib', 'django/forms', 'django/db', 'django/core'] gold=['django/forms'] reachable=True
+    django__django-16400                          choices=['django/db', 'django/core', 'django/contrib', 'django/middleware'] gold=['django/contrib'] reachable=True
+    django__django-16816                          choices=['django/template', 'django/contrib', 'django/core', 'django/templatetags'] gold=['django/contrib'] reachable=True
+    django__django-17087                          choices=['django/contrib', 'django/db', 'django/forms', 'django/template'] gold=['django/db'] reachable=True
+    matplotlib__matplotlib-23314                  choices=['lib/matplotlib', 'setup.py', 'lib/mpl_toolkits', 'setupext.py'] gold=['lib/mpl_toolkits'] reachable=True
+    matplotlib__matplotlib-23476                  choices=['lib/matplotlib', 'setupext.py', 'setup.py', 'tests.py'] gold=['lib/matplotlib'] reachable=True
+    matplotlib__matplotlib-24265                  choices=['lib/matplotlib', 'setup.py', 'setupext.py', 'tests.py'] gold=['lib/matplotlib'] reachable=True
+    matplotlib__matplotlib-25311                  choices=['lib/matplotlib', 'setupext.py'] gold=['lib/matplotlib'] reachable=True
+    pylint-dev__pylint-7080                       choices=['pylint/lint', 'pylint/config', 'pylint/checkers', 'pylint/pyreverse'] gold=['pylint/lint'] reachable=True
+    pylint-dev__pylint-7228                       choices=['pylint/config', 'pylint/lint', 'pylint/__init__.py', 'pylint/checkers'] gold=['pylint/config'] reachable=True
+    pytest-dev__pytest-11148                      choices=['src/_pytest', 'bench/xunit.py'] gold=['src/_pytest'] reachable=True
+    pytest-dev__pytest-6116                       choices=['src/_pytest'] gold=['src/_pytest'] reachable=True
+    pytest-dev__pytest-7220                       choices=['src/_pytest', 'setup.py'] gold=['src/_pytest'] reachable=True
+    pytest-dev__pytest-7490                       choices=['src/_pytest', 'bench/skip.py', 'setup.py'] gold=['src/_pytest'] reachable=True
+    pytest-dev__pytest-9359                       choices=['src/_pytest', 'setup.py'] gold=['src/_pytest'] reachable=True
+    scikit-learn__scikit-learn-25500              choices=['sklearn/calibration.py', 'sklearn/utils', 'sklearn/model_selection', 'build_tools/update_environments_and_lock_files.py'] gold=['sklearn/isotonic.py'] reachable=False
+    sphinx-doc__sphinx-11445                      choices=['sphinx/cmd', 'sphinx/application.py', 'sphinx/ext', 'sphinx/domains'] gold=['sphinx/util'] reachable=False
+    sphinx-doc__sphinx-7738                       choices=['sphinx/ext', 'sphinx/cmd', 'sphinx/application.py', 'sphinx/themes'] gold=['sphinx/ext'] reachable=True
+    sphinx-doc__sphinx-8273                       choices=['sphinx/application.py', 'sphinx/cmd', 'sphinx/domains', 'sphinx/themes'] gold=['sphinx/builders'] reachable=False
+    sphinx-doc__sphinx-8627                       choices=['sphinx/application.py', 'sphinx/ext', 'sphinx/cmd', 'sphinx/environment'] gold=['sphinx/util'] reachable=False
+    sympy__sympy-12236                            choices=['sympy/interactive', 'setup.py', 'sympy/utilities', 'sympy/__init__.py'] gold=['sympy/polys'] reachable=False
+    sympy__sympy-13146                            choices=['sympy/series', 'sympy/simplify', 'sympy/core', 'sympy/solvers'] gold=['sympy/core'] reachable=True
+    sympy__sympy-13895                            choices=['sympy/simplify', 'sympy/matrices', 'sympy/assumptions', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-13915                            choices=['sympy/interactive', 'isympy.py', 'sympy/series', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-14024                            choices=['sympy/simplify', 'sympy/series', 'sympy/core', 'sympy/assumptions'] gold=['sympy/core'] reachable=True
+    sympy__sympy-15346                            choices=['release/fabfile.py', 'sympy/printing', 'sympy/geometry', 'sympy/matrices'] gold=['sympy/simplify'] reachable=False
+    sympy__sympy-17022                            choices=['sympy/utilities', 'sympy/core', 'sympy/plotting', 'sympy/matrices'] gold=['sympy/printing'] reachable=False
+    sympy__sympy-17630                            choices=['sympy/matrices', 'sympy/strategies', 'sympy/utilities', 'sympy/core'] gold=['sympy/matrices'] reachable=True
+    sympy__sympy-18087                            choices=['sympy/simplify', 'sympy/solvers', 'sympy/integrals', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-20322                            choices=['sympy/core', 'sympy/simplify', 'sympy/parsing', 'sympy/printing'] gold=['sympy/core'] reachable=True
+    sympy__sympy-20590                            choices=['sympy/utilities', 'sympy/core', 'sympy/integrals', 'sympy/codegen'] gold=['sympy/core'] reachable=True
+    sympy__sympy-20639                            choices=['sympy/interactive', 'release/fabfile.py', 'sympy/printing', 'sympy/ntheory'] gold=['sympy/printing'] reachable=True
+    sympy__sympy-21055                            choices=['sympy/integrals', 'sympy/core', 'sympy/simplify', 'sympy/solvers'] gold=['sympy/assumptions'] reachable=False
+    sympy__sympy-21379                            choices=['sympy/solvers', 'sympy/core', 'sympy/utilities', 'sympy/simplify'] gold=['sympy/core'] reachable=True
+    sympy__sympy-21612                            choices=['sympy/parsing', 'sympy/printing', 'setup.py', 'sympy/functions'] gold=['sympy/printing'] reachable=True
+    sympy__sympy-21627                            choices=['sympy/plotting', 'sympy/core', 'sympy/functions', 'sympy/solvers'] gold=['sympy/functions'] reachable=True
+    sympy__sympy-22840                            choices=['sympy/utilities', 'sympy/printing', 'sympy/codegen', 'sympy/matrices'] gold=['sympy/simplify'] reachable=False
+
+  -- @all-failure detail (k=4) --
+    astropy__astropy-14182                        choices=['astropy/io', 'astropy/utils', 'astropy/wcs', 'astropy/table'] gold=['astropy/io'] reachable=True
+    django__django-11283                          choices=['django/db', 'django/contrib', 'js_tests/qunit', 'django/core'] gold=['django/contrib'] reachable=True
+    django__django-11815                          choices=['django/db', 'django/utils', 'django/contrib', 'django/http'] gold=['django/db'] reachable=True
+    django__django-12113                          choices=['django/contrib', 'django/db', 'django/core', 'django/views'] gold=['django/db'] reachable=True
+    django__django-12125                          choices=['django/db', 'django/contrib', 'js_tests/qunit', 'django/forms'] gold=['django/db'] reachable=True
+    django__django-14997                          choices=['django/db', 'django/core', 'django/utils', 'django/contrib'] gold=['django/db'] reachable=True
+    django__django-15388                          choices=['django/utils', 'django/core', 'django/contrib', 'django/db'] gold=['django/template'] reachable=False
+    django__django-16229                          choices=['django/contrib', 'django/forms', 'django/db', 'django/core'] gold=['django/forms'] reachable=True
+    django__django-16400                          choices=['django/db', 'django/core', 'django/contrib', 'django/middleware'] gold=['django/contrib'] reachable=True
+    django__django-17087                          choices=['django/contrib', 'django/db', 'django/forms', 'django/template'] gold=['django/db'] reachable=True
+    matplotlib__matplotlib-23314                  choices=['lib/matplotlib', 'setup.py', 'lib/mpl_toolkits', 'setupext.py'] gold=['lib/mpl_toolkits'] reachable=True
+    pylint-dev__pylint-7080                       choices=['pylint/lint', 'pylint/config', 'pylint/checkers', 'pylint/pyreverse'] gold=['pylint/lint'] reachable=True
+    sphinx-doc__sphinx-8273                       choices=['sphinx/application.py', 'sphinx/cmd', 'sphinx/domains', 'sphinx/themes'] gold=['sphinx/builders'] reachable=False
+    sphinx-doc__sphinx-8627                       choices=['sphinx/application.py', 'sphinx/ext', 'sphinx/cmd', 'sphinx/environment'] gold=['sphinx/util'] reachable=False
+    sympy__sympy-12236                            choices=['sympy/interactive', 'setup.py', 'sympy/utilities', 'sympy/__init__.py'] gold=['sympy/polys'] reachable=False
+    sympy__sympy-13146                            choices=['sympy/series', 'sympy/simplify', 'sympy/core', 'sympy/solvers'] gold=['sympy/core'] reachable=True
+    sympy__sympy-13895                            choices=['sympy/simplify', 'sympy/matrices', 'sympy/assumptions', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-13915                            choices=['sympy/interactive', 'isympy.py', 'sympy/series', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-18087                            choices=['sympy/simplify', 'sympy/solvers', 'sympy/integrals', 'sympy/core'] gold=['sympy/core'] reachable=True
+    sympy__sympy-20590                            choices=['sympy/utilities', 'sympy/core', 'sympy/integrals', 'sympy/codegen'] gold=['sympy/core'] reachable=True
+    sympy__sympy-21055                            choices=['sympy/integrals', 'sympy/core', 'sympy/simplify', 'sympy/solvers'] gold=['sympy/assumptions'] reachable=False
+    sympy__sympy-21379                            choices=['sympy/solvers', 'sympy/core', 'sympy/utilities', 'sympy/simplify'] gold=['sympy/core'] reachable=True
+    sympy__sympy-21627                            choices=['sympy/plotting', 'sympy/core', 'sympy/functions', 'sympy/solvers'] gold=['sympy/functions'] reachable=True
+
+======================================================================
+K = 3 offered choices
+======================================================================
+n = 300
+baseline @10  = 0.8267  (248/300 pass, 52 fail)
+baseline @all = 0.9233  (277/300 pass, 23 fail)
+
+(a) Elicitation ceiling (gold prefix among top-3 offered):
+  @10-failures:  39/52 = 0.7500  (multi-gold-prefix instances: 0)
+  @all-failures: 15/23 = 0.6522  (multi-gold-prefix instances: 0)  <- "second-shot reachable"
+
+(b) @10 after oracle-answer rerank (of @10-failures only):
+  baseline @10                 = 0.8267
+  @10 after oracle rerank       = 0.8667  (+12 instances converted, delta = +0.0400)
+  of the 52 @10-failures:
+    converted to pass by rerank         : 12
+    gold prefix not offered (no bit help): 13
+    gold prefix offered but still >10 after boost: 27
+
+(c) Degenerate offered-choice sets (bit adds nothing):
+  @10-fail (n=52):
+    all 3 offered prefixes identical      : 1
+    gold prefix already = rank-1 offered    : 23
+    both conditions                          : 1
+    either (degenerate, union)               : 23
+  @all-fail (n=23):
+    all 3 offered prefixes identical      : 0
+    gold prefix already = rank-1 offered    : 5
+    both conditions                          : 0
+    either (degenerate, union)               : 5
+
+======================================================================
+K = 6 offered choices
+======================================================================
+n = 300
+baseline @10  = 0.8267  (248/300 pass, 52 fail)
+baseline @all = 0.9233  (277/300 pass, 23 fail)
+
+(a) Elicitation ceiling (gold prefix among top-6 offered):
+  @10-failures:  49/52 = 0.9423  (multi-gold-prefix instances: 0)
+  @all-failures: 22/23 = 0.9565  (multi-gold-prefix instances: 0)  <- "second-shot reachable"
+
+(b) @10 after oracle-answer rerank (of @10-failures only):
+  baseline @10                 = 0.8267
+  @10 after oracle rerank       = 0.8767  (+15 instances converted, delta = +0.0500)
+  of the 52 @10-failures:
+    converted to pass by rerank         : 15
+    gold prefix not offered (no bit help): 3
+    gold prefix offered but still >10 after boost: 34
+
+(c) Degenerate offered-choice sets (bit adds nothing):
+  @10-fail (n=52):
+    all 6 offered prefixes identical      : 1
+    gold prefix already = rank-1 offered    : 23
+    both conditions                          : 1
+    either (degenerate, union)               : 23
+  @all-fail (n=23):
+    all 6 offered prefixes identical      : 0
+    gold prefix already = rank-1 offered    : 5
+    both conditions                          : 0
+    either (degenerate, union)               : 5
+
+======================================================================
+SUMMARY (sensitivity across k)
+======================================================================
+  k |  @10 ceiling |  @all ceiling |  @10 after oracle |  @10-fail degen(either) |  @all-fail degen(either)
+  3 |       0.7500 |        0.6522 |            0.8667 |         23/52         |          5/23        
+  4 |       0.8077 |        0.7826 |            0.8667 |         23/52         |          5/23        
+  6 |       0.9423 |        0.9565 |            0.8767 |         23/52         |          5/23        
