@@ -307,3 +307,13 @@ MaxEnt/statistical physics (reports in lab/research/wave1/). Diagnostics:
   add_score directly. Build in progress.
 Also shelved from recsys: stigmergy (per-repo co-access accumulation from agent
 sessions) as a v0.3+ product feedback loop — the only signal that grows with use.
+
+## Anchor-distance evidence term (2026-07-12, NULL in integration)
+
+The wave-1 survivor (19/52 top-5 in an 11-doc minicorpus) converted 0/52 at
+@10 when integrated as an additive add_score term at any weight — discriminative
+power measured in a minicorpus dilutes at pool scale, where distance also boosts
+every other anchor-adjacent candidate. Regression-clean; code kept flag-gated
+(default off). METHODOLOGY LAW: measure discriminative headroom at POOL scale,
+never minicorpus scale. Wave-1 net verdict: six mechanisms killed; @k stands
+at .827/.923 (Lite) / .794/.921 (held-out).

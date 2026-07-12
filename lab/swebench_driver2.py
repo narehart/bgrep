@@ -37,8 +37,18 @@ Both --testbridge and --docsbridge are tail-only channels (insert at
 position >=14, never above): the top-10 returned_files ordering with either
 or both flags on is identical to the ordering with both off.
 
+--anchor-distance turns on the anchor-distance evidence channel (lanes2.
+select_files use_anchor_distance): pool/additions candidates are scored an
+extra + w_d * dscore term inside add_score, where dscore is 1/(1+hops) over
+the import+same-dir graph to the nearest file the issue text names
+(definition-symbol anchors + rarity-gated literal path/basename mentions).
+Evidence, not a post-hoc blend -- it only ever reorders which structural-
+expansion files get promoted into `additions`, never lex_picks (the BM25F
+head stays sovereign). --anchor-distance-weight sets w_d (default 0.6).
+
 Usage:  uv run python swebench_driver2.py [--limit N] [--history] [--comments] [--anchors]
                                            [--testbridge] [--docsbridge]
+                                           [--anchor-distance] [--anchor-distance-weight W]
                                            [--instances-file PATH | --sample N] --out results.jsonl
 """
 
@@ -141,7 +151,8 @@ def _list_current_files(repo_path: Path, extensions: tuple = L.CODE_EXTENSIONS) 
 def run_instance(
     inst: dict, repo_path: Path, use_history: bool, use_comments: bool, use_anchors: bool = False,
     use_testbridge: bool = False, use_docsbridge: bool = False, extensions: tuple = L.CODE_EXTENSIONS,
-    use_neighborhood: bool = False,
+    use_neighborhood: bool = False, use_anchor_distance: bool = False,
+    anchor_distance_weight: float = 0.6,
 ) -> dict:
     t0 = time.perf_counter()
 
@@ -171,7 +182,10 @@ def run_instance(
     t1 = time.perf_counter()
     files, scores = L.select_files(corpus, terms, use_ppr=True, cochange=cochange, anchors=anchors,
                                     use_testbridge=use_testbridge, use_docsbridge=use_docsbridge,
-                                    use_neighborhood=use_neighborhood)
+                                    use_neighborhood=use_neighborhood,
+                                    use_anchor_distance=use_anchor_distance,
+                                    anchor_distance_weight=anchor_distance_weight,
+                                    question=inst["problem_statement"])
     spans, bundle = L.pack_regions(corpus, files, terms, scores, 8192, count_tokens)
     query_ms = (time.perf_counter() - t1) * 1000
     packed_files = [f for f in files if f in spans]
@@ -204,7 +218,8 @@ def run_instance(
         "signals": {"history": use_history, "comments": use_comments, "anchors": use_anchors,
                     "testbridge": use_testbridge, "docsbridge": use_docsbridge,
                     "extensions": "extended" if extensions == L.EXTENDED_EXTENSIONS else "default",
-                    "neighborhood": use_neighborhood},
+                    "neighborhood": use_neighborhood, "anchor_distance": use_anchor_distance,
+                    "anchor_distance_weight": anchor_distance_weight if use_anchor_distance else None},
         "cochange_additions": cochange_additions,
         "anchor_promotions": anchor_promotions,
         "testbridge": testbridge,
@@ -250,6 +265,14 @@ def main() -> None:
                      help="'extended' adds PHP/Ruby/C-family extensions (lanes2.EXTENDED_EXTENSIONS) "
                           "to both the Corpus file walk and gold-file filtering, for the multilingual "
                           "baseline; 'default' (lanes2.CODE_EXTENSIONS) is byte-identical to prior runs")
+    ap.add_argument("--anchor-distance", action="store_true",
+                     help="add a graph-hop-distance evidence term to add_score (lanes2.select_files "
+                          "use_anchor_distance): pool/additions candidates closer, over the import+"
+                          "same-dir graph, to a file the issue text names score higher. Affects only "
+                          "structural-expansion additions, never lex_picks (the BM25F head)")
+    ap.add_argument("--anchor-distance-weight", type=float, default=0.6,
+                     help="w_d multiplier on the anchor-distance evidence term (default 0.6, swept "
+                          "in {0.3, 0.6, 1.0}); no-op unless --anchor-distance is set")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     extensions = L.EXTENDED_EXTENSIONS if args.extensions == "extended" else L.CODE_EXTENSIONS
@@ -279,7 +302,8 @@ def main() -> None:
     print(f"{len(instances)} instances, {len(done)} done, {len(todo)} to run "
           f"(history={args.history} comments={args.comments} anchors={args.anchors} "
           f"testbridge={args.testbridge} docsbridge={args.docsbridge} extensions={args.extensions} "
-          f"neighborhood={args.neighborhood})",
+          f"neighborhood={args.neighborhood} anchor_distance={args.anchor_distance}"
+          f"{f'(w={args.anchor_distance_weight})' if args.anchor_distance else ''})",
           flush=True)
 
     with out_path.open("a") as fh:
@@ -288,7 +312,8 @@ def main() -> None:
                 repo = repo_clone(inst["repo"])
                 checkout(repo, inst["base_commit"])
                 res = run_instance(inst, repo, args.history, args.comments, args.anchors,
-                                    args.testbridge, args.docsbridge, extensions, args.neighborhood)
+                                    args.testbridge, args.docsbridge, extensions, args.neighborhood,
+                                    args.anchor_distance, args.anchor_distance_weight)
             except Exception as exc:
                 res = {"instance_id": inst["instance_id"], "repo": inst["repo"],
                        "error": str(exc)[:300]}

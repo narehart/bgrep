@@ -46,7 +46,7 @@ import json
 import math
 import os
 import re
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 from pathlib import Path
 
 CODE_EXTENSIONS = (".py", ".ts", ".js", ".go", ".rs", ".java", ".kt", ".cs", ".swift", ".tsx", ".jsx")
@@ -548,6 +548,115 @@ def extract_symbol_anchors(question: str, corpus: Corpus) -> list[tuple[str, flo
                 best[f] = strength
                 def_counts[f] = len(files)
     return sorted(best.items(), key=lambda kv: (kv[1], -def_counts[kv[0]]), reverse=True)
+
+
+# ---------------------------------------------------------------- anchor-distance evidence
+
+_PATH_WORDCHAR_RE = re.compile(r"[A-Za-z0-9_]")
+
+
+def _literal_hit(text: str, needle: str) -> bool:
+    """True if `needle` occurs in `text` at a non-word-char boundary on both
+    sides (so e.g. "core.py" doesn't match inside "corecore.py" or a longer
+    identifier). Ported verbatim from the anchordist_diag diagnostic."""
+    start = 0
+    while True:
+        idx = text.find(needle, start)
+        if idx == -1:
+            return False
+        before = text[idx - 1] if idx > 0 else " "
+        after_pos = idx + len(needle)
+        after = text[after_pos] if after_pos < len(text) else " "
+        if not _PATH_WORDCHAR_RE.match(before) and not _PATH_WORDCHAR_RE.match(after):
+            return True
+        start = idx + 1
+
+
+def _literal_path_mentions(question: str, files: list[str]) -> set[str]:
+    """A file is a (path-mention) anchor if its full relative path appears
+    verbatim in the issue text (inherently rare, so no rarity gate needed),
+    OR its basename appears verbatim AND that basename is itself repo-rare
+    (<=3 files share it, mirroring extract_symbol_anchors' <=3-defining-files
+    gate) -- otherwise generic names like 'core.py'/'utils.py' turn every
+    mention of a common filename into a repo-wide anchor blast, pure noise
+    rather than file-identity evidence. Ported verbatim from the
+    anchordist_diag diagnostic's literal_path_mentions."""
+    basename_owners: dict[str, list[str]] = defaultdict(list)
+    for rel in files:
+        basename_owners[Path(rel).name].append(rel)
+
+    hits: set[str] = set()
+    for rel in files:
+        if len(rel) >= 5 and _literal_hit(question, rel):
+            hits.add(rel)
+            continue
+        base = Path(rel).name
+        if len(base) >= 5 and len(basename_owners[base]) <= 3 and _literal_hit(question, base):
+            hits.add(rel)
+    return hits
+
+
+def _anchor_distance_anchor_files(
+    question: str | None, corpus: "Corpus", anchors: list[tuple[str, float]] | None
+) -> set[str]:
+    """Anchor-file set for the anchor-distance evidence term: definition-
+    symbol anchor files (reused from `anchors` if the caller already computed
+    them via extract_symbol_anchors -- e.g. --anchors is also on -- recomputed
+    otherwise) unioned with literal path/basename mentions
+    (_literal_path_mentions, including its rarity gate). Independent of
+    whether the --anchors promotion channel is enabled."""
+    if not question:
+        return set()
+    sym_files = (
+        {f for f, _ in anchors} if anchors is not None
+        else {f for f, _ in extract_symbol_anchors(question, corpus)}
+    )
+    path_files = _literal_path_mentions(question, corpus.files)
+    return (sym_files | path_files) & set(corpus.files)
+
+
+def _combined_structural_graph(
+    files: list[str], edges: dict[str, set[str]], same_dir: dict[str, list[str]]
+) -> dict[str, set[str]]:
+    """import edges unioned with same-directory edges, replicating the exact
+    same_dir grouping select_files/_expand_region already build internally."""
+    combined: dict[str, set[str]] = {f: set(edges.get(f, ())) for f in files}
+    for rel in files:
+        for nbr in same_dir.get(str(Path(rel).parent), []):
+            if nbr != rel:
+                combined[rel].add(nbr)
+                combined.setdefault(nbr, set()).add(rel)
+    return combined
+
+
+def _bfs_multi_source_distance(graph: dict[str, set[str]], sources: set[str]) -> dict[str, int]:
+    dist: dict[str, int] = {}
+    q: deque[str] = deque()
+    for s in sources:
+        if s in graph:
+            dist[s] = 0
+            q.append(s)
+    while q:
+        u = q.popleft()
+        for v in graph.get(u, ()):
+            if v not in dist:
+                dist[v] = dist[u] + 1
+                q.append(v)
+    return dist
+
+
+def anchor_distance_scores(
+    corpus: "Corpus", edges: dict[str, set[str]], same_dir: dict[str, list[str]], anchor_files: set[str]
+) -> dict[str, float]:
+    """dscore(f) = 1/(1+hops) to the nearest anchor file over the combined
+    import+same-dir graph, multi-source BFS'd from every anchor file at
+    once; 0.0 (via .get default at the callsite) for unreachable files or
+    when there are no anchors at all."""
+    if not anchor_files:
+        return {}
+    graph = _combined_structural_graph(corpus.files, edges, same_dir)
+    dist = _bfs_multi_source_distance(graph, anchor_files)
+    return {f: 1.0 / (1.0 + dist[f]) for f in dist}
 
 
 # ---------------------------------------------------------------- import graph
@@ -1308,6 +1417,9 @@ def select_files(
     use_testbridge: bool = False,
     use_docsbridge: bool = False,
     use_neighborhood: bool = False,
+    use_anchor_distance: bool = False,
+    anchor_distance_weight: float = 0.6,
+    question: str | None = None,
 ) -> tuple[list[str], dict[str, float]]:
     """Return candidate files: top BM25F picks, optionally UNIONed with the top
     graph-diffusion additions. The union is monotone: diffusion can only add
@@ -1347,6 +1459,21 @@ def select_files(
     _NEIGHBORHOOD_MIN_REGION files (or the mask empties bm entirely), this
     falls back to the unmasked global pipeline for this query and records
     the fallback in LAST_EXPLAIN['neighborhood'].
+
+    use_anchor_distance (default OFF) adds a graph-hop-distance EVIDENCE TERM
+    to add_score (see anchor_distance_scores): candidates closer, over the
+    import+same-dir graph, to a file the issue text NAMES (definition-symbol
+    anchors + rarity-gated literal path/basename mentions -- see
+    _anchor_distance_anchor_files) score higher in the pool/additions ranking.
+    This affects ONLY which structural-expansion candidates get promoted into
+    `additions`; lex_picks (the BM25F head) is never touched, so the head
+    stays sovereign. A 50/50 blend of this signal with the existing pack
+    order was measured to suppress it almost entirely (2/52 conversions vs
+    19/52 as a standalone rank) -- it must enter as an additive evidence term
+    inside add_score, not a post-hoc reordering. Requires `question` (the raw
+    issue text) to find anchors; with no `question` or no anchors found in
+    the text, dscore is 0.0 everywhere and add_score (hence recall/ordering)
+    is byte-identical to use_anchor_distance=False.
     """
     global LAST_EXPLAIN
     bm = corpus.bm25(terms)
@@ -1412,6 +1539,16 @@ def select_files(
     for rel in corpus.files:
         same_dir[str(Path(rel).parent)].append(rel)
 
+    # Anchor-distance evidence term (see select_files docstring): computed
+    # once here so add_score below can look candidates up by O(1) dict get.
+    # anchor_dscore stays {} (so add_score is byte-identical to flag-off)
+    # whenever use_anchor_distance is False, `question` wasn't given, or no
+    # anchor files were found in the issue text.
+    anchor_dscore: dict[str, float] = {}
+    if use_anchor_distance:
+        anchor_files = _anchor_distance_anchor_files(question, corpus, anchors)
+        anchor_dscore = anchor_distance_scores(corpus, edges, same_dir, anchor_files)
+
     # Expansion frontier: the 1-hop neighborhood (import edges + same package)
     # of the WHOLE retrieved set, not of a few chosen seeds. Every observed
     # recall failure was a structural neighbor of some retrieved file; picking
@@ -1467,7 +1604,14 @@ def select_files(
     def add_score(c: str) -> float:
         # evidence dominates; the link strength is a soft factor so strong
         # evidence through a weaker pick still beats noise near the top pick.
-        return (0.15 + bm_n.get(c, 0.0) + 0.8 * fb_n.get(c, 0.0)) * (0.5 + 0.5 * pool[c])
+        score = (0.15 + bm_n.get(c, 0.0) + 0.8 * fb_n.get(c, 0.0)) * (0.5 + 0.5 * pool[c])
+        if use_anchor_distance:
+            # additive EVIDENCE TERM, not a post-hoc blend with the final
+            # order -- see select_files docstring for why that distinction
+            # matters (a 50/50 blend with pack order suppressed the signal
+            # to 2/52 conversions; as an add_score term it reached 19/52).
+            score += anchor_distance_weight * anchor_dscore.get(c, 0.0)
+        return score
 
     # Cutoff: guarantee each source's single best neighbor (no package can be
     # starved), then fill to 16 by global evidence score.
