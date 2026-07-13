@@ -34,6 +34,21 @@ PARQUET_CACHE = LAB_DIR / "swebench_lite.parquet"
 _DIFF_FILE_RE = re.compile(r"^diff --git a/(\S+) b/", re.M)
 _ENC = tiktoken.get_encoding("cl100k_base")
 
+# Current published Sonnet 4.5 pricing (standard tier, <=200K context):
+# https://platform.claude.com/docs/en/about-claude/pricing (checked 2026-07).
+# Single source of truth: agent.py (per-turn cost ceiling, FIX 2), run_bench.py
+# (between-pair budget cap) and summarize.py (post-hoc cost reporting) all
+# import this so the three can never drift out of sync with each other.
+PRICE_INPUT_PER_MTOK = 3.0
+PRICE_OUTPUT_PER_MTOK = 15.0
+
+
+def row_cost(api_input_tokens: int, api_output_tokens: int) -> float:
+    """$ cost estimate from Anthropic-reported usage tokens at the pricing
+    above."""
+    return ((api_input_tokens or 0) / 1e6 * PRICE_INPUT_PER_MTOK
+            + (api_output_tokens or 0) / 1e6 * PRICE_OUTPUT_PER_MTOK)
+
 
 def count_tokens(text: str) -> int:
     """tiktoken cl100k_base token count. Used uniformly across all three

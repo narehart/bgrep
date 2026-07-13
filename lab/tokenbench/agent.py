@@ -37,11 +37,12 @@ than trusting the pre-run calibration in rag_tool.py.
 from __future__ import annotations
 
 import json
+import random
 import time
 from pathlib import Path
 from typing import Any
 
-from common import count_tokens, files_match, parse_files_line
+from common import count_tokens, files_match, parse_files_line, row_cost
 from rag_tool import RAG_SEARCH_TOOL, rag_search
 from roust_tool import ROUST_TOOL, roust_search
 from sandbox_tools import READ_FILE_TOOL, RUN_COMMAND_TOOL, read_file, run_command
@@ -51,6 +52,62 @@ MAX_TURNS = 30
 MAX_TOKENS_PER_TURN = 4096
 TEMPERATURE = 0
 ROUST_BUDGET = 8192
+
+# FIX 2 (issue #21): a single (instance, arm) run's own cost ceiling, checked
+# INSIDE the turn loop (not just between pairs -- see run_bench.py
+# --budget-cap-usd, which can't bound a run already in progress). The #18
+# pilot saw one run cost $4.19 against a ~$0.95 estimate -- 4.4x over.
+MAX_COST_PER_PAIR_USD = 3.0
+
+# FIX 3 (unticketed, most dangerous): retry/backoff around the API call so a
+# transient 429/5xx/connection blip during a multi-hour run doesn't get
+# recorded as a fake task failure (see run_agent's status="api_error").
+MAX_API_RETRIES = 5
+RETRY_BASE_DELAY_S = 1.0
+_RETRYABLE_EXC_NAMES = {
+    "APIConnectionError", "APITimeoutError", "ConnectionError", "Timeout",
+    "InternalServerError", "RateLimitError", "APIStatusError",
+}
+
+
+def _is_retryable(exc: Exception) -> bool:
+    status = getattr(exc, "status_code", None)
+    if status is not None:
+        return status == 429 or 500 <= status < 600
+    # SDK connection/timeout errors (and anything a flaky network or the
+    # mock client raises) may not carry a status_code at all.
+    return type(exc).__name__ in _RETRYABLE_EXC_NAMES
+
+
+def _retry_delay(exc: Exception, attempt: int) -> float:
+    response = getattr(exc, "response", None)
+    headers = getattr(response, "headers", None) if response is not None else None
+    retry_after = None
+    if headers is not None:
+        retry_after = headers.get("retry-after") or headers.get("Retry-After")
+    if retry_after:
+        try:
+            return float(retry_after)
+        except (TypeError, ValueError):
+            pass
+    return RETRY_BASE_DELAY_S * (2 ** attempt) + random.uniform(0, 0.5)
+
+
+def _call_with_retry(client: Any, **kwargs) -> Any:
+    """client.messages.create with exponential backoff on 429/5xx/connection
+    errors (honoring Retry-After when the SDK surfaces it). Raises the last
+    exception once retries are exhausted -- the caller must record that as
+    status="api_error", NOT a generic task failure."""
+    last_exc: Exception | None = None
+    for attempt in range(MAX_API_RETRIES):
+        try:
+            return client.messages.create(**kwargs)
+        except Exception as exc:  # noqa: BLE001 -- want every error class retried/reported uniformly
+            last_exc = exc
+            if not _is_retryable(exc) or attempt == MAX_API_RETRIES - 1:
+                raise
+            time.sleep(_retry_delay(exc, attempt))
+    raise last_exc  # pragma: no cover -- loop above always returns or raises
 
 ARMS: dict[str, list[str]] = {
     "grep": ["run_command", "read_file"],
@@ -234,9 +291,31 @@ def run_agent(
     model: str = MODEL,
     roust_budget: int = ROUST_BUDGET,
     rag_k: int | None = None,
+    max_cost_per_pair: float = MAX_COST_PER_PAIR_USD,
 ) -> dict:
-    """Runs the tool-use loop to completion (FILES: line, turn cap, or
-    error) and returns a result dict ready to be written to results.jsonl."""
+    """Runs the tool-use loop to completion (FILES: line, turn cap, cost
+    ceiling, or API error) and returns a result dict ready to be written to
+    results.jsonl.
+
+    result["status"] distinguishes WHY the loop ended, so downstream
+    analysis (summarize.py) can tell a genuine task outcome from an
+    infrastructure hiccup:
+      * "ok"                  -- loop completed normally (FILES: line, or a
+                                  genuine turn-cap exhaustion); success/
+                                  failure reflects the actual task outcome.
+      * "aborted_over_budget" -- cumulative cost exceeded max_cost_per_pair
+                                  mid-run (FIX 2, issue #21); NOT a task
+                                  failure, must be excluded from success-rate
+                                  denominators.
+      * "api_error"           -- the Anthropic API call failed even after
+                                  retry/backoff (FIX 3); NOT a task failure,
+                                  must be excluded from success-rate
+                                  denominators.
+      * "error"               -- an unexpected exception elsewhere in the
+                                  loop (e.g. a bug in our own tool-dispatch
+                                  code); kept as a genuine failure, same as
+                                  pre-fix behavior, just now labeled.
+    success is always forced False when status != "ok"."""
     from rag_tool import TOP_K as _DEFAULT_RAG_K
 
     if rag_k is None:
@@ -258,6 +337,7 @@ def run_agent(
     final_text = ""
     error: str | None = None
     hit_turn_cap = False
+    status = "ok"
     tool_call_log: list[dict] = []  # one entry per tool call: {"tool", "tokens", "retrieval", ...}
 
     try:
@@ -268,14 +348,20 @@ def run_agent(
             )
             tiktoken_input_total += count_tokens(request_text)
 
-            response = client.messages.create(
-                model=model,
-                max_tokens=MAX_TOKENS_PER_TURN,
-                temperature=TEMPERATURE,
-                system=system_prompt,
-                tools=tools_schema,
-                messages=messages,
-            )
+            try:
+                response = _call_with_retry(
+                    client,
+                    model=model,
+                    max_tokens=MAX_TOKENS_PER_TURN,
+                    temperature=TEMPERATURE,
+                    system=system_prompt,
+                    tools=tools_schema,
+                    messages=messages,
+                )
+            except Exception as exc:  # noqa: BLE001 -- retries exhausted; NOT a task failure
+                error = f"{type(exc).__name__}: {exc}"[:500]
+                status = "api_error"
+                break
 
             usage = getattr(response, "usage", None)
             api_in = getattr(usage, "input_tokens", 0) if usage else 0
@@ -309,6 +395,13 @@ def run_agent(
             if text_blocks:
                 final_text = "\n".join(text_blocks)
 
+            # FIX 2 (issue #21): check the ACTUAL cumulative cost after every
+            # turn, inside the loop -- run_bench.py's --budget-cap-usd only
+            # checks BETWEEN pairs and can't bound a run already in progress.
+            if row_cost(api_input_total, api_output_total) > max_cost_per_pair:
+                status = "aborted_over_budget"
+                break
+
             if not tool_use_blocks:
                 # No tool calls this turn -- the agent believes it's done.
                 break
@@ -328,15 +421,20 @@ def run_agent(
             messages.append({"role": "user", "content": tool_results})
         else:
             hit_turn_cap = True
-    except Exception as exc:  # noqa: BLE001 -- want every failure mode captured, not crash the sweep
+    except Exception as exc:  # noqa: BLE001 -- catch-all safety net for anything else unexpected
         error = f"{type(exc).__name__}: {exc}"[:500]
+        status = "error"
 
     wall_clock_s = time.perf_counter() - t0
     returned_files = parse_files_line(final_text)
     gold_files = instance["gold_files"]
     # Per spec: exhausting the turn cap is a failure even if a FILES: line
     # happened to appear in the same (over-budget) final turn as a tool call.
-    success = False if (error or hit_turn_cap) else files_match(returned_files, gold_files)
+    # Any non-"ok" status (api_error / aborted_over_budget / error) is also
+    # forced to success=False, but summarize.py must exclude api_error and
+    # aborted_over_budget rows from the success-RATE denominator -- they are
+    # not evidence the task itself failed.
+    success = False if (status != "ok" or hit_turn_cap) else files_match(returned_files, gold_files)
 
     return {
         "instance_id": instance["instance_id"],
@@ -345,6 +443,7 @@ def run_agent(
         "gold_files": gold_files,
         "returned_files": returned_files,
         "success": success,
+        "status": status,
         "error": error,
         "hit_turn_cap": hit_turn_cap,
         "turns_used": turns_used,
