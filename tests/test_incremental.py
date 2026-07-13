@@ -13,6 +13,7 @@ Corpus, while also asserting which update path (roust.cache's "unchanged" /
 from __future__ import annotations
 
 import os
+import subprocess
 import time
 from pathlib import Path
 
@@ -418,3 +419,62 @@ def test_reverse_import_edge_preserved_when_only_one_side_still_imports(tmp_path
     fresh2 = Corpus(repo, history_msgs=None, use_comments=False, build_docs=False)
     fresh_edges2 = build_import_graph(fresh2)
     assert dict(edges) == dict(fresh_edges2)
+
+
+def _git(repo: Path, *args: str) -> None:
+    subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True, text=True)
+
+
+def _make_git_repo(tmp_path: Path) -> Path:
+    """Like _make_repo, but a real git repo (init + commit) so
+    roust.cache._scan_manifest exercises the git-ls-files-first candidate
+    enumeration (roust.core._candidate_files) rather than the raw-walk
+    fallback the other tests in this module hit (their repos are never
+    git-initialized)."""
+    repo = _make_repo(tmp_path)
+    _git(repo, "init", "-q")
+    _git(repo, "-c", "user.email=test@test.invalid", "-c", "user.name=test", "add", "-A")
+    _git(repo, "-c", "user.email=test@test.invalid", "-c", "user.name=test", "commit", "-q", "-m", "test: initial commit")
+    return repo
+
+
+def test_gitignored_file_creation_does_not_trigger_rebuild(tmp_path: Path) -> None:
+    """A .gitignore'd file appearing on disk (e.g. a build artifact, or --
+    the motivating case -- a .venv/ package file) must never flip the cache
+    verdict away from "unchanged": _scan_manifest enumerates candidates via
+    the same git-ls-files-first source Corpus itself indexes, so an ignored
+    file was never a manifest entry to begin with. A subsequent edit to an
+    actually-tracked file must still be detected and patched incrementally."""
+    repo = _make_git_repo(tmp_path)
+
+    corpus, edges, history, cache_hit, kind = cache_mod.load_or_build_ex(
+        repo, with_history=False, with_docs=False, use_cache=True,
+    )
+    assert kind == "full"
+    assert "pkg/router.py" in corpus.files
+
+    (repo / ".gitignore").write_text("ignored_pkg/\n")
+    ignored_dir = repo / "ignored_pkg"
+    ignored_dir.mkdir()
+    (ignored_dir / "junk.py").write_text(
+        '"""Should never be indexed -- lives under a gitignored directory."""\n\n\n'
+        "def junk_fn():\n"
+        "    return 0\n"
+    )
+
+    corpus, edges, history, cache_hit, kind = cache_mod.load_or_build_ex(
+        repo, with_history=False, with_docs=False, use_cache=True,
+    )
+    assert kind == "unchanged", "an ignored file appearing on disk must not trigger a rebuild"
+    assert cache_hit is True
+    assert "ignored_pkg/junk.py" not in corpus.files
+
+    # A tracked-file edit must still be detected and incrementally patched.
+    _write(repo, "pkg/validators.py", _VALIDATORS_V2)
+    corpus, edges, history, cache_hit, kind = cache_mod.load_or_build_ex(
+        repo, with_history=False, with_docs=False, use_cache=True,
+    )
+    assert kind == "incremental", "a tracked-file edit must still be detected"
+    assert cache_hit is True
+    assert "ignored_pkg/junk.py" not in corpus.files
+    _assert_matches_fresh_build(repo, corpus)

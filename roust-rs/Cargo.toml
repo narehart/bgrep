@@ -1,8 +1,13 @@
 [package]
 name = "roust"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
+description = "Recall-first code retrieval for LLM coding agents - grep-level recall at ~1% of the tokens"
 license = "MIT"
+repository = "https://github.com/narehart/roust"
+readme = "../README.md"
+keywords = ["grep", "search", "retrieval", "llm", "code"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 clap = { version = "4.6.1", features = ["derive"] }

@@ -10,6 +10,12 @@ intentional differences from lanes2.py are:
     dependency); it uses the identical tiktoken cl100k_base encoding.
   - The Corpus file walk additionally excludes the on-disk index cache
     directory (.roust/), which does not exist in the lab environment.
+  - The Corpus file walk prefers `git ls-files` (tracked + untracked-but-
+    not-ignored) over a raw filesystem walk when the target path is inside a
+    git work tree, so .gitignore'd directories (.venv/, node_modules/,
+    vendored benchmark clones, ...) are never indexed -- matching ripgrep's
+    file-discovery semantics. lanes2.py, which only ever runs against clean
+    SWE-bench clones, has no equivalent concern and always raw-walks.
 
 See lab/lanes2.py's module docstring for the retrieval-design rationale
 (lanes, history signals, vendor/pack-safety fixes) -- it is not repeated here.
@@ -20,6 +26,7 @@ from __future__ import annotations
 import math
 import os
 import re
+import subprocess
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -37,6 +44,49 @@ def _is_cache_or_git_path(rel: str) -> bool:
         rel.startswith(".git/") or "/.git/" in rel
         or rel.startswith(f"{_CACHE_DIR_NAME}/") or f"/{_CACHE_DIR_NAME}/" in rel
     )
+
+
+def _git_ls_files(repo_path: Path) -> list[str] | None:
+    """Enumerate candidate files via `git ls-files` (tracked + untracked-but-
+    not-ignored), inheriting .gitignore/.git/info/exclude/global excludes --
+    exactly ripgrep's file-discovery semantics. Returns relative (forward-
+    slash) paths, or None if `repo_path` isn't inside a git work tree, or if
+    the git invocation fails for ANY reason -- callers must fall back to a
+    raw filesystem walk rather than hard-fail indexing."""
+    try:
+        check = subprocess.run(
+            ["git", "-C", str(repo_path), "rev-parse", "--is-inside-work-tree"],
+            capture_output=True, text=True, timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if check.returncode != 0 or check.stdout.strip() != "true":
+        return None
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repo_path), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            capture_output=True, timeout=60,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if result.returncode != 0:
+        return None
+    if not result.stdout:
+        return []
+    return [p for p in result.stdout.decode("utf-8", errors="replace").split("\0") if p]
+
+
+def _candidate_files(repo_path: Path) -> list[Path]:
+    """Sorted candidate file Paths for corpus construction: git-tracked +
+    untracked-but-not-ignored files when `repo_path` is inside a git work
+    tree (see _git_ls_files), else every file under `repo_path` (the
+    pre-existing raw-walk behavior). All downstream filters (extension
+    allowlist, vendor regex, size/line caps, .git/.roust exclusion) apply
+    unconditionally on top of either source."""
+    rels = _git_ls_files(repo_path)
+    if rels is not None:
+        return sorted(repo_path / rel for rel in rels)
+    return sorted(repo_path.rglob("*"))
 
 
 # ---------------------------------------------------------------- token counting
@@ -240,7 +290,8 @@ class Corpus:
         self.com_tf: dict[str, Counter[str]] = {}
         self.com_df: Counter[str] = Counter()
         self.def_index: dict[str, list[str]] = defaultdict(list)
-        for p in sorted(repo_path.rglob("*")):
+        candidates = _candidate_files(repo_path)
+        for p in candidates:
             if not p.is_file() or p.suffix not in CODE_EXTENSIONS:
                 continue
             rel = str(p.relative_to(repo_path))
@@ -322,7 +373,7 @@ class Corpus:
         self.docs_len: dict[str, int] = {}
         if build_docs:
             doc_paths: list[Path] = []
-            for p in sorted(repo_path.rglob("*")):
+            for p in candidates:
                 if not p.is_file() or p.suffix not in _DOCS_EXTENSIONS:
                     continue
                 rel = str(p.relative_to(repo_path))

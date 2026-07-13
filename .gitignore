@@ -1,7 +1,13 @@
 __pycache__/
 *.pyc
 lab/repos/
+lab/swebench_repos/
+lab/scala_repos/
+lab/*.parquet
 .venv/
 .roust/
 .venv-pkg/
 roust-rs/target/
+err.log
+explain.log
+out.json

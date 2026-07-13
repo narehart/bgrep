@@ -315,12 +315,62 @@ const MAX_DOCS_FILES: usize = 4000;
 
 // ---------------------------------------------------------------- filesystem walk
 
+/// Enumerate candidate files via `git ls-files` (tracked + untracked-but-
+/// not-ignored), inheriting .gitignore/.git/info/exclude/global excludes --
+/// exactly ripgrep's file-discovery semantics. Returns `None` if
+/// `repo_path` isn't inside a git work tree, or if the git invocation fails
+/// for ANY reason -- callers must fall back to a raw filesystem walk rather
+/// than hard-fail indexing.
+pub(crate) fn git_ls_files(repo_path: &Path) -> Option<Vec<String>> {
+    let check = std::process::Command::new("git")
+        .args(["rev-parse", "--is-inside-work-tree"])
+        .current_dir(repo_path)
+        .output()
+        .ok()?;
+    if !check.status.success() || String::from_utf8_lossy(&check.stdout).trim() != "true" {
+        return None;
+    }
+    let output = std::process::Command::new("git")
+        .args(["ls-files", "-z", "--cached", "--others", "--exclude-standard"])
+        .current_dir(repo_path)
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+    Some(
+        output
+            .stdout
+            .split(|&b| b == 0)
+            .filter(|s| !s.is_empty())
+            .map(|s| String::from_utf8_lossy(s).into_owned())
+            .collect(),
+    )
+}
+
 /// Order paths the way `sorted(repo_path.rglob("*"))` does: full component-
 /// wise (parts-tuple) comparison, computed once over ALL files then used to
 /// sort; directories are never yielded (Python's loop `continue`s on
 /// `not p.is_file()` immediately, so their traversal order is irrelevant to
 /// the surviving files' relative order).
-fn walk_all_files(repo_path: &Path) -> Vec<String> {
+///
+/// Prefers `git_ls_files` when `repo_path` is inside a git work tree (see
+/// above), falling back to a raw filesystem walk otherwise -- or if the git
+/// invocation fails for any reason. Falling back to the raw walk means
+/// entries here are not guaranteed to be plain files in the git-list case
+/// (e.g. a submodule gitlink); callers must still verify via `is_file`
+/// metadata before reading.
+///
+/// `pub(crate)` so `cache.rs` can enumerate the SAME candidate set for its
+/// manifest / history current-files scans (rather than re-walking with its
+/// own logic) -- the manifest must cover exactly the files `Corpus::build`
+/// indexes, or add/remove change detection would desync from what actually
+/// gets (re)indexed.
+pub(crate) fn walk_all_files(repo_path: &Path) -> Vec<String> {
+    if let Some(mut rels) = git_ls_files(repo_path) {
+        rels.sort_by(|a, b| path_sort_key(a).cmp(&path_sort_key(b)));
+        return rels;
+    }
     let mut out: Vec<String> = Vec::new();
     fn recurse(dir: &Path, base: &Path, out: &mut Vec<String>) {
         let entries = match std::fs::read_dir(dir) {
@@ -423,21 +473,24 @@ impl Corpus {
         let mut def_index: HashMap<String, Vec<String>> = HashMap::new();
 
         let all_files = walk_all_files(repo_path);
-        for rel in all_files {
+        for rel in &all_files {
             if rel.starts_with(".git/") || rel.contains("/.git/") {
                 continue;
             }
-            if !has_code_suffix(&rel) {
+            if !has_code_suffix(rel) {
                 continue;
             }
-            if VENDOR_RE.is_match(&rel) {
+            if VENDOR_RE.is_match(rel) {
                 continue;
             }
-            let full = repo_path.join(&rel);
+            let full = repo_path.join(rel);
             let meta = match std::fs::metadata(&full) {
                 Ok(m) => m,
                 Err(_) => continue,
             };
+            if !meta.is_file() {
+                continue;
+            }
             if meta.len() > MAX_FILE_BYTES {
                 continue;
             }
@@ -456,7 +509,7 @@ impl Corpus {
                 continue;
             }
             files.push(rel.clone());
-            ptoks.insert(rel.clone(), path_tokens(&rel));
+            ptoks.insert(rel.clone(), path_tokens(rel));
             let counts = counter_from_tokens(&toks);
             for term in counts.keys() {
                 *df.entry(term.clone()).or_insert(0) += 1;
@@ -465,7 +518,7 @@ impl Corpus {
             tf.insert(rel.clone(), counts);
 
             if use_comments {
-                let com_text = extract_comments(&rel, &txt);
+                let com_text = extract_comments(rel, &txt);
                 let com_toks = tokenize(&com_text);
                 if !com_toks.is_empty() {
                     let ctf = counter_from_tokens(&com_toks);
@@ -476,7 +529,7 @@ impl Corpus {
                 }
             }
 
-            if impl_prior(&rel) == 1.0 {
+            if impl_prior(rel) == 1.0 {
                 let def_re: Option<&LazyLock<Regex>> = if rel.ends_with(".py") {
                     Some(&PY_DEF_RE)
                 } else if rel.ends_with(".go") {
@@ -552,20 +605,19 @@ impl Corpus {
         let mut docs_df: HashMap<String, u32> = HashMap::new();
         let mut docs_len: HashMap<String, u32> = HashMap::new();
         if build_docs {
-            let all_files2 = walk_all_files(repo_path);
             let mut doc_paths: Vec<String> = Vec::new();
-            for rel in all_files2 {
+            for rel in &all_files {
                 if rel.starts_with(".git/") || rel.contains("/.git/") {
                     continue;
                 }
-                let suf = suffix_of(&rel);
+                let suf = suffix_of(rel);
                 if !DOCS_EXTENSIONS.contains(&suf) {
                     continue;
                 }
-                if DOCS_EXCLUDE_RE.is_match(&rel) {
+                if DOCS_EXCLUDE_RE.is_match(rel) {
                     continue;
                 }
-                doc_paths.push(rel);
+                doc_paths.push(rel.clone());
             }
             for rel in doc_paths.into_iter().take(MAX_DOCS_FILES) {
                 let full = repo_path.join(&rel);
@@ -573,6 +625,9 @@ impl Corpus {
                     Ok(m) => m,
                     Err(_) => continue,
                 };
+                if !meta.is_file() {
+                    continue;
+                }
                 if meta.len() > MAX_DOCS_FILE_BYTES {
                     continue;
                 }

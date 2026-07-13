@@ -52,7 +52,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
-pub const CACHE_VERSION: i64 = 1;
+pub const CACHE_VERSION: i64 = 3;
 pub const CACHE_DIRNAME: &str = ".roust";
 const INDEX_FILENAME: &str = "rust-index.bin";
 
@@ -101,86 +101,51 @@ fn git_head_sha(repo_path: &Path) -> String {
     }
 }
 
-/// `os.path.splitext(name)[1]` equivalent: the extension (including the
-/// leading dot) of the LAST dot in `name`, or `""` if there is no dot past
-/// position 0 (matches `core::suffix_of`'s "leading-dot dotfile has no
-/// suffix" handling, close enough for the fixed extension sets this cache
-/// filters on).
-fn splitext_ext(name: &str) -> &str {
-    match name.rfind('.') {
-        Some(idx) if idx > 0 => &name[idx..],
-        _ => "",
-    }
-}
-
-const PRUNE_DIRS: &[&str] = &[".git", CACHE_DIRNAME];
-
-/// Stat-only walk (no file reads) over every candidate-extension file,
-/// returning `{relpath: (mtime_ns, size)}`. Deliberately cheaper and
-/// coarser than `Corpus::build`'s own walk (no vendor-regex / oversize /
-/// long-line filtering) -- a spuriously-"changed" entry just costs an extra
-/// reindex of that one file (or, for add/remove, a full rebuild), which is
-/// always safe; it can never cause a stale hit.
+/// Stat-only pass (no file reads) over every candidate-extension file,
+/// returning `{relpath: (mtime_ns, size)}`. Uses `core::walk_all_files` --
+/// the SAME git-ls-files-first enumeration (falling back to a raw
+/// filesystem walk outside a git work tree) that `Corpus::build` itself
+/// walks -- so the manifest's file set matches exactly what the Corpus
+/// indexes. This is what makes a .gitignore'd file appearing on disk (e.g.
+/// inside .venv/) invisible to change detection: git ls-files never lists
+/// it, so it was never a candidate in the first place, and its creation
+/// can't flip the verdict away from "unchanged". Deliberately cheaper and
+/// coarser than `Corpus::build`'s own per-file filtering (no vendor-regex /
+/// oversize / long-line filtering) -- a spuriously-"changed" entry just
+/// costs an extra reindex of that one file (or, for add/remove, a full
+/// rebuild), which is always safe; it can never cause a stale hit.
 fn scan_manifest(repo_path: &Path, with_docs: bool) -> Manifest {
     let mut exts: HashSet<&str> = core::CODE_EXTENSIONS.iter().copied().collect();
     if with_docs {
         exts.extend(core::DOCS_EXTENSIONS.iter().copied());
     }
     let mut manifest = Manifest::new();
-
-    fn recurse(dir: &Path, base: &Path, exts: &HashSet<&str>, out: &mut Manifest) {
-        let entries = match std::fs::read_dir(dir) {
-            Ok(e) => e,
-            Err(_) => return,
-        };
-        for entry in entries.flatten() {
-            let path = entry.path();
-            let file_type = match entry.file_type() {
-                Ok(t) => t,
-                Err(_) => continue,
-            };
-            let is_dir = if file_type.is_symlink() {
-                std::fs::metadata(&path).map(|m| m.is_dir()).unwrap_or(false)
-            } else {
-                file_type.is_dir()
-            };
-            if is_dir {
-                let name = entry.file_name();
-                let name_str = name.to_string_lossy();
-                if PRUNE_DIRS.contains(&name_str.as_ref()) {
-                    continue;
-                }
-                recurse(&path, base, exts, out);
-                continue;
-            }
-            let name = entry.file_name();
-            let name_str = name.to_string_lossy();
-            if !exts.contains(splitext_ext(&name_str)) {
-                continue;
-            }
-            let meta = match entry.metadata() {
-                Ok(m) => m,
-                Err(_) => continue,
-            };
-            let rel = match path.strip_prefix(base) {
-                Ok(r) => r,
-                Err(_) => continue,
-            };
-            let relstr = match rel.to_str() {
-                Some(s) => s.replace('\\', "/"),
-                None => continue,
-            };
-            let mtime_ns = meta
-                .modified()
-                .ok()
-                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-                .map(|d| d.as_nanos() as i64)
-                .unwrap_or(0);
-            out.insert(relstr, (mtime_ns, meta.len()));
+    for rel in core::walk_all_files(repo_path) {
+        if rel.starts_with(".git/") || rel.contains("/.git/") {
+            continue;
         }
+        if rel.starts_with(&format!("{CACHE_DIRNAME}/")) || rel.contains(&format!("/{CACHE_DIRNAME}/")) {
+            continue;
+        }
+        if !exts.contains(core::suffix_of(&rel)) {
+            continue;
+        }
+        let full = repo_path.join(&rel);
+        let meta = match std::fs::metadata(&full) {
+            Ok(m) => m,
+            Err(_) => continue,
+        };
+        if !meta.is_file() {
+            continue;
+        }
+        let mtime_ns = meta
+            .modified()
+            .ok()
+            .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+            .map(|d| d.as_nanos() as i64)
+            .unwrap_or(0);
+        manifest.insert(rel, (mtime_ns, meta.len()));
     }
-
-    recurse(repo_path, repo_path, &exts, &mut manifest);
     manifest
 }
 
@@ -262,52 +227,29 @@ fn save(repo_path: &Path, key: &str, corpus: &Corpus, edges: &EdgeMap, history: 
 
 /// Cheap mirror of `Corpus::build`'s file-collection filter (extension,
 /// `.git`/`.roust` exclusion) without reading/tokenizing file contents --
-/// matches `roust.cache._build_fresh`'s `current_files` comprehension
-/// (including its "top-level `startswith` only, not nested-`.git`-aware"
-/// quirk, since that's exactly what it mirrors).
+/// matches `roust.cache._build_fresh`'s `current_files` comprehension. Uses
+/// `core::walk_all_files` (git-ls-files-first, same as `Corpus::build` and
+/// `scan_manifest`) so a .gitignore'd file is never fed to history mining as
+/// a "current" file either.
 fn collect_current_code_files(repo_path: &Path) -> HashSet<String> {
     let mut files = HashSet::new();
-    fn recurse(dir: &Path, base: &Path, out: &mut HashSet<String>) {
-        let entries = match std::fs::read_dir(dir) {
-            Ok(e) => e,
-            Err(_) => return,
-        };
-        for entry in entries.flatten() {
-            let path = entry.path();
-            let file_type = match entry.file_type() {
-                Ok(t) => t,
-                Err(_) => continue,
-            };
-            if file_type.is_dir() {
-                recurse(&path, base, out);
-            } else {
-                let is_file = if file_type.is_symlink() {
-                    std::fs::metadata(&path).map(|m| m.is_file()).unwrap_or(false)
-                } else {
-                    file_type.is_file()
-                };
-                if !is_file {
-                    continue;
-                }
-                let rel = match path.strip_prefix(base) {
-                    Ok(r) => r,
-                    Err(_) => continue,
-                };
-                let relstr = match rel.to_str() {
-                    Some(s) => s.replace('\\', "/"),
-                    None => continue,
-                };
-                if relstr.starts_with(".git/") || relstr.starts_with(&format!("{CACHE_DIRNAME}/")) {
-                    continue;
-                }
-                if !core::is_code_file(&relstr) {
-                    continue;
-                }
-                out.insert(relstr);
-            }
+    for rel in core::walk_all_files(repo_path) {
+        if rel.starts_with(".git/") || rel.contains("/.git/") {
+            continue;
         }
+        if rel.starts_with(&format!("{CACHE_DIRNAME}/")) || rel.contains(&format!("/{CACHE_DIRNAME}/")) {
+            continue;
+        }
+        if !core::is_code_file(&rel) {
+            continue;
+        }
+        let full = repo_path.join(&rel);
+        match std::fs::metadata(&full) {
+            Ok(m) if m.is_file() => {}
+            _ => continue,
+        }
+        files.insert(rel);
     }
-    recurse(repo_path, repo_path, &mut files);
     files
 }
 

@@ -50,7 +50,6 @@ itself indexed.
 
 from __future__ import annotations
 
-import os
 import pickle
 import subprocess
 from pathlib import Path
@@ -59,15 +58,16 @@ from roust.core import (
     CODE_EXTENSIONS,
     Corpus,
     _DOCS_EXTENSIONS,
+    _candidate_files,
+    _is_cache_or_git_path,
     build_import_graph,
     update_import_graph_for_files,
 )
 from roust.history import mine_history
 
-CACHE_VERSION = 3
+CACHE_VERSION = 5
 CACHE_DIRNAME = ".roust"
 _INDEX_FILENAME = "index.pkl"
-_PRUNE_DIRS = {".git", CACHE_DIRNAME}
 
 HistoryTuple = tuple  # (msgs: dict[str, str], cochange: dict[str, dict[str, int]], meta: dict[str, dict])
 Manifest = dict  # {relpath: (mtime_ns: int, size: int)}
@@ -88,9 +88,16 @@ def _git_head_sha(repo_path: Path) -> str:
 
 
 def _scan_manifest(repo_path: Path, with_docs: bool) -> Manifest:
-    """Stat-only os.walk pass (no file reads) over every candidate-extension
-    file, returning {relpath: (mtime_ns, size)}. Deliberately cheaper and
-    coarser than Corpus's own walk (no vendor-regex / oversize / long-line
+    """Stat-only pass (no file reads) over every candidate-extension file,
+    returning {relpath: (mtime_ns, size)}. Uses roust.core._candidate_files
+    -- the SAME git-ls-files-first enumeration (falling back to a raw
+    filesystem walk outside a git work tree) that Corpus itself walks -- so
+    the manifest's file set matches exactly what the Corpus indexes. This is
+    what makes a .gitignore'd file appearing on disk (e.g. inside .venv/)
+    invisible to change detection: git ls-files never lists it, so it was
+    never a candidate in the first place, and its creation can't flip the
+    verdict away from "unchanged". Deliberately cheaper and coarser than
+    Corpus's own per-file filtering (no vendor-regex / oversize / long-line
     filtering) -- a spuriously-"changed" entry just costs an extra reindex
     of that one file (or, for add/remove, a full rebuild), which is always
     safe; it can never cause a stale hit."""
@@ -98,18 +105,17 @@ def _scan_manifest(repo_path: Path, with_docs: bool) -> Manifest:
     if with_docs:
         exts |= set(_DOCS_EXTENSIONS)
     manifest: Manifest = {}
-    for dirpath, dirnames, filenames in os.walk(repo_path):
-        dirnames[:] = [d for d in dirnames if d not in _PRUNE_DIRS]
-        for name in filenames:
-            if os.path.splitext(name)[1] not in exts:
-                continue
-            full = os.path.join(dirpath, name)
-            try:
-                st = os.stat(full)
-            except OSError:
-                continue
-            rel = os.path.relpath(full, repo_path)
-            manifest[rel] = (st.st_mtime_ns, st.st_size)
+    for p in _candidate_files(repo_path):
+        if not p.is_file() or p.suffix not in exts:
+            continue
+        rel = str(p.relative_to(repo_path))
+        if _is_cache_or_git_path(rel):
+            continue
+        try:
+            st = p.stat()
+        except OSError:
+            continue
+        manifest[rel] = (st.st_mtime_ns, st.st_size)
     return manifest
 
 
@@ -215,9 +221,9 @@ def _build_fresh(
     if with_history:
         current_files = {
             str(p.relative_to(repo_path))
-            for p in repo_path.rglob("*")
+            for p in _candidate_files(repo_path)
             if p.is_file() and p.suffix in CODE_EXTENSIONS
-            and not (str(p.relative_to(repo_path)).startswith((".git/", f"{CACHE_DIRNAME}/")))
+            and not _is_cache_or_git_path(str(p.relative_to(repo_path)))
         }
         history = mine_history(repo_path, current_files=current_files)
 
