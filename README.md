@@ -14,24 +14,30 @@ compressed into one process call.
 
 ## Install
 
-From source, until the PyPI release lands:
+roust is a single Rust binary. Every install path below builds or ships the
+same `roust-rs` engine — there is no separate Python implementation.
 
 ```bash
-uv tool install git+https://github.com/narehart/roust
-# or, for local development:
-git clone https://github.com/narehart/roust && cd roust && pip install -e .
-```
-
-Once published:
-
-```bash
+# PyPI (wheel built by maturin, bundles the Rust binary):
+pip install roust
+# or
 uv tool install roust
 # or
 pipx install roust
 ```
 
-Requires Python 3.10+. `git` should be on `PATH` if you want the
-commit-history signal (roust degrades gracefully without it).
+```bash
+# From source, via cargo:
+cargo install --path roust-rs
+```
+
+```bash
+# From source, via pip (builds the wheel locally with maturin):
+git clone https://github.com/narehart/roust && cd roust && pip install .
+```
+
+`git` should be on `PATH` if you want the commit-history signal (roust
+degrades gracefully without it).
 
 The first `roust` call against a repo builds an index — a few hundred
 milliseconds to a few seconds depending on repo size. The index is cached
@@ -276,15 +282,27 @@ Cold index build, Rust vs Python engine: httpx 145ms vs 522ms; django 1.8s vs 7.
 
 ## Roadmap
 
-- ~~Rust port~~ **v0.2 complete**: `roust-rs/` — feature-parity with Python v0.2 (channel-aware packing, on-disk cache with incremental updates, deterministic seed). Parity gate **PASSES 300/300 exact** on SWE-bench Lite (report in `parity/rust_gate_300_v3.json`). Cold 3.6–4.2× faster than Python (httpx 145ms vs 522ms, django 1.8s vs 7.6s); warm/incremental 2–3×. Build: `cd roust-rs && cargo build --release`. Prebuilt binaries / Homebrew: still to come.
+- ~~Rust port~~ **complete and shipped as the only engine**: `roust-rs/` was
+  brought to feature-parity with the (now-deleted) Python v0.2 engine
+  (channel-aware packing, on-disk cache with incremental updates,
+  deterministic seed) — bundle-level parity gate **PASSED 300/300 exact**
+  on SWE-bench Lite (report in `parity/rust_gate_300_v3.json`) before the
+  Python engine was removed. Cold 3.6–4.2× faster than the old Python
+  engine (httpx 145ms vs 522ms, django 1.8s vs 7.6s); warm/incremental
+  2–3×. Build from source: `cd roust-rs && cargo build --release`.
+- ~~Publish to PyPI~~ **done** — `pip install roust` ships the maturin-built
+  wheel wrapping the Rust binary.
 - MCP server.
 - Incremental index updates (avoid full reindex on every change).
-- Publish to PyPI and Homebrew.
+- Homebrew tap.
 
 ---
 
 Research artifacts -- benchmark JSONLs, diagnostics, and pre-registered
-held-out predictions -- live in [`lab/`](lab/README.md).
+held-out predictions -- live in [`lab/`](lab/README.md). `lab/` is a frozen
+Python research sandbox (including `lab/lanes2.py`, the oracle the parity
+gates were built against) -- it is never the source of truth for shipped
+behavior, which is `roust-rs/` end to end.
 
 License: MIT.
 
