@@ -21,9 +21,9 @@
 use roust::cache;
 use roust::core::{
     anchor_def_symbols, extract_symbol_anchors, is_low_confidence, pack_regions, query_term_coverage, query_terms,
-    select_files, SelectParams,
+    select_files, PackUnits, SelectParams,
 };
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use std::collections::HashSet;
 use std::path::PathBuf;
 use std::time::Instant;
@@ -36,6 +36,25 @@ use std::time::Instant;
 /// identifiable rather than silently measured as current.
 const ROUST_VERSION: &str =
     concat!(env!("CARGO_PKG_VERSION"), " (", env!("ROUST_GIT_SHA"), ", ", env!("ROUST_GIT_DIRTY"), ")");
+
+/// CLI mirror of `roust::core::PackUnits` -- clap needs its own enum to
+/// derive `ValueEnum`'s kebab-case parsing (`windows` / `blocks`); mapped
+/// 1:1 onto the core type just below `Args::parse()`.
+#[derive(ValueEnum, Clone, Copy, Debug, Default, PartialEq, Eq)]
+enum PackUnitsArg {
+    #[default]
+    Windows,
+    Blocks,
+}
+
+impl From<PackUnitsArg> for PackUnits {
+    fn from(v: PackUnitsArg) -> Self {
+        match v {
+            PackUnitsArg::Windows => PackUnits::Windows,
+            PackUnitsArg::Blocks => PackUnits::Blocks,
+        }
+    }
+}
 
 #[derive(Parser, Debug)]
 #[command(
@@ -96,6 +115,11 @@ struct Args {
     /// dump the Explain diagnostic record as JSON to stderr
     #[arg(long)]
     explain: bool,
+
+    /// region-packing candidate unit: "windows" (default, current
+    /// behavior) or "blocks" (whole function/def blocks, E1/issue #4)
+    #[arg(long, value_enum, default_value_t = PackUnitsArg::Windows)]
+    pack_units: PackUnitsArg,
 }
 
 fn main() {
@@ -159,8 +183,17 @@ fn main() {
     } else {
         anchor_def_symbols(&args.query, &corpus, &anchor_files)
     };
-    let (spans, bundle) =
-        pack_regions(&corpus, &files, &terms, &scores, args.budget, &count_tokens, Some(&anchor_symbols), 0.0);
+    let (spans, bundle) = pack_regions(
+        &corpus,
+        &files,
+        &terms,
+        &scores,
+        args.budget,
+        &count_tokens,
+        Some(&anchor_symbols),
+        0.0,
+        args.pack_units.into(),
+    );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 
     if args.explain {

@@ -2216,6 +2216,113 @@ fn python_blocks(text: &str) -> Vec<(usize, usize)> {
     spans.into_iter().filter(|&(a, b)| b >= a).collect()
 }
 
+/// Trailing "gap" detection helper for `python_leaf_blocks`: the first
+/// non-blank line (0-indexed) at or below `indent`, scanning
+/// `lines[header_line + 1 .. limit]` (`limit` is the next SIBLING header's
+/// line, same convention `python_blocks` uses for its own `end`) -- i.e.
+/// where a def/class's body actually ends, as distinct from `limit`
+/// itself. Anything between this point and `limit` is code sitting at the
+/// block's OWN syntactic level that isn't itself a def/class header (a
+/// module-level assignment, a class attribute between two methods, an
+/// `if __name__ == "__main__":` guard, ...). `python_blocks` silently
+/// folds that trailing code into the PRECEDING header's span (its `end`
+/// is always the next header's line, full stop); `python_leaf_blocks`
+/// uses this to carve it out as its own candidate unit instead. Regex/
+/// indentation heuristic, not a real parse -- same caveat as the rest of
+/// this module's Python "AST" handling.
+fn py_block_body_end(lines: &[&str], header_line: usize, indent: usize, limit: usize) -> usize {
+    for (j, ln) in lines.iter().enumerate().take(limit).skip(header_line + 1) {
+        if ln.trim().is_empty() {
+            continue;
+        }
+        let cur_indent = ln.chars().take_while(|c| *c == ' ' || *c == '\t').count();
+        if cur_indent <= indent {
+            return j;
+        }
+    }
+    limit
+}
+
+/// Leaf-only block spans for `--pack-units blocks`. Unlike `python_blocks`
+/// (which emits BOTH a container's whole span AND every nested child's
+/// tighter span -- so a class and each of its methods are all separately
+/// scoreable candidates, deliberately overlapping), this emits exactly one
+/// candidate per INNERMOST def/class (no header nested inside it): a true
+/// "whole function/def block" unit, matching what this mode is named for.
+/// A container header (one WITH nested children) contributes only its own
+/// preamble span (header through the line before its first child) -- its
+/// children's own leaf spans already cover the rest of its body, so the
+/// container's full span would just be redundant with them. Code between
+/// two children, or after the last child before the next sibling/EOF, at
+/// the container's own indentation, is picked up by the preceding leaf
+/// child's own trailing-gap detection (`py_block_body_end`), which mirrors
+/// `python_blocks`' `end` computation and so naturally cascades correctly
+/// through arbitrarily deep nesting -- see doc comment on that function.
+fn python_leaf_blocks(text: &str) -> Vec<(usize, usize)> {
+    let lines = py_splitlines(text);
+    let n = lines.len();
+    let mut headers: Vec<(usize, usize)> = Vec::new();
+    for (i, ln) in lines.iter().enumerate() {
+        if let Some(caps) = PY_BLOCK_RE.captures(ln) {
+            let indent = caps.get(1).unwrap().as_str().chars().count();
+            headers.push((i, indent));
+        }
+    }
+    if headers.is_empty() {
+        return vec![(1, n)];
+    }
+
+    let mut spans: Vec<(usize, usize)> = Vec::new();
+    if headers[0].0 > 0 {
+        spans.push((1, headers[0].0)); // leading preamble (imports, module docstring)
+    }
+
+    for (idx, &(i, indent)) in headers.iter().enumerate() {
+        if lines[i].trim_start().starts_with('@') {
+            continue; // standalone decorator: folded into the following def/class's span below
+        }
+        let mut start = i;
+        let mut k = i as isize - 1;
+        while k >= 0 && lines[k as usize].trim_start().starts_with('@') {
+            start = k as usize;
+            k -= 1;
+        }
+        let mut sibling_end = n;
+        let mut first_child: Option<usize> = None;
+        for &(j, ind2) in &headers[idx + 1..] {
+            if ind2 <= indent {
+                sibling_end = j;
+                break;
+            }
+            if first_child.is_none() {
+                first_child = Some(j);
+            }
+        }
+        match first_child {
+            Some(fc) => {
+                // container: only its own preamble is a unit here -- its
+                // children emit their own leaf spans on later iterations.
+                // Always pushed, even when `fc == start + 1` (the header
+                // sits directly atop its first child, no docstring/body
+                // line of its own): a bare "class Foo:" header line is
+                // still a real line that needs SOME candidate covering it,
+                // or it silently falls into no unit at all.
+                spans.push((start + 1, fc));
+            }
+            None => {
+                // leaf: header through its real body end, plus a trailing
+                // gap unit if the body ends before the sibling boundary.
+                let end = py_block_body_end(&lines, i, indent, sibling_end);
+                spans.push((start + 1, end));
+                if end < sibling_end {
+                    spans.push((end + 1, sibling_end));
+                }
+            }
+        }
+    }
+    spans.into_iter().filter(|&(a, b)| b >= a).collect()
+}
+
 static PY_DEF_LINE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[ \t]*(?:async def|def|class)\s+(\w+)").unwrap());
 
 /// 1-indexed line number of each class/def header's FIRST occurrence in
@@ -2277,6 +2384,56 @@ struct Candidate {
     gain: f64,
     text: String,
     name_score: f64,
+}
+
+/// Candidate-generation mode for `pack_regions` (E1, issue #4). `Windows`
+/// is the untouched, default, pre-existing behavior (`python_blocks`'
+/// nested spans for `.py`, `window_blocks` radius-30 hit windows for
+/// everything else). `Blocks` (CLI: `--pack-units blocks`) swaps `.py`
+/// candidate generation for `python_leaf_blocks`' one-candidate-per-
+/// whole-function/def units; non-Python files are untouched in EITHER
+/// mode (block detection here is a Python-regex heuristic, not a real
+/// multi-language parse -- see `PY_BLOCK_RE`). Everything downstream of
+/// candidate generation (scoring, the two greedy packing passes) is
+/// identical between modes -- this is the ONLY thing `pack_units` gates.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum PackUnits {
+    #[default]
+    Windows,
+    Blocks,
+}
+
+/// `Blocks` mode's oversized-block trim threshold, as a fraction of the
+/// TOTAL packing budget (`budget_tokens`, not any per-file cap): a whole
+/// function/def block bigger than this on its own would either (a) blow
+/// straight past pass-1's per-file cap trim into an even deeper post-hoc
+/// cut anyway, or (b) never fit pass-2's `spent + tok > budget_tokens`
+/// check and simply vanish from the bundle. Trimming the CANDIDATE itself
+/// down to its head here means an oversized function still shows up
+/// (mis-trimmed) instead of silently disappearing -- see issue #4/E1.
+/// 0.4 (40%) was chosen to be generous: only a genuinely oversized single
+/// block (not just "a somewhat large function") should be pre-clipped at
+/// candidate-generation time, since ordinary-sized blocks are already
+/// handled correctly by pass-1's per-file cap and pass-2's marginal-gain
+/// competition.
+const BLOCK_OVERSIZE_FRAC: f64 = 0.4;
+/// Minimum lines kept by the oversized-block head-trim (signature line(s)
+/// plus a handful of body lines), even if that overshoots
+/// `BLOCK_OVERSIZE_FRAC` of the budget for a very dense block -- mirrors
+/// the `4`-line floor `pack_regions`' own pass-1 per-file trim already uses
+/// below.
+const BLOCK_HEAD_MIN_LINES: usize = 8;
+
+/// How many of a `Blocks`-mode candidate's `n_lines` to keep from the top
+/// when its full token count (`full_tok`) exceeds the oversized-block cap
+/// (`cap_tok`, see `BLOCK_OVERSIZE_FRAC`) -- proportional to how much of
+/// the cap the full candidate would have needed, mirroring `pack_regions`'
+/// own separate pass-1 per-file trim formula (`keep = max(N, len * cap /
+/// tok)`), floored at `BLOCK_HEAD_MIN_LINES` and capped at `n_lines`
+/// itself (never "trims" a small candidate longer than it already is).
+/// Caller's responsibility to only invoke this when `full_tok > cap_tok`.
+fn oversized_block_keep_lines(n_lines: usize, full_tok: usize, cap_tok: usize) -> usize {
+    BLOCK_HEAD_MIN_LINES.max(((n_lines as f64) * (cap_tok as f64) / (full_tok as f64)) as usize).min(n_lines)
 }
 
 // ---------------------------------------------------------------- region-level symbol-name anchoring
@@ -2422,6 +2579,7 @@ pub fn pack_regions(
     count_tokens: &dyn Fn(&str) -> usize,
     anchor_symbols: Option<&IndexMap<String, Vec<String>>>,
     w_name: f64,
+    pack_units: PackUnits,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2440,16 +2598,31 @@ pub fn pack_regions(
         let text = &corpus.text[rel];
         let lines = py_splitlines(text);
         let hits = hit_lines(text, &tset);
-        let spans = if rel.ends_with(".py") { python_blocks(text) } else { window_blocks(text, &hits, 30) };
+        let spans = match pack_units {
+            PackUnits::Windows => {
+                if rel.ends_with(".py") {
+                    python_blocks(text)
+                } else {
+                    window_blocks(text, &hits, 30)
+                }
+            }
+            PackUnits::Blocks => {
+                if rel.ends_with(".py") {
+                    python_leaf_blocks(text)
+                } else {
+                    window_blocks(text, &hits, 30)
+                }
+            }
+        };
         let hitset: HashSet<usize> = hits.into_iter().collect();
         let def_lines: Vec<(usize, String)> =
             if w_name != 0.0 { file_def_lines(text, def_re_for(rel)) } else { Vec::new() };
-        for (a, b) in spans {
+        for (a, mut b) in spans {
             if a == 0 || b < a || a > lines.len() {
                 // guard against degenerate spans; Python's 1-indexed slicing
                 // lines[a-1:b] silently no-ops out of range.
             }
-            let seg_lines: Vec<&str> = if a >= 1 && a <= lines.len() + 1 {
+            let mut seg_lines: Vec<&str> = if a >= 1 && a <= lines.len() + 1 {
                 let start = a.saturating_sub(1).min(lines.len());
                 let end = b.min(lines.len());
                 if start < end {
@@ -2460,6 +2633,21 @@ pub fn pack_regions(
             } else {
                 Vec::new()
             };
+
+            // Oversized-block head-trim, Blocks mode only (see
+            // `BLOCK_OVERSIZE_FRAC` doc comment): a single function/def
+            // candidate bigger than the threshold gets clipped to its head
+            // here, at candidate-generation time, rather than excluded.
+            if matches!(pack_units, PackUnits::Blocks) && rel.ends_with(".py") && !seg_lines.is_empty() {
+                let full_tok = count_tokens(&seg_lines.join("\n"));
+                let cap_tok = ((budget_tokens as f64) * BLOCK_OVERSIZE_FRAC).max(1.0) as usize;
+                if full_tok > cap_tok {
+                    let keep = oversized_block_keep_lines(seg_lines.len(), full_tok, cap_tok);
+                    seg_lines.truncate(keep);
+                    b = a + keep.saturating_sub(1);
+                }
+            }
+
             let seg = seg_lines.join("\n");
             let seg_tokens: HashSet<String> = tokenize(&seg).into_iter().collect();
             let seg_terms: HashSet<String> = tset.intersection(&seg_tokens).cloned().collect();
@@ -2896,10 +3084,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, PackUnits::Windows);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, PackUnits::Windows);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -2943,8 +3131,8 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, PackUnits::Windows);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, PackUnits::Windows);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
 
@@ -2999,7 +3187,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, PackUnits::Windows);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 
@@ -3055,5 +3243,147 @@ mod tests {
         assert!(is_low_confidence(5.0, 0, 0));
         // Right at the boundary: not low-confidence (strict `<`, not `<=`).
         assert!(!is_low_confidence(LOW_CONFIDENCE_TOP_SCORE, 5, 5));
+    }
+
+    // ---------------------------------------------------------------- E1/issue #4: --pack-units blocks
+
+    /// `python_blocks` (the `Windows`-mode Python span generator) is
+    /// untouched by this change -- pinned here as a literal regression
+    /// fixture so a future edit can't silently alter default-mode output.
+    #[test]
+    fn python_blocks_windows_mode_unchanged_reference() {
+        let text = "def alpha():\n    return 1\n\n\ndef beta():\n    return 2\n";
+        assert_eq!(python_blocks(text), vec![(1, 4), (5, 6)]);
+    }
+
+    /// `python_leaf_blocks` (`--pack-units blocks`'s Python span generator)
+    /// on a small fixture mixing top-level functions and a class with two
+    /// methods -- spans must land EXACTLY on def/class boundaries: one
+    /// candidate per whole function/def block, a class's own preamble line
+    /// as its own unit (no docstring here, so it's just the header line),
+    /// and no nested "whole class" span duplicating its methods' bodies
+    /// (unlike `python_blocks`, which emits that redundant container span
+    /// too).
+    #[test]
+    fn python_leaf_blocks_matches_def_boundaries() {
+        let src_lines = [
+            "import os",                 // 1
+            "",                          // 2
+            "",                          // 3
+            "def foo():",                // 4
+            "    return 1",              // 5
+            "",                          // 6
+            "",                          // 7
+            "def bar():",                // 8
+            "    x = 1",                 // 9
+            "    return x",              // 10
+            "",                          // 11
+            "",                          // 12
+            "class Baz:",                // 13
+            "    def method_a(self):",   // 14
+            "        return 'a'",        // 15
+            "",                          // 16
+            "    def method_b(self):",   // 17
+            "        return 'b'",        // 18
+        ];
+        let text = src_lines.join("\n") + "\n";
+        let spans = python_leaf_blocks(&text);
+        assert_eq!(
+            spans,
+            vec![
+                (1, 3),   // module preamble: import + 2 blanks
+                (4, 7),   // def foo(): whole block (incl. trailing blanks before bar)
+                (8, 12),  // def bar(): whole block (incl. trailing blanks before Baz)
+                (13, 13), // class Baz:'s own header line (no docstring/attrs of its own)
+                (14, 16), // method_a: whole block (incl. trailing blank before method_b)
+                (17, 18), // method_b: whole block through EOF
+            ]
+        );
+        // every span's start line is exactly a def/class header or the
+        // module preamble -- no span starts mid-body.
+        let lines: Vec<&str> = text.split('\n').collect();
+        assert!(lines[3].starts_with("def foo"));
+        assert!(lines[7].starts_with("def bar"));
+        assert!(lines[12].starts_with("class Baz"));
+        assert!(lines[13].trim_start().starts_with("def method_a"));
+        assert!(lines[16].trim_start().starts_with("def method_b"));
+    }
+
+    /// `pack_regions` with `PackUnits::Windows` must select the exact same
+    /// span set as calling `python_blocks` directly -- i.e. the default
+    /// candidate-generation path is unaffected by the new `Blocks` mode
+    /// plumbing. Budget is generous enough (and both blocks match query
+    /// terms) that pass 2 also picks up the file's second candidate, so
+    /// this exercises both greedy passes, not just pass 1's single pick.
+    #[test]
+    fn pack_regions_windows_mode_unchanged() {
+        let tmp = std::env::temp_dir().join(format!("roust_windows_unchanged_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        std::fs::write(&tmp.join("case.py"), "def alpha():\n    return 1\n\n\ndef beta():\n    return 2\n").unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("alpha beta", &[]);
+        let scores: IndexMap<String, f64> = [("case.py".to_string(), 1.0)].into_iter().collect();
+        let files = vec!["case.py".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans, _) =
+            pack_regions(&corpus, &files, &terms, &scores, 10_000, &count_tokens, None, 0.0, PackUnits::Windows);
+        let mut got = spans["case.py"].clone();
+        got.sort();
+        assert_eq!(got, vec![(1, 4), (5, 6)], "Windows mode must match python_blocks' own span set exactly");
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// `oversized_block_keep_lines`, the pure helper backing `Blocks`
+    /// mode's oversized-block head-trim: keep count must be proportional
+    /// to the cap/full-token ratio, floored at `BLOCK_HEAD_MIN_LINES`, and
+    /// never exceed the candidate's own line count.
+    #[test]
+    fn oversized_block_keep_lines_trims_proportionally() {
+        // 500 lines, 1000 tokens total, cap 400 -> keep ~= 500 * 400/1000 = 200
+        assert_eq!(oversized_block_keep_lines(500, 1000, 400), 200);
+        // proportional keep would be below the floor -> clamp up to the floor
+        assert_eq!(oversized_block_keep_lines(500, 100_000, 400), BLOCK_HEAD_MIN_LINES);
+        // full_tok already under cap: not this function's job to be called,
+        // but it must still never report MORE lines than the candidate has.
+        assert_eq!(oversized_block_keep_lines(3, 1000, 400), 3);
+    }
+
+    /// End-to-end: `pack_regions` with `PackUnits::Blocks` on a single
+    /// oversized function must still emit a candidate for it (not drop it
+    /// entirely), head-trimmed rather than spanning the whole function.
+    /// The per-file score is set high enough that the PRE-EXISTING
+    /// per-file-cap trim (a separate, later mechanism) would not further
+    /// clip the already-trimmed candidate, isolating this test to the NEW
+    /// oversized-block trim specifically.
+    #[test]
+    fn pack_regions_blocks_mode_trims_oversized_function_head() {
+        let tmp = std::env::temp_dir().join(format!("roust_oversized_block_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let filler: String = (0..300).map(|i| format!("    x{i} = {i}\n")).collect();
+        let src = format!("def giant_handler():\n    token_budget = 1\n{filler}    return token_budget\n");
+        let n_lines = src.matches('\n').count();
+        std::fs::write(&tmp.join("giant.py"), &src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("token budget", &[]);
+        let scores: IndexMap<String, f64> = [("giant.py".to_string(), 5.0)].into_iter().collect();
+        let files = vec!["giant.py".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans, _) =
+            pack_regions(&corpus, &files, &terms, &scores, 1000, &count_tokens, None, 0.0, PackUnits::Blocks);
+        let file_spans = &spans["giant.py"];
+        assert_eq!(file_spans.len(), 1, "single whole-function file has exactly one leaf-block candidate");
+        let (a, b) = file_spans[0];
+        assert_eq!(a, 1, "trimmed span must still start at the function's own def line");
+        assert!(b < n_lines, "oversized function must be head-trimmed, not spanning the whole body ({b} of {n_lines})");
+        let kept = b - a + 1;
+        assert!(kept >= BLOCK_HEAD_MIN_LINES, "must keep at least the head-trim floor");
+        assert!(kept < n_lines / 2, "must have meaningfully trimmed a >=40%-of-budget function");
+
+        std::fs::remove_dir_all(&tmp).ok();
     }
 }
