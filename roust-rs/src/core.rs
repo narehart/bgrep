@@ -2413,6 +2413,30 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
 /// a symbol-name match is identity evidence independent of how long the
 /// matched definition happens to be (measured via this repo's own dogfood
 /// case, see lab/dogfood_pack_regions.py).
+///
+/// `adaptive_stop` (0.0 from the production caller, i.e. DISABLED: the
+/// current always-fill-the-budget behavior -- E2/issue #4, wave2's
+/// budgeted-passage-selection report finding #2, Adaptive-k arXiv:
+/// 2506.08479) is a relative threshold on pass 2's greedy marginal-gain-
+/// per-token sequence: pass 2 already computes, and sorts by, exactly this
+/// quantity every iteration (see `marginal` below) to pick the next
+/// candidate, so halting on it needs no new signal. The FIRST candidate
+/// pass 2 selects sets a `first_gain` baseline; every subsequent iteration
+/// compares the best REMAINING marginal gain/token against `adaptive_stop *
+/// first_gain` BEFORE selecting it, and if it falls below that fraction,
+/// pass 2 halts entirely (does not merely skip the candidate) -- the
+/// Adaptive-k pattern of reading the score distribution's own decline as
+/// the stopping signal, rather than exhausting `budget_tokens`. A relative
+/// (not absolute) threshold is used because `marginal`'s scale varies with
+/// query/file score magnitudes, so a single fixed absolute cutoff would not
+/// generalize across queries the way a fraction of each query's own
+/// first-selected gain does (Provence's single-global-threshold precedent
+/// for the general design, arXiv:2501.16214, though its threshold is
+/// applied to a different, trained per-unit score). Pass 1 is a fixed
+/// one-region-per-file loop (best gain/tok or a forced anchor pick, no
+/// sequential marginal-gain race across candidates), so there is no
+/// analogous "next-best marginal" to halt on there -- `adaptive_stop` only
+/// gates pass 2.
 pub fn pack_regions(
     corpus: &Corpus,
     files: &[String],
@@ -2422,6 +2446,7 @@ pub fn pack_regions(
     count_tokens: &dyn Fn(&str) -> usize,
     anchor_symbols: Option<&IndexMap<String, Vec<String>>>,
     w_name: f64,
+    adaptive_stop: f64,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2652,6 +2677,12 @@ pub fn pack_regions(
         .map(|(i, _)| i)
         .collect();
 
+    // Baseline for `adaptive_stop`: the marginal gain/token of the FIRST
+    // candidate pass 2 selects. `None` until that first selection happens;
+    // stays `None` forever (no stopping check possible/needed) if
+    // `adaptive_stop == 0.0`, matching the `w_name != 0.0`-gated cost
+    // elsewhere in this function -- zero real cost on the default path.
+    let mut first_gain: Option<f64> = None;
     while !remaining.is_empty() && spent < budget_tokens {
         let marginal = |i: usize| -> f64 {
             let c = &candidates[i];
@@ -2689,12 +2720,25 @@ pub fn pack_regions(
         // remaining candidate's marginal score exactly once per greedy
         // iteration and sort that cache instead: this also cuts evaluations
         // from O(n log n) to O(n) per iteration.
-        let scored: Vec<(usize, f64)> = remaining.iter().map(|&i| (i, marginal(i))).collect();
-        remaining = {
-            let mut scored = scored;
-            scored.sort_by(|a, b| b.1.total_cmp(&a.1));
-            scored.into_iter().map(|(i, _)| i).collect()
-        };
+        let mut scored: Vec<(usize, f64)> = remaining.iter().map(|&i| (i, marginal(i))).collect();
+        scored.sort_by(|a, b| b.1.total_cmp(&a.1));
+        // Adaptive stopping (E2/issue #4): `scored[0].1` is this iteration's
+        // best remaining marginal gain/token, the exact quantity `marginal`
+        // computes and the sort above just ranked by -- no new signal, just
+        // reading the curve pack_regions already produces. First iteration
+        // sets the baseline; every later iteration halts pass 2 entirely
+        // once the best remaining candidate's marginal has decayed below
+        // `adaptive_stop` of that baseline (relative, not absolute, so it
+        // scales with each query's own gain magnitude).
+        if adaptive_stop != 0.0 {
+            let top_marginal = scored[0].1;
+            match first_gain {
+                None => first_gain = Some(top_marginal),
+                Some(fg) if top_marginal < adaptive_stop * fg => break,
+                Some(_) => {}
+            }
+        }
+        remaining = scored.into_iter().map(|(i, _)| i).collect();
         let i = remaining.remove(0);
         let tok = candidates[i].tok as i64;
         if spent + tok > budget_tokens {
@@ -2928,10 +2972,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0.0);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -2975,8 +3019,8 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
 
@@ -3025,15 +3069,74 @@ mod tests {
         // remaining candidates per iteration -- the exact scenario that
         // triggers repeated `marginal(i)` calls for the same `i` within a
         // single sort.
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls given many equal/near-equal marginal scores (and must never panic)"
             );
         }
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E2/issue #4: adaptive stopping on pack_regions' pass-2 marginal-gain-
+    /// per-token curve. `func_rich` (docstring hitting all 8 query terms)
+    /// wins pass 1 and, by covering every query term, forces pass 2's
+    /// `tier1..tier6` candidates onto the redundant-coverage term
+    /// (`0.25 * weight(seg_terms)`) alone -- a strictly decreasing sequence
+    /// as term-overlap count drops 6/5/4/3/2/1, i.e. exactly the
+    /// diminishing-marginal-gain curve adaptive stopping is meant to halt
+    /// on. Assert: (1) `adaptive_stop=0.0` is the current always-fill
+    /// behavior -- pass 2 exhausts every remaining candidate; (2) a
+    /// positive threshold halts pass 2 strictly earlier (fewer selected
+    /// segments / fewer spent tokens), proving the stopping rule actually
+    /// bites and does not merely skip a candidate and continue.
+    #[test]
+    fn pack_regions_adaptive_stop_halts_pass2_on_declining_marginal_gain() {
+        let tmp = std::env::temp_dir().join(format!("roust_adaptivestop_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+
+        let terms8 = ["zzalpha", "zzbeta", "zzgamma", "zzdelta", "zzepsilon", "zzzeta", "zzeta", "zztheta"];
+        let mut src = String::new();
+        src.push_str(&format!(
+            "def func_rich(x):\n    \"\"\"{}.\"\"\"\n    return x + 0\n\n\n",
+            terms8.join(" ")
+        ));
+        // tiers with STRICTLY decreasing term-overlap count (6, 5, 4, 3, 2,
+        // 1), same filler shape/length so token cost is comparable across
+        // tiers and the decline is driven by term overlap, not size.
+        for (i, k) in (1..=6).rev().enumerate() {
+            let doc = terms8[..k].join(" ");
+            src.push_str(&format!("def tier_{i}(x):\n    \"\"\"{doc}.\"\"\"\n    return x + {i}\n\n\n"));
+        }
+        std::fs::write(tmp.join("many.py"), &src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms(&terms8.join(" "), &[]);
+        let files = vec!["many.py".to_string()];
+        let scores: IndexMap<String, f64> = [("many.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let n_segments = |spans: &IndexMap<String, Vec<(usize, usize)>>| -> usize {
+            spans.get("many.py").map(|v| v.len()).unwrap_or(0)
+        };
+
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
+        // off (default): pass 2 exhausts every remaining tier candidate --
+        // 1 pass-1 pick (func_rich) + all 6 tiers.
+        assert_eq!(n_segments(&spans_off), 7, "adaptive_stop=0.0 must reproduce current always-fill behavior (all tiers selected)");
+
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.9);
+        assert!(
+            n_segments(&spans_on) < n_segments(&spans_off),
+            "adaptive_stop=0.9 must halt pass 2 strictly earlier than the always-fill default (got {} vs {} segments)",
+            n_segments(&spans_on),
+            n_segments(&spans_off)
+        );
+        assert!(n_segments(&spans_on) >= 2, "pass 1's pick plus at least the first pass-2 selection must survive any threshold");
 
         std::fs::remove_dir_all(&tmp).ok();
     }
@@ -3086,7 +3189,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0.0);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 

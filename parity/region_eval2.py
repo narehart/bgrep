@@ -62,8 +62,13 @@ def engine_version_string() -> str:
     return proc.stdout.strip() or proc.stderr.strip()
 
 
-def run_roust(query: str, repo_path: Path, timeout: float) -> tuple[dict | None, str | None]:
+def run_roust(query: str, repo_path: Path, timeout: float, adaptive_stop: float = 0.0) -> tuple[dict | None, str | None]:
     argv = [str(ROUST_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path)]
+    if adaptive_stop != 0.0:
+        # only appended for non-default values -- default invocation (no
+        # flag) stays byte-identical to pre-E2 argv, see roust-rs/src/
+        # main.rs's own `0.0` default for `--adaptive-stop`.
+        argv += ["--adaptive-stop", str(adaptive_stop)]
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -110,7 +115,7 @@ def load_lite_rows(limit: int) -> list[dict]:
     return rows
 
 
-def eval_lite_instance(row: dict, timeout: float) -> dict:
+def eval_lite_instance(row: dict, timeout: float, adaptive_stop: float = 0.0) -> dict:
     instance_id = row["instance_id"]
     gold_hunks = parse_gold_hunks(row["patch"])
     gold_files = sorted(gold_hunks.keys())
@@ -136,7 +141,7 @@ def eval_lite_instance(row: dict, timeout: float) -> dict:
         rec["error"] = f"checkout failed: {exc}"
         return rec
 
-    obj, err = run_roust(row["problem_statement"], repo_path, timeout)
+    obj, err = run_roust(row["problem_statement"], repo_path, timeout, adaptive_stop)
     if err:
         rec["error"] = err
         return rec
@@ -191,6 +196,8 @@ def main() -> None:
     ap.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT_S)
     ap.add_argument("--report", type=Path, required=True, help="JSONL output path")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--adaptive-stop", type=float, default=0.0,
+                     help="passthrough to roust's --adaptive-stop (E2/issue #4); 0.0 (default) matches roust's own default (off)")
     args = ap.parse_args()
 
     if not ROUST_BIN.exists():
@@ -211,7 +218,7 @@ def main() -> None:
     t0 = time.time()
     with args.report.open("w") as fh:
         for i, row in enumerate(rows, 1):
-            rec = eval_lite_instance(row, args.timeout)
+            rec = eval_lite_instance(row, args.timeout, args.adaptive_stop)
             fh.write(json.dumps(rec, default=str) + "\n")
             fh.flush()
             if rec["error"] is None:
