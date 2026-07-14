@@ -283,10 +283,11 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 | BM25 | 61.7 | Acc@10 | yes | arXiv:2505.07849 |
 | CoSIL | 60.7 | Top-1 | no (LLM) | arXiv:2503.22424 |
 | archex (BM25 default) | 56.0 | Agentless-metric FILE | yes (local index; embeddings optional) | `lab/results_regions/agentless_metric_archex_bm25.json` |
+| archex (vector/hybrid) | 57.3 | Agentless-metric FILE | yes (local index + FastEmbed/ONNX) | `lab/results_regions/agentless_metric_archex_vector.json` |
 
-— = not measured by us (see gaps below). archex's row is its default retrieval mode (BM25+graph, no embeddings); its optional vector/hybrid mode was not run — vector mode pending, see [#1](https://github.com/narehart/roust/issues/1).
+— = not measured by us (see gaps below). archex has two rows: its default retrieval mode (BM25+graph, no embeddings) and its optional vector/hybrid mode (FastEmbed/ONNX + graph) — both are now measured, see [#1](https://github.com/narehart/roust/issues/1).
 
-The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 41.0% (exact) / LINE 35.7%; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3; archex (BM25 default) is 56.0 / 38.3 / 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`, 2 of 300 instances timed out and count as wrong). Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") is 0.45% mean — roust trades precision for recall by design, packing ~1,150 lines of surrounding context per instance under the 8192-token budget ([#4](https://github.com/narehart/roust/issues/4)).
+The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 41.0% (exact) / LINE 35.7%; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3; archex (BM25 default) is 56.0 / 38.3 / 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`, 2 of 300 instances timed out and count as wrong); archex (vector/hybrid) is 57.3 / 40.7 / 27.7 (`lab/results_regions/agentless_metric_archex_vector.json`, same 2 timeouts) — a single-digit gain over BM25 that leaves the ~35-point FILE gap to roust unchanged. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") is 0.45% mean — roust trades precision for recall by design, packing ~1,150 lines of surrounding context per instance under the 8192-token budget ([#4](https://github.com/narehart/roust/issues/4)).
 
 ### Latency (measured, `lab/latency/latency_v1.json`)
 
@@ -312,8 +313,10 @@ methodology in `lab/latency/bench_latency.py`.
 
 Competitor latency: archex (BM25 default mode) query wall time on the SWE-bench
 Lite corpora, `lab/results_regions/archex300_bm25_v1.jsonl` — index mean 5.69s,
-query median 9.68s (2 of 300 queries hit the 300s timeout), vs roust's
-0.1–0.4s wall time above on comparable repos ([#1](https://github.com/narehart/roust/issues/1)).
+query median 9.68s (2 of 300 queries hit the 300s timeout); archex (vector/hybrid
+mode), `lab/results_regions/archex300_vector_v1.jsonl` — index mean 0.92s, query
+median 12.98s (same 2 timeouts), worse than BM25 despite the faster index; vs
+roust's 0.1–0.4s wall time above on comparable repos ([#1](https://github.com/narehart/roust/issues/1)).
 
 *Historical note:* an earlier claim (never backed by a committed artifact)
 compared the (now-deleted) Python engine against the Rust port directly —
@@ -353,7 +356,7 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
 ### What still needs work
 
 - ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly ([#2](https://github.com/narehart/roust/issues/2)): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine; a `w_name` sweep on the exact harness ([#4](https://github.com/narehart/roust/issues/4)) then showed the symbol-name weighting itself caused the LINE drop — reverting it (w_name=0.0) restores FUNCTION 41.0% (exact) and LINE 35.7% (`lab/results_regions/agentless_metric_v3.json`). FUNCTION is still the weakest cell vs Agentless GPT-4o's 52.0 — [#3](https://github.com/narehart/roust/issues/3)
-- ~~archex has never been measured by us on any of our benches~~ Agentless-metric arm measured ([#1](https://github.com/narehart/roust/issues/1)): archex 0.19.2, BM25 default mode, FILE 56.0 / FUNCTION 38.3 / LINE 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`) — the tokenbench agent-loop arm is still open, pending a cost/benefit call in the issue
+- ~~archex has never been measured by us on any of our benches~~ both Agentless-metric arms measured ([#1](https://github.com/narehart/roust/issues/1)): archex 0.19.2 BM25 default mode is FILE 56.0 / FUNCTION 38.3 / LINE 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`); vector/hybrid mode is FILE 57.3 / FUNCTION 40.7 / LINE 27.7 (`lab/results_regions/agentless_metric_archex_vector.json`), a single-digit gain over BM25 with worse latency (12.98s vs 9.68s query median) that leaves the ~35-point FILE gap to roust unchanged — steelman complete; the tokenbench agent-loop arm is not justified at current quality
 - ~~True cost-per-success~~ measured via repeat runs ([#16](https://github.com/narehart/roust/issues/16)): roust solves 14/15 deterministically at ~$1/answer with one real capability gap (django-16400, 0/10); embedding-RAG reaches everything eventually at $2.50/first-success — see `results_repeats.jsonl`
 - ~~Latency has no committed benchmark artifact~~ measured ([#15](https://github.com/narehart/roust/issues/15)): cold/warm index + query p50/p95 across four repo sizes (66–2,131 files indexed), `lab/latency/latency_v1.json`
 

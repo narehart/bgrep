@@ -359,4 +359,8 @@ Swept `pack_regions` symbol-name weight `w_name` in {0.0, 0.5, 1.0} on the shipp
 
 ## archex Agentless-metric arm (2026-07-14)
 
-archex 0.19.2, BM25 default mode (no embeddings), `--budget 8192`, measured via `lab/archex_eval/run_archex_metric.py` on all 300 SWE-bench Lite instances (298 ok, 2 timeouts counted as wrong): FILE 56.0% / FUNCTION 38.3% / LINE 25.7% (`lab/results_regions/agentless_metric_archex_bm25.json`); vector/hybrid mode not run (issue #1).
+archex 0.19.2, BM25 default mode (no embeddings), `--budget 8192`, measured via `lab/archex_eval/run_archex_metric.py` on all 300 SWE-bench Lite instances (298 ok, 2 timeouts counted as wrong): FILE 56.0% / FUNCTION 38.3% / LINE 25.7% (`lab/results_regions/agentless_metric_archex_bm25.json`); vector/hybrid mode measured below.
+
+## archex vector/hybrid mode measured (2026-07-15)
+
+archex 0.19.2, `--vector` (FastEmbed/ONNX) + `--strategy hybrid`, `--budget 8192`, same protocol as the BM25 run above, all 300 instances (298 ok, 2 timeouts counted as wrong): FILE 57.3% / FUNCTION 40.7% / LINE 27.7% (`lab/results_regions/agentless_metric_archex_vector.json`) — a single-digit gain over BM25 that leaves the ~35-point FILE gap to roust unchanged, and query latency is worse (12.98s median vs BM25's 9.68s) despite a much faster index (0.92s vs 5.69s mean). Steelman complete: the tokenbench agent-loop arm (#1 part (b)) is not justified at current quality.
