@@ -28,9 +28,19 @@ use std::collections::HashSet;
 use std::path::PathBuf;
 use std::time::Instant;
 
+/// Engine provenance embedded at compile time by build.rs -- short git SHA
+/// and a dirty flag scoped to `roust-rs/` paths (see build.rs). Powers
+/// `roust --version` (e.g. `roust 0.2.0 (abc1234, clean)`) and the
+/// `engine_sha`/`engine_dirty` fields in `--json` stats, so a stale `uv run
+/// roust` wheel (doesn't rebuild on `roust-rs/src` changes) is always
+/// identifiable rather than silently measured as current.
+const ROUST_VERSION: &str =
+    concat!(env!("CARGO_PKG_VERSION"), " (", env!("ROUST_GIT_SHA"), ", ", env!("ROUST_GIT_DIRTY"), ")");
+
 #[derive(Parser, Debug)]
 #[command(
     name = "roust",
+    version = ROUST_VERSION,
     about = "Recall-first code retrieval for coding agents - one ranked, token-budgeted bundle per query, no model or API key required"
 )]
 struct Args {
@@ -171,6 +181,8 @@ fn main() {
         "top_score": explain.top_score,
         "matched_query_terms": matched_terms,
         "total_query_terms": total_terms,
+        "engine_sha": env!("ROUST_GIT_SHA"),
+        "engine_dirty": env!("ROUST_GIT_DIRTY") == "dirty",
     });
     if low_confidence {
         stats["low_confidence"] = serde_json::json!(true);

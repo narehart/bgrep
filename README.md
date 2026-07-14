@@ -39,6 +39,13 @@ git clone https://github.com/narehart/roust && cd roust && pip install .
 `git` should be on `PATH` if you want the commit-history signal (roust
 degrades gracefully without it).
 
+Developing against `roust-rs/`: `uv run roust` does not rebuild automatically
+when `roust-rs/src` changes -- after any Rust edit, run `uv sync
+--reinstall-package roust` before relying on `uv run roust` again (`roust
+--version` embeds a git SHA + dirty flag so a stale build is identifiable;
+see `lab/tokenbench/README.md`'s engine-provenance guard for the automated
+version of this check).
+
 The first `roust` call against a repo builds an index — a few hundred
 milliseconds to a few seconds depending on repo size. The index is cached
 under `<repo>/.roust/` (add that directory to your `.gitignore`) and

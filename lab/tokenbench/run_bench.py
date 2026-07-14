@@ -35,6 +35,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -42,12 +44,110 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agent import ARMS, MAX_COST_PER_PAIR_USD, MAX_TURNS, MODEL, ROUST_BUDGET, run_agent  # noqa: E402
-from common import checkout, load_instances, repo_clone, row_cost  # noqa: E402
+from common import REPO_ROOT, checkout, load_instances, repo_clone, row_cost  # noqa: E402
 from rag_tool import TOP_K as RAG_TOP_K  # noqa: E402
 
 TOKENBENCH_DIR = Path(__file__).resolve().parent
 
 ARM_NAMES = list(ARMS.keys())  # grep, roust, roust_grep, rag_grep
+
+# roust --version prints e.g. "roust 0.2.0 (c591d75, dirty)" -- see
+# roust-rs/build.rs (engine provenance embed) and roust-rs/src/main.rs
+# (clap version wiring).
+_ENGINE_VERSION_RE = re.compile(r"^roust (\S+) \(([0-9a-f]+|unknown), (clean|dirty)\)\s*$")
+
+
+def check_engine_provenance(arms: list[str], allow_stale: bool) -> str:
+    """Startup guard against the stale-`uv run roust`-wheel incident (sibling
+    of issue #8): `uv run roust` serves a cached build of the roust-rs
+    binary that does NOT rebuild when roust-rs/src changes, until `uv sync
+    --reinstall-package roust` is run -- so a benchmark run after any Rust
+    change can silently measure a stale engine. Compares the running
+    binary's embedded git SHA + roust-rs-scoped dirty flag (`--version`)
+    against this repo's current HEAD and working-tree state, and hard-fails
+    (SystemExit) on any mismatch/dirtiness unless `allow_stale` is set, in
+    which case it logs a loud warning and continues.
+
+    Returns the `engine_version` string to be recorded on every result row
+    (e.g. "roust 0.2.0 (c591d75, clean)", or "unknown" if it couldn't be
+    determined and no roust-using arm was requested).
+    """
+    uses_roust = any("roust" in ARMS.get(a, []) for a in arms)
+
+    try:
+        r = subprocess.run(
+            ["uv", "run", "roust", "--version"], cwd=REPO_ROOT,
+            capture_output=True, text=True, timeout=60,
+        )
+    except (subprocess.SubprocessError, OSError) as exc:
+        if not uses_roust:
+            print(f"WARNING: engine provenance guard: 'uv run roust --version' failed ({exc}); "
+                  f"continuing since no requested arm uses roust.", flush=True)
+            return "unknown"
+        raise SystemExit(
+            f"engine provenance guard: could not run 'uv run roust --version' ({exc}). "
+            f"A requested arm uses roust, so its freshness cannot be verified. Fix your "
+            f"uv/roust install, or pass --allow-stale-engine to override."
+        )
+
+    version_line = r.stdout.strip()
+    if r.returncode != 0 or not version_line:
+        msg = (f"engine provenance guard: 'uv run roust --version' exited {r.returncode}: "
+               f"{r.stderr.strip()[:300]!r}")
+        if uses_roust and not allow_stale:
+            raise SystemExit(f"{msg}. Try `uv sync --reinstall-package roust`, or pass "
+                              f"--allow-stale-engine to override.")
+        print(f"WARNING: {msg}", flush=True)
+        return "unknown"
+
+    m = _ENGINE_VERSION_RE.match(version_line)
+    if not m:
+        msg = f"engine provenance guard: could not parse 'roust --version' output: {version_line!r}"
+        if uses_roust and not allow_stale:
+            raise SystemExit(f"{msg}. Try `uv sync --reinstall-package roust`, or pass "
+                              f"--allow-stale-engine to override.")
+        print(f"WARNING: {msg}", flush=True)
+        return version_line
+
+    _pkg_version, engine_sha, engine_dirty_label = m.groups()
+
+    repo_sha = None
+    repo_dirty = None
+    try:
+        sha_r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT,
+                                capture_output=True, text=True, timeout=10)
+        if sha_r.returncode == 0:
+            repo_sha = sha_r.stdout.strip()
+        dirty_r = subprocess.run(["git", "status", "--porcelain", "--", "roust-rs/"], cwd=REPO_ROOT,
+                                  capture_output=True, text=True, timeout=10)
+        if dirty_r.returncode == 0:
+            repo_dirty = bool(dirty_r.stdout.strip())
+    except (subprocess.SubprocessError, OSError):
+        pass
+
+    sha_mismatch = repo_sha is not None and engine_sha != "unknown" and engine_sha != repo_sha
+    stale = sha_mismatch or engine_dirty_label == "dirty" or bool(repo_dirty)
+
+    if stale:
+        reasons = []
+        if sha_mismatch:
+            reasons.append(f"binary sha {engine_sha!r} != repo HEAD {repo_sha!r}")
+        if engine_dirty_label == "dirty":
+            reasons.append("binary was built from a dirty roust-rs/ tree")
+        if repo_dirty:
+            reasons.append("repo roust-rs/ currently has uncommitted changes")
+        msg = (
+            f"engine provenance guard: stale/dirty roust engine detected ({'; '.join(reasons)}). "
+            f"The running 'uv run roust' binary ({version_line!r}) does not match this repo's "
+            f"current roust-rs/ state -- run `uv sync --reinstall-package roust` to rebuild it, "
+            f"then re-run. Override with --allow-stale-engine (not recommended for real results)."
+        )
+        if allow_stale:
+            print(f"WARNING (--allow-stale-engine): {msg}", flush=True)
+        else:
+            raise SystemExit(msg)
+
+    return version_line
 
 
 def make_client(mock: bool):
@@ -101,12 +201,19 @@ def main() -> None:
     ap.add_argument("--mock", action="store_true",
                      help="use a scripted fake Anthropic client (no network, no spend) to validate "
                           "harness wiring without spending")
+    ap.add_argument("--allow-stale-engine", action="store_true",
+                     help="override the engine-provenance guard (logs a loud warning instead of "
+                          "exiting) when the running 'uv run roust' binary doesn't match this "
+                          "repo's current roust-rs/ HEAD/dirty state -- NOT recommended for "
+                          "results that will be reported")
     args = ap.parse_args()
 
     arms = [a.strip() for a in args.arms.split(",") if a.strip()]
     for a in arms:
         if a not in ARM_NAMES:
             raise SystemExit(f"unknown arm '{a}', choose from {ARM_NAMES}")
+
+    engine_version = check_engine_provenance(arms, args.allow_stale_engine)
 
     if not args.mock:
         import os
@@ -143,7 +250,7 @@ def main() -> None:
           f"{len(done)} done, {len(todo)} to run (mock={args.mock}, model={args.model}, "
           f"max_turns={args.max_turns}, budget_cap=${args.budget_cap_usd:.2f}, "
           f"max_cost_per_pair=${args.max_cost_per_pair:.2f}, "
-          f"already spent ~${running_cost_usd:.2f})", flush=True)
+          f"already spent ~${running_cost_usd:.2f}, engine={engine_version})", flush=True)
 
     with out_path.open("a") as out_fh:
         for k, (inst, arm) in enumerate(todo, 1):
@@ -173,6 +280,7 @@ def main() -> None:
                     "success": False, "status": "error",
                 }
             result["trial"] = args.trial
+            result["engine_version"] = engine_version
             out_fh.write(json.dumps(result) + "\n")
             out_fh.flush()
             running_cost_usd += row_cost(result.get("api_input_tokens", 0), result.get("api_output_tokens", 0))

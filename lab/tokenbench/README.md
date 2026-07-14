@@ -263,3 +263,24 @@ tool versions across rows within a single run. The real run was gated on
 `git status --short src/roust/ roust-rs/` returning clean AND
 `.venv-pkg/bin/roust --help` succeeding before any (instance, arm) pair was
 executed.
+
+## Engine provenance guard (stale-`uv run roust`-wheel incident)
+
+`uv run roust` (what `roust_tool.py` shells out to) serves a cached
+build of the `roust-rs` binary that does **not** rebuild automatically when
+`roust-rs/src` changes -- confirmed 2026-07-13: after merging engine
+changes, the venv binary stayed stale until `uv sync --reinstall-package
+roust` was run. Sibling failure mode to the "coordination note" above and to
+issue #8. **Any Rust engine change requires `uv sync --reinstall-package
+roust` before the next bench run** -- otherwise the bench may silently
+measure the old engine.
+
+`run_bench.py` now enforces this automatically at startup, before any
+(instance, arm) pair runs: it reads the running binary's embedded provenance
+(`uv run roust --version` -> `roust 0.2.0 (<git sha>, clean|dirty)`, wired
+via `roust-rs/build.rs`) and compares it against the repo's current
+`roust-rs/`-scoped git state. A sha mismatch or any dirtiness (embedded or
+current) is a hard `SystemExit` naming the fix command; `--allow-stale-engine`
+downgrades this to a loud warning for deliberate stale-engine testing. Every
+result row records the parsed `engine_version` string, so provenance is
+in the data forever, not just in a one-time gate check.
