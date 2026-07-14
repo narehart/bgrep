@@ -2277,6 +2277,7 @@ struct Candidate {
     gain: f64,
     text: String,
     name_score: f64,
+    salience: f64,
 }
 
 // ---------------------------------------------------------------- region-level symbol-name anchoring
@@ -2372,6 +2373,115 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
     score
 }
 
+// ---------------------------------------------------------------- region-level structural salience (GLANCE-LR)
+//
+// E3/issue #4, wave2's fine-grained-fault-localization scan #1 ranked item
+// (Guo et al. TOSEM 2023, GLANCE-LR): a fully deterministic, untrained,
+// execution-free per-line "defect-proneness"/structural-salience score --
+// `NumTokens * (NumFunctionCalls + 1)`, plus an unconditional boost for
+// lines carrying control-flow keywords -- used here as a query-independent
+// prior on WHERE in a file an edit is likely to land, orthogonal to (and
+// blended additively with, never multiplicatively, per the w_name lesson
+// below) the query-term-density signal `gain` already captures.
+
+/// Control-flow keywords that make a line structurally interesting
+/// independent of its term/call density (GLANCE-LR's "unconditional
+/// boost"): branch/loop/exit statements are exactly the lines empirically
+/// most likely to carry or be adjacent to a fix, per the source paper.
+/// Word-boundary matched so e.g. `forward` or `tryFoo` don't false-positive
+/// on `for`/`try`.
+static SALIENCE_CONTROL_KW_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\b(if|elif|else|for|while|return|raise|try|with)\b").unwrap());
+
+/// Heuristic function-call detector: an identifier immediately followed by
+/// `(`. Precision limits (documented per the spec, not fixed): (1) in
+/// C-like/JS/TS sources this also matches control-keyword-with-parens
+/// forms (`if (`, `while (`, `catch (`), double-counting lines that already
+/// get the control-keyword boost above -- harmless for ranking (both push
+/// the same line's salience up) but not a "true" call count; (2) macro
+/// invocations (Rust `foo!(`), generic instantiations (`Foo<T>(`), and
+/// decorators are not distinguished from ordinary calls; (3) a call whose
+/// `(` is on a different line than its callee name is missed entirely
+/// (this is a per-LINE score, matching GLANCE-LR's own per-line unit).
+/// Regex over an AST is deliberately not used here: roust's tree-sitter
+/// parse is not threaded into `pack_regions`, and the spec calls this
+/// precision trade-off acceptable for an orthogonal, additively-blended
+/// prior rather than a standalone ranker.
+static SALIENCE_CALL_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\b[A-Za-z_][A-Za-z0-9_]*\s*\(").unwrap());
+
+/// Multiplicative boost applied to a control-keyword line's raw
+/// `tokens * (calls + 1)` score. GLANCE-LR's own "unconditional boost" is
+/// ordinal (such lines are always ranked above non-control lines within a
+/// file), not a numeric bonus; since this per-line score is here averaged
+/// into a single continuous per-region value (see `region_salience`)
+/// rather than used to produce a file-local ranking, the boost is
+/// operationalized as a small fixed multiplier instead: deterministic,
+/// bounded, and monotonic in the base score, so a highly-salient control
+/// line still outranks a low-salience one but no single line can swamp a
+/// region's mean. 2.0 is a judgment call (not empirically tuned) -- picked
+/// as a middle value between "no effect" (1.0) and "let one line dominate
+/// the mean"; flagged as an easy follow-up sweep parameter if control-line
+/// weighting turns out to matter on its own.
+const SALIENCE_CONTROL_BOOST: f64 = 2.0;
+
+/// Per-line structural salience: `tokens * (calls + 1)`, doubled if the
+/// line contains a control keyword. `count_tokens` is the SAME tokenizer
+/// closure `pack_regions` already threads through for region sizing
+/// (production caller: real cl100k BPE via tiktoken; tests: whitespace
+/// split) -- no second tokenizer is introduced.
+fn line_salience(line: &str, count_tokens: &dyn Fn(&str) -> usize) -> f64 {
+    let toks = count_tokens(line) as f64;
+    let calls = SALIENCE_CALL_RE.find_iter(line).count() as f64;
+    let mut sal = toks * (calls + 1.0);
+    if SALIENCE_CONTROL_KW_RE.is_match(line) {
+        sal *= SALIENCE_CONTROL_BOOST;
+    }
+    sal
+}
+
+/// Per-file line-salience cache: `(per_line_salience, file_max)`, computed
+/// ONCE per file (determinism lesson from `adaptive_stop`/`w_name`: no
+/// recomputed float keys inside comparators -- `pack_regions` calls this
+/// once per file up front and every candidate span looks up into the
+/// resulting `Vec`/scalar instead of recomputing `line_salience` per
+/// comparison). `file_max` is the file's own maximum per-line salience,
+/// used to normalize region salience onto a comparable [0, 1]-ish scale
+/// across files with very different line lengths/call densities (0.0 for
+/// an empty file, handled by the caller).
+fn file_line_salience(lines: &[&str], count_tokens: &dyn Fn(&str) -> usize) -> (Vec<f64>, f64) {
+    let sal: Vec<f64> = lines.iter().map(|l| line_salience(l, count_tokens)).collect();
+    let file_max = sal.iter().cloned().fold(0.0_f64, f64::max);
+    (sal, file_max)
+}
+
+/// Region structural-salience score: MEAN of `[a, b]`'s per-line salience
+/// (1-indexed, inclusive, matching this module's span convention -- same
+/// `saturating_sub(1)`/`.min(len)` clamp already used for `seg_lines`
+/// above), divided by the file's own max so it lands in [0, 1] (0.0 for a
+/// degenerate/empty span or an all-zero-salience file, avoiding a 0/0
+/// NaN). MEAN, not SUM: a summed score scales with region length, which
+/// `pack_regions` already double-counts via `gain`'s own `/tok` division --
+/// stacking a length-scaled salience term on top would reintroduce a
+/// hidden size dependency this feature is not supposed to have (analogous
+/// to the `w_name` dilution bug this module's docs already warn about,
+/// just from the opposite direction: SUM would inflate large regions
+/// instead of erasing small ones). MEAN keeps the term's magnitude
+/// comparable across region sizes, exactly like `name_score`'s small
+/// integer scale, so `salience_weight` sweeps the same way `w_name` does.
+fn region_salience(sal: &[f64], file_max: f64, a: usize, b: usize) -> f64 {
+    if file_max <= 0.0 {
+        return 0.0;
+    }
+    let start = a.saturating_sub(1).min(sal.len());
+    let end = b.min(sal.len());
+    if start >= end {
+        return 0.0;
+    }
+    let slice = &sal[start..end];
+    let mean = slice.iter().sum::<f64>() / slice.len() as f64;
+    mean / file_max
+}
+
 /// Greedy weighted-coverage packing of regions under budget. See
 /// lanes2.py's `pack_regions` docstring.
 ///
@@ -2413,6 +2523,32 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
 /// a symbol-name match is identity evidence independent of how long the
 /// matched definition happens to be (measured via this repo's own dogfood
 /// case, see lab/dogfood_pack_regions.py).
+///
+/// `salience_weight` (0.0 from the production caller, i.e. DISABLED, current
+/// query-density-only behavior, byte-identical to pre-E3 -- E3/issue #4,
+/// wave2's fine-grained-fault-localization scan's #1 ranked item, GLANCE-LR)
+/// additively blends a query-INDEPENDENT structural-salience prior (see
+/// `region_salience`: mean per-line `tokens * (calls + 1)`, control-keyword-
+/// boosted, normalized to the file's own max) into the same SELECTION
+/// METRIC `w_name` uses -- gain/tok POST-division, not folded into the
+/// pre-division `gain` field. This deliberately deviates from a literal
+/// reading of "add to gain": `region_salience` is already length-invariant
+/// (a MEAN, not a sum -- see that function's doc), so adding it into
+/// pre-division `gain` would still get diluted by the same `/tok` division
+/// that dilutes `w_name`'s bonus when folded in pre-division, for exactly
+/// the reason that comment documents -- a large truly-salient region could
+/// never out-rank a small merely-dense one. Mirroring `w_name`'s established,
+/// already-battle-tested fix (apply post-division instead) keeps the two
+/// terms on the same undiluted, size-independent footing and avoids
+/// reintroducing the dilution bug `w_name` was specifically patched to
+/// avoid. ADDITIVE, never multiplicative/saturating, per the w_name lesson
+/// (a positive `w_name` was measured to regress the shipped engine when it
+/// dominated/saturated the objective instead of complementing it -- see
+/// above); `salience_weight` is a plain `+ salience_weight * region_salience`
+/// term on the ratio, in both pass 1 (`best_ratio`) and pass 2 (`marginal`),
+/// since both passes score/rank candidates by the same gain/tok-plus-bonus
+/// ratio and both need the same undiluted-by-size treatment for a name-/
+/// salience-anchored large region to be able to win either pass.
 pub fn pack_regions(
     corpus: &Corpus,
     files: &[String],
@@ -2422,6 +2558,7 @@ pub fn pack_regions(
     count_tokens: &dyn Fn(&str) -> usize,
     anchor_symbols: Option<&IndexMap<String, Vec<String>>>,
     w_name: f64,
+    salience_weight: f64,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2456,6 +2593,13 @@ pub fn pack_regions(
         let hitset: HashSet<usize> = hits.into_iter().collect();
         let def_lines: Vec<(usize, String)> =
             if w_name != 0.0 { file_def_lines(text, def_re_for(rel)) } else { Vec::new() };
+        // Per-file line-salience cache (E3): computed ONCE per file, gated
+        // behind `salience_weight != 0.0` exactly like `def_lines` above --
+        // zero extra cost on the default (salience off) path. Every
+        // candidate span below looks up into this cache instead of
+        // recomputing `line_salience` per span/comparison.
+        let (sal_cache, file_sal_max): (Vec<f64>, f64) =
+            if salience_weight != 0.0 { file_line_salience(&lines, count_tokens) } else { (Vec::new(), 0.0) };
         for (a, b) in spans {
             if a == 0 || b < a || a > lines.len() {
                 // guard against degenerate spans; Python's 1-indexed slicing
@@ -2485,7 +2629,10 @@ pub fn pack_regions(
             }
             let gain = (weight(&seg_terms) + 0.5 * n_hits as f64) * (0.3 + scores.get(rel).copied().unwrap_or(0.0));
             let ns = if w_name != 0.0 { name_score(region_symbol(&def_lines, a, b), &tset) } else { 0.0 };
-            candidates.push(Candidate { file: rel.clone(), span: (a, b), tok, terms: seg_terms, gain, text: seg, name_score: ns });
+            let sal = if salience_weight != 0.0 { region_salience(&sal_cache, file_sal_max, a, b) } else { 0.0 };
+            candidates.push(Candidate {
+                file: rel.clone(), span: (a, b), tok, terms: seg_terms, gain, text: seg, name_score: ns, salience: sal,
+            });
         }
     }
 
@@ -2570,9 +2717,12 @@ pub fn pack_regions(
         } else {
             let mut best_idx = idxs[0];
             let mut best_ratio = candidates[best_idx].gain / (candidates[best_idx].tok.max(1) as f64)
-                + w_name * candidates[best_idx].name_score;
+                + w_name * candidates[best_idx].name_score
+                + salience_weight * candidates[best_idx].salience;
             for &i in &idxs[1..] {
-                let ratio = candidates[i].gain / (candidates[i].tok.max(1) as f64) + w_name * candidates[i].name_score;
+                let ratio = candidates[i].gain / (candidates[i].tok.max(1) as f64)
+                    + w_name * candidates[i].name_score
+                    + salience_weight * candidates[i].salience;
                 if ratio > best_ratio {
                     best_ratio = ratio;
                     best_idx = i;
@@ -2619,9 +2769,10 @@ pub fn pack_regions(
         }
 
         let best_name_score = candidates[best_idx].name_score;
+        let best_salience = candidates[best_idx].salience;
         let cand = Candidate {
             file: rel.clone(), span: best_span, tok: best_tok, terms: best_terms, gain: 0.0, text: best_text,
-            name_score: best_name_score,
+            name_score: best_name_score, salience: best_salience,
         };
         covered.extend(cand.terms.iter().cloned());
         spent += cand.tok as i64;
@@ -2659,11 +2810,11 @@ pub fn pack_regions(
             let new_weight = weight(&diff);
             let base = (new_weight + 0.25 * weight(&c.terms) + 0.1) * (0.3 + scores.get(&c.file).copied().unwrap_or(0.0))
                 / (c.tok.max(1) as f64);
-            // same undiluted-by-size name bonus as pass 1's selection metric
-            // (see pack_regions' doc comment) -- otherwise a name-anchored
-            // region too large to win pass 1 could never win pass 2's
-            // marginal race either.
-            base + w_name * c.name_score
+            // same undiluted-by-size name/salience bonus as pass 1's
+            // selection metric (see pack_regions' doc comment) -- otherwise
+            // a name-/salience-anchored region too large to win pass 1
+            // could never win pass 2's marginal race either.
+            base + w_name * c.name_score + salience_weight * c.salience
         };
         // total_cmp, not partial_cmp().unwrap(): `marginal` folds in
         // `scores.get(&c.file)`, an externally-supplied score that isn't
@@ -2715,6 +2866,7 @@ pub fn pack_regions(
             gain: candidates[i].gain,
             text: candidates[i].text.clone(),
             name_score: candidates[i].name_score,
+            salience: candidates[i].salience,
         });
         chosen_map.entry(file).or_default().push(seg_idx);
     }
@@ -2928,10 +3080,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0.0);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -2975,10 +3127,183 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E3/issue #4: hand-computed `line_salience`/`region_salience` values
+    /// (GLANCE-LR structural salience), using the same whitespace-split
+    /// `count_tokens` stub the other pack_regions tests use, so the token
+    /// counts below are trivially hand-verifiable.
+    ///
+    /// Line 1 `"if x > 0:"`: 4 whitespace tokens ("if", "x", ">", "0:"), 0
+    /// calls (no `identifier(` match) -> base = 4*(0+1) = 4.0; contains
+    /// control keyword "if" -> doubled -> 8.0.
+    /// Line 2 `"y = compute(x)"`: 3 tokens ("y", "=", "compute(x)"), 1 call
+    /// (`compute(`) -> base = 3*(1+1) = 6.0; no control keyword -> 6.0.
+    /// Line 3 `"for i in range(z):"`: 4 tokens ("for", "i", "in",
+    /// "range(z):"), 1 call (`range(`) -> base = 4*(1+1) = 8.0; contains
+    /// control keyword "for" -> doubled -> 16.0.
+    #[test]
+    fn line_salience_hand_computed() {
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+        assert_eq!(line_salience("if x > 0:", &count_tokens), 8.0);
+        assert_eq!(line_salience("y = compute(x)", &count_tokens), 6.0);
+        assert_eq!(line_salience("for i in range(z):", &count_tokens), 16.0);
+        // No tokens -> no calls, no control keyword -> 0.0, not NaN/panic.
+        assert_eq!(line_salience("", &count_tokens), 0.0);
+    }
+
+    /// `region_salience` over the same 3 hand-computed lines: file max is
+    /// 16.0 (the "for" line). A region covering just line 2 (mean = 6.0)
+    /// normalizes to 6.0/16.0 = 0.375. A region covering all 3 lines (mean
+    /// = (8.0+6.0+16.0)/3 = 10.0) normalizes to 10.0/16.0 = 0.625. An
+    /// empty-file / all-zero-salience file normalizes to 0.0, not NaN
+    /// (0/0 guard).
+    #[test]
+    fn region_salience_hand_computed() {
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+        let lines = ["if x > 0:", "y = compute(x)", "for i in range(z):"];
+        let (sal, file_max) = file_line_salience(&lines, &count_tokens);
+        assert_eq!(sal, vec![8.0, 6.0, 16.0]);
+        assert_eq!(file_max, 16.0);
+
+        assert!((region_salience(&sal, file_max, 2, 2) - 0.375).abs() < 1e-12);
+        assert!((region_salience(&sal, file_max, 1, 3) - 0.625).abs() < 1e-12);
+
+        // degenerate/empty span and empty file both fall back to 0.0.
+        assert_eq!(region_salience(&sal, file_max, 5, 4), 0.0);
+        assert_eq!(region_salience(&[], 0.0, 1, 1), 0.0);
+    }
+
+    /// E3/issue #4: `salience_weight = 0.0` (the production default) must
+    /// be byte-identical to the pre-E3 engine -- i.e. pack_regions'
+    /// dogfood-bug fixture (see `pack_regions_name_score_promotes_symbol_name_match`)
+    /// must still reproduce the exact same pre-fix selection
+    /// (`subtokens` wins on term density alone) when `salience_weight` is
+    /// left at its default 0.0, proving the new gated per-file salience
+    /// cache and the new additive term contribute exactly nothing to the
+    /// selection metric on the default path.
+    #[test]
+    fn pack_regions_salience_weight_default_is_byte_identical_to_pre_e3() {
+        let tmp = std::env::temp_dir().join(format!("roust_saliencegolden_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let filler: String = (0..40).map(|i| format!("    x{i} = {i}\n")).collect();
+        let src = format!(
+            "def subtokens(word):\n    \"\"\"token budget enforced.\"\"\"\n    return word.split('_')\n\n\ndef pack_regions(cap):\n{filler}    return cap\n"
+        );
+        std::fs::write(tmp.join("core.py"), src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("how is the token budget enforced when packing regions", &[]);
+        let scores: IndexMap<String, f64> = [("core.py".to_string(), 1.0)].into_iter().collect();
+        let files = vec!["core.py".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let def_lines = file_def_lines(&corpus.text["core.py"], def_re_for("core.py"));
+        let sym_of = |spans: &IndexMap<String, Vec<(usize, usize)>>| -> Option<String> {
+            spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
+        };
+
+        let (spans_default, bundle_default) =
+            pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
+        assert_eq!(
+            sym_of(&spans_default),
+            Some("subtokens".to_string()),
+            "salience_weight=0.0 (default) must reproduce the exact pre-E3 selection"
+        );
+
+        // Repeat with an explicit 0.0 to pin that this is the CLI/library
+        // default, not merely "some value happens to match".
+        let (spans_explicit, bundle_explicit) =
+            pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
+        assert_eq!(spans_default, spans_explicit);
+        assert_eq!(bundle_default, bundle_explicit);
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E3/issue #4: a sufficiently large `salience_weight` must be able to
+    /// flip pass-1 selection toward a structurally-salient (calls +
+    /// control-flow-heavy) region even when a same-file region is denser
+    /// in query terms -- the salience-analog of the `w_name` dogfood test
+    /// above, and proof the additive blend actually reaches the selection
+    /// metric rather than being a no-op wired to nothing.
+    /// `dense_short`'s docstring hits all 3 query terms (token/budget/
+    /// enforce) densely in a 3-token-ish body -- wins pass-1 on gain/tok
+    /// alone. `big_salient` mentions "token" exactly once but is packed
+    /// with calls (`compute(x)`, `helper(y)`, `process(i)`, `range(z)`)
+    /// and control keywords (if/for/return), giving it a much higher
+    /// structural salience that a large-enough `salience_weight` should
+    /// let outrank `dense_short`'s term density.
+    #[test]
+    fn pack_regions_salience_weight_promotes_structurally_salient_region() {
+        let tmp = std::env::temp_dir().join(format!("roust_saliencepromote_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let src = "def dense_short(v):\n    \"\"\"token budget enforced.\"\"\"\n    return v\n\n\ndef big_salient(x):\n    \"\"\"token.\"\"\"\n    if x > 0:\n        y = compute(x)\n        z = helper(y)\n        for i in range(z):\n            w = process(i)\n    return w\n";
+        std::fs::write(tmp.join("core.py"), src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("how is the token budget enforced", &[]);
+        let scores: IndexMap<String, f64> = [("core.py".to_string(), 1.0)].into_iter().collect();
+        let files = vec!["core.py".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let def_lines = file_def_lines(&corpus.text["core.py"], def_re_for("core.py"));
+        let sym_of = |spans: &IndexMap<String, Vec<(usize, usize)>>| -> Option<String> {
+            spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
+        };
+
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
+        assert_eq!(
+            sym_of(&spans_off),
+            Some("dense_short".to_string()),
+            "salience_weight=0.0 must select the term-dense region, unaffected by structural salience"
+        );
+
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 25.0);
+        assert_eq!(
+            sym_of(&spans_on),
+            Some("big_salient".to_string()),
+            "a large enough salience_weight must flip pass-1 selection toward the structurally-salient region"
+        );
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E3/issue #4: repeated calls to pack_regions with `salience_weight >
+    /// 0.0` and identical inputs must produce byte-identical output --
+    /// same determinism bar as `w_name`/`adaptive_stop` (precomputed,
+    /// cached per-file salience; no float recomputation inside
+    /// comparators that could drift across calls).
+    #[test]
+    fn pack_regions_salience_weight_deterministic_across_repeated_calls() {
+        let tmp = std::env::temp_dir().join(format!("roust_saliencedet_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let mut src = String::new();
+        for i in 0..30 {
+            src.push_str(&format!(
+                "def fn_{i}(x):\n    \"\"\"token budget enforced.\"\"\"\n    if x > {i}:\n        y = compute(x)\n        z = helper(y, {i})\n    return x + {i}\n\n\n"
+            ));
+        }
+        std::fs::write(tmp.join("many.py"), &src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("how is the token budget enforced", &[]);
+        let files = vec!["many.py".to_string()];
+        let scores: IndexMap<String, f64> = [("many.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.75);
+        assert!(!first.is_empty());
+        for _ in 0..10 {
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.75);
+            assert_eq!(spans, first, "pack_regions with salience_weight > 0.0 must be deterministic across repeated calls");
+        }
 
         std::fs::remove_dir_all(&tmp).ok();
     }
@@ -3025,10 +3350,10 @@ mod tests {
         // remaining candidates per iteration -- the exact scenario that
         // triggers repeated `marginal(i)` calls for the same `i` within a
         // single sort.
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls given many equal/near-equal marginal scores (and must never panic)"
@@ -3086,7 +3411,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0.0);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 

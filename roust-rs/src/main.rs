@@ -96,6 +96,15 @@ struct Args {
     /// dump the Explain diagnostic record as JSON to stderr
     #[arg(long)]
     explain: bool,
+
+    /// weight for GLANCE-LR structural-salience blending in region scoring
+    /// (E3/issue #4): additively blends a query-independent per-region
+    /// salience prior (mean per-line tokens*(calls+1), control-keyword-
+    /// boosted, normalized to the file's own max) into pack_regions'
+    /// gain/tok selection metric in both passes. 0.0 (default) = OFF,
+    /// byte-identical output to pre-E3.
+    #[arg(long, default_value_t = 0.0)]
+    salience_weight: f64,
 }
 
 fn main() {
@@ -107,6 +116,10 @@ fn main() {
     }
     if args.k < 0 {
         eprintln!("roust: error: --k must be >= 0");
+        std::process::exit(2);
+    }
+    if args.salience_weight < 0.0 {
+        eprintln!("roust: error: --salience-weight must be >= 0.0");
         std::process::exit(2);
     }
 
@@ -159,8 +172,17 @@ fn main() {
     } else {
         anchor_def_symbols(&args.query, &corpus, &anchor_files)
     };
-    let (spans, bundle) =
-        pack_regions(&corpus, &files, &terms, &scores, args.budget, &count_tokens, Some(&anchor_symbols), 0.0);
+    let (spans, bundle) = pack_regions(
+        &corpus,
+        &files,
+        &terms,
+        &scores,
+        args.budget,
+        &count_tokens,
+        Some(&anchor_symbols),
+        0.0,
+        args.salience_weight,
+    );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 
     if args.explain {
