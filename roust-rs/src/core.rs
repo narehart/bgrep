@@ -2390,8 +2390,14 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
 /// likely to be noise, independent of how it happens to score on term
 /// density.
 ///
-/// `w_name` (default-equivalent 1.0 from all production callers -- the
-/// measured-saturating weight, 2.0/4.0 score identically) additionally
+/// `w_name` (0.0 from the production caller, i.e. DISABLED: a sweep of
+/// {0.0, 0.5, 1.0} on the exact harness -- parity/region_eval2.py +
+/// lab/agentless_metric.py, full300_v9 vs full300_v8/wname05, issue #4 --
+/// measured that any positive weight regresses the shipped engine, LINE
+/// all-or-nothing 35.7% -> 29.3% and line-fraction 0.4564 -> 0.3989, while
+/// 0.5 and 1.0 score identically, i.e. the weight saturates; the original
+/// validation was against the diverged lab pipeline, issue #8; parameter
+/// and code paths kept for re-tuning) additionally
 /// rewards a region whose OWN defining symbol name matches query terms (see
 /// `name_score`), independent of the anchor channel above: `anchor_symbols`
 /// only fires for files the anchor channel itself promoted, whereas this

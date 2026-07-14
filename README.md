@@ -276,7 +276,7 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 | SweRankEmbed-Large + LLM rerank | 96.0 | Acc@10 | no (trained + LLM) | arXiv:2505.07849 |
 | SweRankEmbed-Large | 94.2 | Acc@10 | no (trained) | arXiv:2505.07849 |
 | LocAgent | 94.16 | file acc | no (LLM) | arXiv:2503.09089 |
-| **roust** | 92.3 | Agentless-metric FILE | yes | `lab/results_regions/agentless_metric_v2.json` |
+| **roust** | 92.3 | Agentless-metric FILE | yes | `lab/results_regions/agentless_metric_v3.json` |
 | SweRankEmbed-Small | 90.9 | Acc@10 | no (trained) | arXiv:2505.07849 |
 | OrcaLoca | 83.33 | file-match | no (LLM) | arXiv:2502.00350 |
 | Agentless GPT-4o | 69.7 | Agentless-metric FILE | no (LLM) | arXiv:2407.01489 |
@@ -286,7 +286,7 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 
 — = not measured by us (see gaps below).
 
-The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 39.7% (exact) / LINE 29.3%; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") is 0.45% mean — roust trades precision for recall by design, packing ~1,050 lines of surrounding context per instance under the 8192-token budget ([#4](https://github.com/narehart/roust/issues/4)).
+The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 41.0% (exact) / LINE 35.7%; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") is 0.45% mean — roust trades precision for recall by design, packing ~1,150 lines of surrounding context per instance under the 8192-token budget ([#4](https://github.com/narehart/roust/issues/4)).
 
 Cold index build, Rust vs Python engine: httpx 145ms vs 522ms; django 1.8s vs 7.6s — prose-only, no committed benchmark artifact ([#15](https://github.com/narehart/roust/issues/15)).
 
@@ -320,7 +320,7 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
 
 ### What still needs work
 
-- ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly ([#2](https://github.com/narehart/roust/issues/2)): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine — both **weaker** than the old proxy/stale-engine numbers, and still the weakest cells — `lab/results_regions/agentless_metric_v2.json`, [#3](https://github.com/narehart/roust/issues/3)
+- ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly ([#2](https://github.com/narehart/roust/issues/2)): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine; a `w_name` sweep on the exact harness ([#4](https://github.com/narehart/roust/issues/4)) then showed the symbol-name weighting itself caused the LINE drop — reverting it (w_name=0.0) restores FUNCTION 41.0% (exact) and LINE 35.7% (`lab/results_regions/agentless_metric_v3.json`). FUNCTION is still the weakest cell vs Agentless GPT-4o's 52.0 — [#3](https://github.com/narehart/roust/issues/3)
 - archex has never been measured by us on any of our benches — [#1](https://github.com/narehart/roust/issues/1)
 - ~~True cost-per-success~~ measured via repeat runs ([#16](https://github.com/narehart/roust/issues/16)): roust solves 14/15 deterministically at ~$1/answer with one real capability gap (django-16400, 0/10); embedding-RAG reaches everything eventually at $2.50/first-success — see `results_repeats.jsonl`
 - Latency has no committed benchmark artifact — [#15](https://github.com/narehart/roust/issues/15)

@@ -352,3 +352,7 @@ This does not reopen `lab/`: this directory remains a frozen Python research
 sandbox (#8) whose pipelines are not the source of truth for shipped behavior;
 the measurement above is driven entirely by the shipped `roust-rs` binary via
 `parity/`, same convention as every other post-freeze parity/region_eval run.
+
+## w_name sweep on the exact harness (2026-07-14)
+
+Swept `pack_regions` symbol-name weight `w_name` in {0.0, 0.5, 1.0} on the shipped engine via `parity/region_eval2.py` + `lab/agentless_metric.py` (issue #4): 0.5 and 1.0 tie (weight saturates, LINE 29.3%, line-fraction 0.3989), 0.0 wins (FUNCTION 41.0%, LINE 35.7%, line-fraction 0.4564) — the weighting, validated only on the diverged lab pipeline (#8), was net-negative on the shipped engine and is reverted; winner run `full300_v9.jsonl` (engine d250e1c) → `agentless_metric_v3.json`, losing point `full300_wname05.jsonl` (engine 842f757).

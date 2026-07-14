@@ -160,7 +160,7 @@ fn main() {
         anchor_def_symbols(&args.query, &corpus, &anchor_files)
     };
     let (spans, bundle) =
-        pack_regions(&corpus, &files, &terms, &scores, args.budget, &count_tokens, Some(&anchor_symbols), 1.0);
+        pack_regions(&corpus, &files, &terms, &scores, args.budget, &count_tokens, Some(&anchor_symbols), 0.0);
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 
     if args.explain {
