@@ -231,6 +231,7 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 - roust costs more per attempt than grep (308k vs 240k tokens) and wins on solve rate anyway. grep is cheap because it gives up: 73.3% of its runs hit the turn cap and produce nothing.
 - `$ / successful run` is a **lower bound** — it excludes the failed attempts paid for along the way. True cost-per-success is unmeasured ([#16](https://github.com/narehart/roust/issues/16)).
 - Giving the agent grep *alongside* roust makes it worse (93.3% → 57.1%): replace grep, don't supplement it ([#5](https://github.com/narehart/roust/issues/5)).
+- Outcome volatility (measured, trial 1 repeat of all pairs, `lab/tokenbench/results_repeats.jsonl`): roust's outcomes reproduced exactly (0/15 pairs flipped; 93.3% both runs); grep nearly stable (1/15); **embedding-RAG flipped 6/14 pairs (43%) and its aggregate moved 71.4% → 86.7% on a second identical run** — treat any single-run RAG number as ±15pp noise.
 
 ### Localization accuracy (published protocol)
 

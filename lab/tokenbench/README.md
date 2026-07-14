@@ -238,6 +238,22 @@ happening; the cap simply bounds how much of the 30-instance set was
 affordable within the authorized spend. Rerun with a higher
 `--budget-cap-usd` (resume-safe) to extend coverage.
 
+## Known accounting limitations
+
+- **No prompt caching.** The harness sets no `cache_control`; every turn
+  re-bills the full transcript at $3/MTok. Real deployments cache the
+  prefix. A cache-adjusted recomputation (`cache_cost_analysis.py`) shows
+  costs drop ~72-81% for all arms -- but the roust/grep ratio WIDENS from
+  1.48x to 1.80x, because caching bills writes at a premium ($3.75) and
+  reads at a discount ($0.30), and roust's few-big-bundles shape puts 2.5x
+  more of its tokens in the write bucket (write/read 0.167 vs grep 0.068).
+  roust's 2x advantage over rag_grep narrows to 1.35x but survives.
+  Negative result recorded so nobody re-litigates "just enable caching."
+- **Turn-cap floor.** 73-80% of grep runs hit the 30-turn cap and stop
+  mid-task; grep's measured $/attempt is a truncated floor, not a
+  completion cost. Both limitations bias AGAINST roust, so the published
+  roust-vs-grep comparison is conservative.
+
 ## Coordination note
 
 At harness-build time, `src/roust/` and `roust-rs/` had uncommitted
