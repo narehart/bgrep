@@ -2277,6 +2277,7 @@ struct Candidate {
     gain: f64,
     text: String,
     name_score: f64,
+    recency_score: f64,
 }
 
 // ---------------------------------------------------------------- region-level symbol-name anchoring
@@ -2372,6 +2373,22 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
     score
 }
 
+/// Mean per-line change-recency (see `history::file_line_recency`, already
+/// normalized per-file to `[0, 1]`) over a region's line span `[a, b]`
+/// (1-indexed, inclusive). A line absent from `line_recency` (no usable
+/// history signal for it) contributes 0 to the mean, not a skip -- so a
+/// region that's mostly cold with one hot line scores proportionally low
+/// rather than spuriously high. Returns 0.0 for an empty map or a
+/// degenerate span.
+fn region_recency(line_recency: &HashMap<usize, f64>, a: usize, b: usize) -> f64 {
+    if line_recency.is_empty() || b < a {
+        return 0.0;
+    }
+    let n = (b - a + 1) as f64;
+    let sum: f64 = (a..=b).map(|l| line_recency.get(&l).copied().unwrap_or(0.0)).sum();
+    sum / n
+}
+
 /// Greedy weighted-coverage packing of regions under budget. See
 /// lanes2.py's `pack_regions` docstring.
 ///
@@ -2413,6 +2430,23 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
 /// a symbol-name match is identity evidence independent of how long the
 /// matched definition happens to be (measured via this repo's own dogfood
 /// case, see lab/dogfood_pack_regions.py).
+///
+/// `recency_weight` (0.0 from the production CLI default, i.e. DISABLED --
+/// byte-identical to before this parameter existed when left at 0.0: see
+/// issue #4 / `--recency-weight`) additively blends a Linespots-style
+/// per-line change-recency prior (`history::file_line_recency`, mean over
+/// the region's span, normalized per-file to `[0, 1]`) INTO `gain`
+/// (pre-division), unlike `w_name` above: recency is evidence about the
+/// SEGMENT itself (this code was recently touched), not identity evidence
+/// independent of size, so -- per the spec's explicit "additively into
+/// region gain, precomputed" contract -- it belongs alongside the same
+/// size-sensitive `weight(&seg_terms)` term-density already occupies,
+/// scaled the same way by the `/tok` division every candidate goes
+/// through. The
+/// per-file line-recency map is computed at most once per file per
+/// `pack_regions` call (memoized in `recency_cache`), not once per
+/// candidate span -- and not at all when `recency_weight == 0.0`, so the
+/// disabled default path never shells out to git for this feature.
 pub fn pack_regions(
     corpus: &Corpus,
     files: &[String],
@@ -2422,6 +2456,7 @@ pub fn pack_regions(
     count_tokens: &dyn Fn(&str) -> usize,
     anchor_symbols: Option<&IndexMap<String, Vec<String>>>,
     w_name: f64,
+    recency_weight: f64,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2448,6 +2483,11 @@ pub fn pack_regions(
 
     let mut candidates: Vec<Candidate> = Vec::new();
 
+    // Per-file line-recency maps, computed at most once per file (not once
+    // per candidate span) and only when the feature is actually on -- see
+    // `pack_regions`' doc comment.
+    let mut recency_cache: HashMap<String, HashMap<usize, f64>> = HashMap::new();
+
     for rel in files {
         let text = &corpus.text[rel];
         let lines = py_splitlines(text);
@@ -2456,6 +2496,15 @@ pub fn pack_regions(
         let hitset: HashSet<usize> = hits.into_iter().collect();
         let def_lines: Vec<(usize, String)> =
             if w_name != 0.0 { file_def_lines(text, def_re_for(rel)) } else { Vec::new() };
+        let file_recency: Option<&HashMap<usize, f64>> = if recency_weight != 0.0 {
+            Some(
+                recency_cache
+                    .entry(rel.clone())
+                    .or_insert_with(|| crate::history::file_line_recency(&corpus.repo_path, rel)),
+            )
+        } else {
+            None
+        };
         for (a, b) in spans {
             if a == 0 || b < a || a > lines.len() {
                 // guard against degenerate spans; Python's 1-indexed slicing
@@ -2483,9 +2532,20 @@ pub fn pack_regions(
             if tok == 0 {
                 continue;
             }
-            let gain = (weight(&seg_terms) + 0.5 * n_hits as f64) * (0.3 + scores.get(rel).copied().unwrap_or(0.0));
+            let rs = file_recency.map(|fr| region_recency(fr, a, b)).unwrap_or(0.0);
+            let gain = (weight(&seg_terms) + 0.5 * n_hits as f64) * (0.3 + scores.get(rel).copied().unwrap_or(0.0))
+                + recency_weight * rs;
             let ns = if w_name != 0.0 { name_score(region_symbol(&def_lines, a, b), &tset) } else { 0.0 };
-            candidates.push(Candidate { file: rel.clone(), span: (a, b), tok, terms: seg_terms, gain, text: seg, name_score: ns });
+            candidates.push(Candidate {
+                file: rel.clone(),
+                span: (a, b),
+                tok,
+                terms: seg_terms,
+                gain,
+                text: seg,
+                name_score: ns,
+                recency_score: rs,
+            });
         }
     }
 
@@ -2619,9 +2679,10 @@ pub fn pack_regions(
         }
 
         let best_name_score = candidates[best_idx].name_score;
+        let best_recency_score = candidates[best_idx].recency_score;
         let cand = Candidate {
             file: rel.clone(), span: best_span, tok: best_tok, terms: best_terms, gain: 0.0, text: best_text,
-            name_score: best_name_score,
+            name_score: best_name_score, recency_score: best_recency_score,
         };
         covered.extend(cand.terms.iter().cloned());
         spent += cand.tok as i64;
@@ -2657,8 +2718,14 @@ pub fn pack_regions(
             let c = &candidates[i];
             let diff: HashSet<String> = c.terms.difference(&covered).cloned().collect();
             let new_weight = weight(&diff);
-            let base = (new_weight + 0.25 * weight(&c.terms) + 0.1) * (0.3 + scores.get(&c.file).copied().unwrap_or(0.0))
-                / (c.tok.max(1) as f64);
+            let tok = c.tok.max(1) as f64;
+            // recency, like term-density, is divided by tok -- same
+            // size-sensitive treatment `gain`'s additive recency term gets in
+            // pass 1 (see pack_regions' doc comment); `c.recency_score` was
+            // already computed once at candidate-build time, so this is
+            // pure arithmetic on a precomputed value, not a recomputation.
+            let base = (new_weight + 0.25 * weight(&c.terms) + 0.1) * (0.3 + scores.get(&c.file).copied().unwrap_or(0.0)) / tok
+                + recency_weight * c.recency_score / tok;
             // same undiluted-by-size name bonus as pass 1's selection metric
             // (see pack_regions' doc comment) -- otherwise a name-anchored
             // region too large to win pass 1 could never win pass 2's
@@ -2715,6 +2782,7 @@ pub fn pack_regions(
             gain: candidates[i].gain,
             text: candidates[i].text.clone(),
             name_score: candidates[i].name_score,
+            recency_score: candidates[i].recency_score,
         });
         chosen_map.entry(file).or_default().push(seg_idx);
     }
@@ -2928,10 +2996,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0.0);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0.0);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -2975,8 +3043,8 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
 
@@ -3025,10 +3093,10 @@ mod tests {
         // remaining candidates per iteration -- the exact scenario that
         // triggers repeated `marginal(i)` calls for the same `i` within a
         // single sort.
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls given many equal/near-equal marginal scores (and must never panic)"
@@ -3086,7 +3154,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0.0);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 
@@ -3142,5 +3210,132 @@ mod tests {
         assert!(is_low_confidence(5.0, 0, 0));
         // Right at the boundary: not low-confidence (strict `<`, not `<=`).
         assert!(!is_low_confidence(LOW_CONFIDENCE_TOP_SCORE, 5, 5));
+    }
+
+    // ---------------------------------------------------------------- E6:
+    // recency_weight blending in pack_regions
+
+    fn recency_test_git(repo: &Path, args: &[&str]) {
+        let status = std::process::Command::new("git").arg("-C").arg(repo).args(args).status().expect("failed to run git");
+        assert!(status.success(), "git {args:?} failed in {repo:?}");
+    }
+
+    fn recency_test_commit(repo: &Path, msg: &str) {
+        recency_test_git(repo, &["-c", "user.email=test@test.invalid", "-c", "user.name=test", "add", "-A"]);
+        recency_test_git(
+            repo,
+            &["-c", "user.email=test@test.invalid", "-c", "user.name=test", "commit", "-q", "-m", msg],
+        );
+    }
+
+    /// `alpha_helper` and `beta_helper` are structurally and lexically
+    /// IDENTICAL (same token count, same "widget" query-term hit) so
+    /// `pack_regions`' pass-1 pick is an exact gain/tok TIE between them
+    /// with `recency_weight == 0.0` -- which Python-parity tie-breaking
+    /// (first-max, not last-max) resolves in favor of `alpha_helper` (the
+    /// earlier span). A follow-up commit re-touches ONLY `beta_helper`'s
+    /// docstring line, giving it a much newer git-blame last-touch than
+    /// `alpha_helper` (whose lines are still last-touched by the initial
+    /// commit) -- enough of a `region_recency` gap (~0.33 vs ~0.00001, see
+    /// `history::file_line_recency`'s doc comment on decay steepness) that
+    /// a nonzero `recency_weight` flips the tie toward `beta_helper`
+    /// instead, i.e. "regions shift toward recently-edited code".
+    const RECENCY_FIXTURE_C0: &str = "def alpha_helper(x):\n    \"\"\"alpha widget.\"\"\"\n    return x\n\n\ndef beta_helper(x):\n    \"\"\"beta widget.\"\"\"\n    return x\n";
+    const RECENCY_FIXTURE_C1: &str = "def alpha_helper(x):\n    \"\"\"alpha widget.\"\"\"\n    return x\n\n\ndef beta_helper(x):\n    \"\"\"Beta widget.\"\"\"\n    return x\n";
+
+    fn make_recency_pack_fixture(tag: &str) -> PathBuf {
+        let repo = std::env::temp_dir().join(format!("roust_packrecency_{tag}_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&repo);
+        std::fs::create_dir_all(&repo).unwrap();
+        recency_test_git(&repo, &["init", "-q"]);
+        std::fs::write(repo.join("mod.py"), RECENCY_FIXTURE_C0).unwrap();
+        recency_test_commit(&repo, "test: create mod.py");
+        std::fs::write(repo.join("mod.py"), RECENCY_FIXTURE_C1).unwrap();
+        recency_test_commit(&repo, "test: touch beta helper only");
+        repo
+    }
+
+    #[test]
+    fn recency_weight_zero_is_byte_identical_to_pre_feature_tie_break() {
+        let repo = make_recency_pack_fixture("zero");
+        let corpus = Corpus::build(&repo, None, false, false);
+        let terms = query_terms("widget", &[]);
+        let files = vec!["mod.py".to_string()];
+        let scores: IndexMap<String, f64> = [("mod.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 0.0);
+        let chosen = spans.get("mod.py").expect("mod.py should have a chosen region");
+        assert_eq!(chosen.len(), 1, "budget should admit exactly one region");
+        // First-max tie-break (Python `max()` semantics, not Rust's
+        // `max_by`) picks the EARLIER span, alpha_helper's, on an exact tie.
+        assert_eq!(chosen[0].0, 1, "recency_weight=0.0 must keep the pre-feature first-max tie-break (alpha_helper)");
+
+        std::fs::remove_dir_all(&repo).ok();
+    }
+
+    #[test]
+    fn recency_weight_shifts_region_toward_recently_touched_span() {
+        let repo = make_recency_pack_fixture("shift");
+        let corpus = Corpus::build(&repo, None, false, false);
+        let terms = query_terms("widget", &[]);
+        let files = vec!["mod.py".to_string()];
+        let scores: IndexMap<String, f64> = [("mod.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 0.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 5.0);
+
+        let off_start = spans_off["mod.py"][0].0;
+        let on_start = spans_on["mod.py"][0].0;
+        assert!(on_start > off_start, "recency_weight=5.0 should flip the tie to the LATER (recently-touched) span: off={off_start} on={on_start}");
+
+        std::fs::remove_dir_all(&repo).ok();
+    }
+
+    /// Determinism: recency-weighted packing over the same repo state must
+    /// be deterministic across repeated calls (mirrors issue #14's own
+    /// determinism bar for the pre-existing gain/tok tie-breaking).
+    #[test]
+    fn recency_weight_packing_is_deterministic() {
+        let repo = make_recency_pack_fixture("determinism");
+        let corpus = Corpus::build(&repo, None, false, false);
+        let terms = query_terms("widget", &[]);
+        let files = vec!["mod.py".to_string()];
+        let scores: IndexMap<String, f64> = [("mod.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans1, bundle1) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 5.0);
+        let (spans2, bundle2) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 5.0);
+        assert_eq!(spans1, spans2);
+        assert_eq!(bundle1, bundle2);
+
+        std::fs::remove_dir_all(&repo).ok();
+    }
+
+    /// A nonzero `recency_weight` against a repo with NO usable git history
+    /// (not git-initialized at all) must degrade to the same behavior as
+    /// `recency_weight == 0.0`, never panic: `history::file_line_recency`
+    /// returns an empty map, `region_recency` returns 0.0 for every span, so
+    /// the additive term contributes nothing and the pre-feature tie-break
+    /// stands.
+    #[test]
+    fn recency_weight_with_no_git_history_is_a_safe_noop() {
+        let repo = std::env::temp_dir().join(format!("roust_packrecency_nogit_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&repo);
+        std::fs::create_dir_all(&repo).unwrap();
+        std::fs::write(repo.join("mod.py"), RECENCY_FIXTURE_C1).unwrap();
+        let corpus = Corpus::build(&repo, None, false, false);
+        let terms = query_terms("widget", &[]);
+        let files = vec!["mod.py".to_string()];
+        let scores: IndexMap<String, f64> = [("mod.py".to_string(), 1.0)].into_iter().collect();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 8, &count_tokens, None, 0.0, 5.0);
+        let chosen = &spans["mod.py"];
+        assert_eq!(chosen.len(), 1);
+        assert_eq!(chosen[0].0, 1, "no git history -> recency contributes 0, first-max tie-break stands");
+
+        std::fs::remove_dir_all(&repo).ok();
     }
 }

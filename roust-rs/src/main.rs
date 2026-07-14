@@ -3,6 +3,7 @@
 //!     roust [--json] [--files-only] [--budget N=8192] [--k N]
 //!              [--no-cache] [--reindex]
 //!              [--no-history] [--no-docs] [--no-anchors] [--no-testbridge]
+//!              [--recency-weight W=0.0]
 //!              [--explain] QUERY PATH
 //!
 //! Runs the frozen-v7 retrieval pipeline (roust::core, roust::cache,
@@ -93,6 +94,12 @@ struct Args {
     #[arg(long)]
     no_testbridge: bool,
 
+    /// weight for the Linespots-style per-line git-history change-recency
+    /// prior, additively blended into region gain (0.0 = off, the default;
+    /// byte-identical output to before this flag existed). See issue #4.
+    #[arg(long, default_value_t = 0.0)]
+    recency_weight: f64,
+
     /// dump the Explain diagnostic record as JSON to stderr
     #[arg(long)]
     explain: bool,
@@ -107,6 +114,10 @@ fn main() {
     }
     if args.k < 0 {
         eprintln!("roust: error: --k must be >= 0");
+        std::process::exit(2);
+    }
+    if !args.recency_weight.is_finite() || args.recency_weight < 0.0 {
+        eprintln!("roust: error: --recency-weight must be a finite number >= 0");
         std::process::exit(2);
     }
 
@@ -159,8 +170,17 @@ fn main() {
     } else {
         anchor_def_symbols(&args.query, &corpus, &anchor_files)
     };
-    let (spans, bundle) =
-        pack_regions(&corpus, &files, &terms, &scores, args.budget, &count_tokens, Some(&anchor_symbols), 0.0);
+    let (spans, bundle) = pack_regions(
+        &corpus,
+        &files,
+        &terms,
+        &scores,
+        args.budget,
+        &count_tokens,
+        Some(&anchor_symbols),
+        0.0,
+        args.recency_weight,
+    );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 
     if args.explain {
