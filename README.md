@@ -288,7 +288,34 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 
 The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 41.0% (exact) / LINE 35.7%; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") is 0.45% mean — roust trades precision for recall by design, packing ~1,150 lines of surrounding context per instance under the 8192-token budget ([#4](https://github.com/narehart/roust/issues/4)).
 
-Cold index build, Rust vs Python engine: httpx 145ms vs 522ms; django 1.8s vs 7.6s — prose-only, no committed benchmark artifact ([#15](https://github.com/narehart/roust/issues/15)).
+### Latency (measured, `lab/latency/latency_v1.json`)
+
+Cold index (median of 3, `.roust/` removed each time), warm index (median of
+5, cache hit), and query time (p50/p95 of 20 queries cycling 10
+problem-statement-like phrases, warm cache) — `index_ms`/`query_ms` from
+`--json` output, plus end-to-end subprocess wall time, the number that
+matches what an agent actually experiences ([#15](https://github.com/narehart/roust/issues/15)):
+
+| Repo | Files indexed | Cold index (index / wall) | Warm index (index / wall) | Query index p50 / p95 | Query wall p50 / p95 |
+|---|---|---|---|---|---|
+| roust (this repo) | 66 | 145ms / 302ms | 24ms / 181ms | 109ms / 148ms | 140ms / 180ms |
+| requests | 122 | 128ms / 244ms | 23ms / 144ms | 81ms / 111ms | 114ms / 144ms |
+| flask | 77 | 184ms / 300ms | 25ms / 142ms | 97ms / 107ms | 129ms / 142ms |
+| django | 2,131 | 1538ms / 1756ms | 195ms / 412ms | 158ms / 246ms | 363ms / 451ms |
+
+Measured on an Apple M3 Max (arm64), engine `roust 0.2.0 (418212b, clean)`.
+Roughly a third of the wall-clock time at this repo size is fixed subprocess
+startup overhead, not indexing or query work — visible as the gap between
+`index_ms`/`query_ms` and the wall-time column above. Full samples, machine
+info, and per-repo `files_indexed`/disk-size in `lab/latency/latency_v1.json`;
+methodology in `lab/latency/bench_latency.py`.
+
+*Historical note:* an earlier claim (never backed by a committed artifact)
+compared the (now-deleted) Python engine against the Rust port directly —
+"Rust 3.6–4.2× faster than Python engine (httpx 145ms vs 522ms, django 1.8s
+vs 7.6s)". The Python engine was removed in #12, so that comparison is no
+longer reproducible; it's kept here only as a historical data point, not a
+current claim.
 
 ### ContextBench (human-annotated gold context, their evaluator)
 
@@ -323,7 +350,7 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
 - ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly ([#2](https://github.com/narehart/roust/issues/2)): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine; a `w_name` sweep on the exact harness ([#4](https://github.com/narehart/roust/issues/4)) then showed the symbol-name weighting itself caused the LINE drop — reverting it (w_name=0.0) restores FUNCTION 41.0% (exact) and LINE 35.7% (`lab/results_regions/agentless_metric_v3.json`). FUNCTION is still the weakest cell vs Agentless GPT-4o's 52.0 — [#3](https://github.com/narehart/roust/issues/3)
 - archex has never been measured by us on any of our benches — [#1](https://github.com/narehart/roust/issues/1)
 - ~~True cost-per-success~~ measured via repeat runs ([#16](https://github.com/narehart/roust/issues/16)): roust solves 14/15 deterministically at ~$1/answer with one real capability gap (django-16400, 0/10); embedding-RAG reaches everything eventually at $2.50/first-success — see `results_repeats.jsonl`
-- Latency has no committed benchmark artifact — [#15](https://github.com/narehart/roust/issues/15)
+- ~~Latency has no committed benchmark artifact~~ measured ([#15](https://github.com/narehart/roust/issues/15)): cold/warm index + query p50/p95 across four repo sizes (66–2,131 files indexed), `lab/latency/latency_v1.json`
 
 ### How these were measured
 
@@ -352,9 +379,12 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
   (channel-aware packing, on-disk cache with incremental updates,
   deterministic seed) — bundle-level parity gate **PASSED 300/300 exact**
   on SWE-bench Lite (report in `parity/rust_gate_300_v3.json`) before the
-  Python engine was removed. Cold 3.6–4.2× faster than the old Python
-  engine (httpx 145ms vs 522ms, django 1.8s vs 7.6s); warm/incremental
-  2–3×. Build from source: `cd roust-rs && cargo build --release`.
+  Python engine was removed. Measured absolute latency (cold/warm index,
+  query p50/p95) is in the Scoreboard's Latency block above
+  (`lab/latency/latency_v1.json`, [#15](https://github.com/narehart/roust/issues/15));
+  the old cold-index Rust-vs-Python ratio is no longer reproducible and is
+  kept there only as a historical note. Build from source: `cd roust-rs &&
+  cargo build --release`.
 - ~~Publish to PyPI~~ **done** — `pip install roust` ships the maturin-built
   wheel wrapping the Rust binary.
 - MCP server.

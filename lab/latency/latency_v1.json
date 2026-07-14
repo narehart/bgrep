@@ -1,0 +1,366 @@
+{
+  "engine_version": "roust 0.2.0 (418212b, clean)",
+  "machine": {
+    "uname_m": "arm64",
+    "cpu": "Apple M3 Max"
+  },
+  "timestamp": "2026-07-14T12:31:46Z",
+  "queries": [
+    "fix off-by-one error in loop boundary",
+    "add support for custom authentication headers",
+    "handle unicode decoding error in response body",
+    "connection pooling timeout not respected",
+    "improve error message when validation fails",
+    "memory leak when processing large files",
+    "race condition in concurrent request handling",
+    "deprecate old configuration option safely",
+    "unexpected behavior when parsing malformed input",
+    "add caching layer for repeated queries"
+  ],
+  "repos": {
+    "bgrep": {
+      "files_indexed": 66,
+      "repo_size_bytes": 387246045,
+      "cold_index": {
+        "index_ms_median": 145,
+        "wall_ms_median": 301.7319590144325,
+        "index_ms_samples": [
+          213,
+          133,
+          145
+        ],
+        "wall_ms_samples": [
+          374.0,
+          288.6,
+          301.7
+        ]
+      },
+      "warm_index": {
+        "index_ms_median": 24,
+        "wall_ms_median": 181.39716700534336,
+        "index_ms_samples": [
+          24,
+          23,
+          24,
+          24,
+          24
+        ],
+        "wall_ms_samples": [
+          183.0,
+          182.9,
+          180.7,
+          181.2,
+          181.4
+        ]
+      },
+      "query": {
+        "query_ms_p50": 109,
+        "query_ms_p95": 148,
+        "wall_ms_p50": 140.4,
+        "wall_ms_p95": 179.6,
+        "query_ms_samples": [
+          149,
+          124,
+          103,
+          99,
+          112,
+          148,
+          67,
+          110,
+          104,
+          109,
+          144,
+          121,
+          102,
+          97,
+          109,
+          147,
+          66,
+          109,
+          100,
+          109
+        ],
+        "wall_ms_samples": [
+          183.0,
+          156.7,
+          135.9,
+          131.7,
+          143.5,
+          179.6,
+          99.1,
+          141.1,
+          134.3,
+          141.0,
+          175.4,
+          152.1,
+          136.1,
+          128.6,
+          140.0,
+          179.2,
+          98.6,
+          140.4,
+          129.6,
+          138.9
+        ]
+      }
+    },
+    "requests": {
+      "files_indexed": 122,
+      "repo_size_bytes": 1815187,
+      "cold_index": {
+        "index_ms_median": 128,
+        "wall_ms_median": 244.46158300270326,
+        "index_ms_samples": [
+          138,
+          114,
+          128
+        ],
+        "wall_ms_samples": [
+          254.1,
+          231.4,
+          244.5
+        ]
+      },
+      "warm_index": {
+        "index_ms_median": 23,
+        "wall_ms_median": 144.45699998759665,
+        "index_ms_samples": [
+          23,
+          24,
+          23,
+          23,
+          24
+        ],
+        "wall_ms_samples": [
+          143.9,
+          143.8,
+          145.4,
+          145.0,
+          144.5
+        ]
+      },
+      "query": {
+        "query_ms_p50": 81,
+        "query_ms_p95": 111,
+        "wall_ms_p50": 113.6,
+        "wall_ms_p95": 143.8,
+        "query_ms_samples": [
+          111,
+          68,
+          82,
+          66,
+          98,
+          74,
+          81,
+          70,
+          83,
+          80,
+          113,
+          71,
+          81,
+          65,
+          97,
+          75,
+          84,
+          72,
+          82,
+          79
+        ],
+        "wall_ms_samples": [
+          143.8,
+          102.2,
+          115.2,
+          99.1,
+          129.3,
+          107.1,
+          113.6,
+          102.4,
+          117.3,
+          113.3,
+          147.4,
+          104.3,
+          114.0,
+          98.8,
+          130.0,
+          107.1,
+          116.5,
+          106.0,
+          115.1,
+          110.8
+        ]
+      }
+    },
+    "flask": {
+      "files_indexed": 77,
+      "repo_size_bytes": 1575018,
+      "cold_index": {
+        "index_ms_median": 184,
+        "wall_ms_median": 300.29533299966715,
+        "index_ms_samples": [
+          223,
+          184,
+          183
+        ],
+        "wall_ms_samples": [
+          338.9,
+          300.3,
+          298.5
+        ]
+      },
+      "warm_index": {
+        "index_ms_median": 25,
+        "wall_ms_median": 141.73112498247065,
+        "index_ms_samples": [
+          23,
+          26,
+          26,
+          25,
+          25
+        ],
+        "wall_ms_samples": [
+          139.0,
+          141.7,
+          142.1,
+          140.8,
+          144.2
+        ]
+      },
+      "query": {
+        "query_ms_p50": 97,
+        "query_ms_p95": 107,
+        "wall_ms_p50": 128.6,
+        "wall_ms_p95": 141.9,
+        "query_ms_samples": [
+          111,
+          102,
+          96,
+          66,
+          91,
+          95,
+          98,
+          107,
+          94,
+          102,
+          107,
+          102,
+          95,
+          64,
+          92,
+          96,
+          97,
+          97,
+          92,
+          100
+        ],
+        "wall_ms_samples": [
+          145.6,
+          135.5,
+          127.4,
+          98.6,
+          123.8,
+          128.4,
+          130.7,
+          141.9,
+          128.4,
+          134.8,
+          139.1,
+          136.1,
+          128.3,
+          98.3,
+          126.6,
+          129.1,
+          128.6,
+          128.4,
+          122.9,
+          131.6
+        ]
+      }
+    },
+    "django": {
+      "files_indexed": 2131,
+      "repo_size_bytes": 37454547,
+      "cold_index": {
+        "index_ms_median": 1538,
+        "wall_ms_median": 1756.0010839952156,
+        "index_ms_samples": [
+          1963,
+          1538,
+          1537
+        ],
+        "wall_ms_samples": [
+          2175.0,
+          1753.1,
+          1756.0
+        ]
+      },
+      "warm_index": {
+        "index_ms_median": 195,
+        "wall_ms_median": 411.84604199952446,
+        "index_ms_samples": [
+          194,
+          195,
+          194,
+          197,
+          212
+        ],
+        "wall_ms_samples": [
+          409.6,
+          410.3,
+          411.8,
+          418.8,
+          432.3
+        ]
+      },
+      "query": {
+        "query_ms_p50": 158,
+        "query_ms_p95": 246,
+        "wall_ms_p50": 362.7,
+        "wall_ms_p95": 451.2,
+        "query_ms_samples": [
+          200,
+          148,
+          136,
+          158,
+          127,
+          133,
+          136,
+          183,
+          168,
+          247,
+          200,
+          146,
+          136,
+          158,
+          131,
+          132,
+          138,
+          186,
+          169,
+          246
+        ],
+        "wall_ms_samples": [
+          412.2,
+          357.7,
+          347.2,
+          368.3,
+          334.7,
+          339.1,
+          341.1,
+          393.6,
+          375.5,
+          456.1,
+          405.3,
+          354.1,
+          343.8,
+          362.7,
+          340.0,
+          339.0,
+          348.3,
+          394.8,
+          372.9,
+          451.2
+        ]
+      }
+    }
+  }
+}
