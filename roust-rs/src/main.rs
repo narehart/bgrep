@@ -3,7 +3,7 @@
 //!     roust [--json] [--files-only] [--budget N=8192] [--k N]
 //!              [--no-cache] [--reindex]
 //!              [--no-history] [--no-docs] [--no-anchors] [--no-testbridge]
-//!              [--explain] [--include-preamble N] QUERY PATH
+//!              [--explain] [--include-preamble N] [--preamble-top-k N] QUERY PATH
 //!
 //! Runs the frozen-v7 retrieval pipeline (roust::core, roust::cache,
 //! roust::history) against a repo and prints a token-budgeted,
@@ -105,6 +105,15 @@ struct Args {
     /// region(s); 0 (default) is OFF, byte-identical output (E15)
     #[arg(long, default_value_t = 0)]
     include_preamble: i64,
+
+    /// restrict --include-preamble's forced preamble to only the top N
+    /// ranked files (rank = position in the ranked file order returned by
+    /// file selection); only meaningful when --include-preamble > 0 --
+    /// guards against the unrestricted-k pathology where every returned
+    /// file's protected preamble alone exceeds --budget and evicts every
+    /// non-preamble region (E15 amendment)
+    #[arg(long, default_value_t = 3)]
+    preamble_top_k: i64,
 }
 
 fn main() {
@@ -120,6 +129,10 @@ fn main() {
     }
     if args.include_preamble < 0 {
         eprintln!("roust: error: --include-preamble must be >= 0");
+        std::process::exit(2);
+    }
+    if args.preamble_top_k < 0 {
+        eprintln!("roust: error: --preamble-top-k must be >= 0");
         std::process::exit(2);
     }
 
@@ -182,6 +195,7 @@ fn main() {
         Some(&anchor_symbols),
         0.0,
         args.include_preamble as usize,
+        args.preamble_top_k as usize,
     );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 

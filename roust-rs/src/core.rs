@@ -2488,6 +2488,26 @@ fn compute_preamble_span(rel: &str, text: &str, n: usize) -> Option<(usize, usiz
 /// gain metric and tie-break order. This can leave the bundle over budget
 /// if the protected spans alone already exceed it; that is the deliberate
 /// trade-off of "preambles are never evicted."
+///
+/// `preamble_top_k` (E15 amendment, issue "restrict preamble to top-ranked
+/// files"): the smoke test on the unrestricted (all-files) version of this
+/// flag showed the pathology this amendment exists to prevent -- with
+/// unrestricted `k` (~26 returned files), N=30-line protected preambles on
+/// EVERY file cost ~9,900 tokens, over the whole 8,192 budget on their own,
+/// and the eviction step above then removed every non-preamble span, since
+/// preambles are never themselves evictable. The E13 gold-line mining that
+/// motivated E15 in the first place shows the preamble-miss mass
+/// concentrates in gold files, which rank near the top (File@10 82.7%), so
+/// restricting force-inclusion to only the first `preamble_top_k` entries of
+/// `files` (i.e. this function's own `files` parameter, in the RANKED order
+/// its caller passes -- `select_files`' output order, unchanged by this
+/// function) captures most of that mass at a fraction of the token cost. A
+/// file at rank `>= preamble_top_k` is entirely unaffected by
+/// `include_preamble`: its selected region(s) are packed exactly as they'd
+/// be with `include_preamble == 0`, not merged, not protected, ordinarily
+/// evictable. Only meaningful when `include_preamble > 0`; ignored
+/// otherwise (the `include_preamble == 0` path returns before this
+/// parameter is ever read).
 pub fn pack_regions(
     corpus: &Corpus,
     files: &[String],
@@ -2498,6 +2518,7 @@ pub fn pack_regions(
     anchor_symbols: Option<&IndexMap<String, Vec<String>>>,
     w_name: f64,
     include_preamble: usize,
+    preamble_top_k: usize,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2845,7 +2866,7 @@ pub fn pack_regions(
     }
 
     let mut finals: Vec<FinalSpan> = Vec::new();
-    for rel in files {
+    for (rank, rel) in files.iter().enumerate() {
         let idxs = match chosen_map.get(rel) {
             Some(v) if !v.is_empty() => v,
             _ => continue,
@@ -2856,7 +2877,16 @@ pub fn pack_regions(
         let text_full = &corpus.text[rel];
         let full_lines = py_splitlines(text_full);
         let n_lines = full_lines.len();
-        let preamble = compute_preamble_span(rel, text_full, include_preamble);
+        // preamble_top_k: only the first `preamble_top_k` ranked files (see
+        // this function's own doc comment) are even eligible for the
+        // force-included preamble span -- a file at rank >= preamble_top_k
+        // takes the exact `None` path below, identical to include_preamble
+        // == 0 for that file alone.
+        let preamble = if rank < preamble_top_k {
+            compute_preamble_span(rel, text_full, include_preamble)
+        } else {
+            None
+        };
 
         match preamble {
             None => {
@@ -3136,10 +3166,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 3);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0, 3);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -3183,8 +3213,8 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 3);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 3);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
 
@@ -3233,10 +3263,10 @@ mod tests {
         // remaining candidates per iteration -- the exact scenario that
         // triggers repeated `marginal(i)` calls for the same `i` within a
         // single sort.
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 3);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 3);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls given many equal/near-equal marginal scores (and must never panic)"
@@ -3294,7 +3324,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0, 3);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 
@@ -3428,7 +3458,7 @@ mod tests {
         let files = vec!["core.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 0);
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 0, 3);
         let file_spans = &spans["core.py"];
         assert_eq!(file_spans, &vec![(19, 21)], "default (0) must select only target_symbol's own block, no preamble");
 
@@ -3461,10 +3491,10 @@ mod tests {
         // helper_one's own block (9..13) is selected -- confirms the merge
         // below is genuinely due to E15, not some other candidate already
         // spanning the gap.
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 10, &count_tokens, None, 0.0, 0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 10, &count_tokens, None, 0.0, 0, 3);
         assert_eq!(spans_off["core.py"], vec![(9, 13)]);
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 10, &count_tokens, None, 0.0, 8);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 10, &count_tokens, None, 0.0, 8, 3);
         let file_spans = &spans_on["core.py"];
         assert_eq!(file_spans.len(), 1, "preamble (1..8) touches the selected span (9..13) and must merge into one");
         assert_eq!(file_spans[0], (1, 13));
@@ -3492,7 +3522,7 @@ mod tests {
         // N=3 (well under the full 8-line preamble, and well short of
         // touching target_symbol's block at line 19): must produce a
         // separate (1, 3) span, NOT (1, 8) and NOT merged with (19, 21).
-        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 3);
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 3, 3);
         let mut file_spans = spans["core.py"].clone();
         file_spans.sort();
         assert_eq!(file_spans, vec![(1, 3), (19, 21)], "cap must be respected exactly, and the gap must prevent a merge");
@@ -3515,9 +3545,9 @@ mod tests {
         let files = vec!["core.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 1000, &count_tokens, None, 0.0, 8);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 1000, &count_tokens, None, 0.0, 8, 3);
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 1000, &count_tokens, None, 0.0, 8);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 1000, &count_tokens, None, 0.0, 8, 3);
             assert_eq!(spans, first, "pack_regions with include_preamble > 0 must be deterministic across repeated calls");
         }
 
@@ -3552,7 +3582,7 @@ mod tests {
 
         // Baseline (flag off, budget=20): both helper_one and target_symbol
         // fit and are selected -- neither the preamble nor anything else.
-        let (spans_baseline, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 0);
+        let (spans_baseline, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 0, 3);
         let mut baseline = spans_baseline["core.py"].clone();
         baseline.sort();
         assert_eq!(baseline, vec![(9, 13), (19, 21)], "baseline: both blocks selected under this budget with the flag off");
@@ -3561,7 +3591,7 @@ mod tests {
         // of 3 lines): total now exceeds budget=20, so the lowest-gain
         // non-preamble span (helper_one) must be evicted, keeping the
         // protected preamble and the higher-gain target_symbol span.
-        let (spans_tight, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 5);
+        let (spans_tight, _) = pack_regions(&corpus, &files, &terms, &scores, 20, &count_tokens, None, 0.0, 5, 3);
         let mut file_spans = spans_tight["core.py"].clone();
         file_spans.sort();
         assert_eq!(
@@ -3569,6 +3599,149 @@ mod tests {
             vec![(1, 5), (19, 21)],
             "the low-gain helper_one span must be evicted while the protected preamble and target_symbol survive"
         );
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    // ---------------------------------------------------------------- E15 amendment: preamble_top_k
+
+    /// `preamble_top_k` (E15 amendment): a file at rank >= preamble_top_k in
+    /// the `files` order gets NO forced preamble at all -- its spans are
+    /// exactly what ordinary (non-E15) selection/eviction would produce,
+    /// while a rank < preamble_top_k file still gets the full E15 treatment
+    /// (forced span, protected from eviction). Two identical-content files
+    /// (via `many_files_preamble_fixture`, below) so any difference in
+    /// outcome is attributable ONLY to rank, not content; `mod1.go` (rank 1)
+    /// sits outside `preamble_top_k == 1`. Uses the same non-Python, single-
+    /// candidate-per-file fixture as the many-files pathology test below (a
+    /// generous budget is safe here specifically BECAUSE each file has
+    /// exactly one real candidate -- there is nothing left for pass 2 to
+    /// greedily add, unlike a `.py` fixture where python_blocks' own
+    /// always-present zero-term "leading preamble" candidate would
+    /// otherwise confound a large budget).
+    #[test]
+    fn pack_regions_preamble_top_k_excludes_lower_ranked_file() {
+        let tmp = std::env::temp_dir().join(format!("roust_preamble_topk_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let names = many_files_preamble_fixture(&tmp, 2);
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("how is the token budget enforced", &[]);
+        let scores: IndexMap<String, f64> = names.iter().map(|f| (f.clone(), 1.0)).collect();
+        // names[0] ("mod0.go") ranked first, names[1] ("mod1.go") second --
+        // this ordering, not `scores`, is what pack_regions treats as rank.
+        let files = names.clone();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 10_000, &count_tokens, None, 0.0, 30, 1);
+
+        let mut rank0_spans = spans[names[0].as_str()].clone();
+        rank0_spans.sort();
+        assert_eq!(
+            rank0_spans,
+            vec![(1, 30), (36, 75)],
+            "rank 0 (< preamble_top_k) must still get its forced preamble"
+        );
+
+        let mut rank1_spans = spans[names[1].as_str()].clone();
+        rank1_spans.sort();
+        assert_eq!(
+            rank1_spans,
+            vec![(36, 75)],
+            "rank 1 (>= preamble_top_k == 1) must get NO forced preamble, identical to include_preamble == 0 for that file"
+        );
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// Builds `n_files` `.go` files (non-Python, so `window_blocks` is used
+    /// and there is no python_blocks-only "leading preamble" candidate to
+    /// account for): each file is `filler0..filler29` (a 30-line preamble
+    /// candidate, one word per line), a 35-line word-gap so the query hit
+    /// falls well clear of that preamble's own end (avoiding an incidental
+    /// merge), one hit line ("token budget enforced", the file's only real
+    /// candidate), then a 9-line tail. Every file is byte-identical modulo
+    /// filename, so BM25/idf/gain are tied bit-for-bit across all of them --
+    /// the only thing that can distinguish outcomes is rank (`files`' own
+    /// order) via `preamble_top_k`.
+    fn many_files_preamble_fixture(tmp: &Path, n_files: usize) -> Vec<String> {
+        let mut names = Vec::new();
+        for i in 0..n_files {
+            let mut lines: Vec<String> = Vec::new();
+            for j in 0..30 {
+                lines.push(format!("filler{j}"));
+            }
+            for j in 0..35 {
+                lines.push(format!("gap{j}"));
+            }
+            lines.push("token budget enforced".to_string());
+            for j in 0..9 {
+                lines.push(format!("tail{j}"));
+            }
+            let text = lines.join("\n") + "\n";
+            let name = format!("mod{i}.go");
+            std::fs::write(tmp.join(&name), text).unwrap();
+            names.push(name);
+        }
+        names
+    }
+
+    /// The smoke-test pathology this amendment exists to fix, reproduced at
+    /// unit-test scale: with preamble force-included on EVERY returned file
+    /// (`preamble_top_k` unrestricted, i.e. >= file count), the protected
+    /// preambles alone can push total spend over budget and evict every
+    /// file's actual (deep, non-preamble) matched region -- since preambles
+    /// are never themselves eviction candidates. With the DEFAULT
+    /// `preamble_top_k == 3`, only the top 3 ranked files carry the extra
+    /// preamble cost, so the same budget comfortably fits every file's deep
+    /// region intact, with no eviction at all.
+    #[test]
+    fn pack_regions_preamble_top_k_default_survives_many_files_pathology() {
+        let tmp = std::env::temp_dir().join(format!("roust_preamble_manyfiles_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let names = many_files_preamble_fixture(&tmp, 10);
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("how is the token budget enforced", &[]);
+        let scores: IndexMap<String, f64> = names.iter().map(|f| (f.clone(), 1.0)).collect();
+        let files = names.clone();
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        // Deep region (36, 75), 42 words; preamble (1, 30), 30 words (per
+        // file). budget=560: unrestricted preamble cost alone (10 * 30 =
+        // 300) plus all 10 deep regions (420) totals 720 > 560, forcing
+        // evictions among the (unprotected) deep regions; restricted to the
+        // top 3, preamble cost is only 90, totalling 510 <= 560 -- fits with
+        // room to spare, no eviction needed.
+        let budget = 560;
+
+        // Pathology: preamble_top_k == n_files (effectively unrestricted).
+        let (spans_unrestricted, _) =
+            pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 30, names.len());
+        for f in &files {
+            let s = &spans_unrestricted[f];
+            assert!(s.iter().any(|&(a, _)| a == 1), "preamble is protected -- must survive on every file: {f}");
+        }
+        let survived_unrestricted =
+            files.iter().filter(|f| spans_unrestricted[f.as_str()].iter().any(|&(a, _)| a == 36)).count();
+        assert!(
+            survived_unrestricted < names.len(),
+            "unrestricted preamble must evict at least one file's deep region under this budget (got {survived_unrestricted}/{})",
+            names.len()
+        );
+
+        // Fix: preamble_top_k == 3 (the shipped default).
+        let (spans_default, _) =
+            pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 30, 3);
+        for (i, f) in files.iter().enumerate() {
+            let s = &spans_default[f.as_str()];
+            assert!(s.iter().any(|&(a, _)| a == 36), "deep region must survive on every file with default top-k=3: {f}");
+            if i < 3 {
+                assert!(s.iter().any(|&(a, _)| a == 1), "rank {i} (< 3) must still get its forced preamble: {f}");
+            } else {
+                assert!(!s.iter().any(|&(a, _)| a == 1), "rank {i} (>= 3) must get NO forced preamble: {f}");
+            }
+        }
 
         std::fs::remove_dir_all(&tmp).ok();
     }
