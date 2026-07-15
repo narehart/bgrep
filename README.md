@@ -132,11 +132,41 @@ this signal is calibrated for realistic-size repositories; a tiny
 few-file toy repo can legitimately score below the threshold even on a
 genuinely on-topic query.
 
+### Output size: agents vs humans
+
+The default `--budget 8192` is sized for LLM context windows, not for a human
+scrolling a terminal. A coding agent reads the bundle selectively, and
+roust's recall-first packing is measured against that use case: 93.3%
+agent-loop solve rate. A human reading the same bundle top-to-bottom will
+find it broad by design -- region precision is intentionally traded for
+recall, so the bundle covers as many candidate edit sites as fit in the
+budget rather than just the single best match.
+
+For hand use, shrink the bundle instead of reading past it:
+
+```bash
+# Quarter-size bundle, same latency, best-ranked content first
+roust "connection pooling" ~/code/httpx --budget 2048
+
+# Cap the file count directly
+roust "connection pooling" ~/code/httpx --k 8
+
+# Scannable list instead of packed code
+roust "connection pooling" ~/code/httpx --files-only
+```
+
+One honest caveat: shrinking the budget trades away recall roughly linearly
+(measured -- see issue #4's tail-cut experiment log), so leave the default
+alone for agent use.
+
 ## Using with coding agents
 
 This is the point of the tool: an agent that reaches for `roust` before
 `grep` gets the files it needs in one shot, without needing to iterate on
-search terms across a much larger result set.
+search terms across a much larger result set. Don't lower `--budget` in
+agent configs -- the breadth is the product, since the agent reads
+selectively rather than top-to-bottom; a smaller budget just trades away
+measured recall for no benefit to the agent.
 
 ### Claude Code
 

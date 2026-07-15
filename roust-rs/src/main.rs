@@ -52,11 +52,13 @@ struct Args {
     #[arg(default_value = ".")]
     path: String,
 
-    /// token budget for the packed bundle
+    /// token budget for the packed bundle (default 8192, sized for LLM
+    /// context; humans reading by hand may prefer 2048)
     #[arg(long, default_value_t = 8192)]
     budget: i64,
 
-    /// cap the number of returned files, 0 = no cap
+    /// cap the number of returned files, 0 = no cap (humans reading by hand
+    /// may prefer --k 8 for a tighter, scannable list)
     #[arg(long, default_value_t = 0)]
     k: i64,
 
