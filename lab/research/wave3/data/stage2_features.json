@@ -1,0 +1,3978 @@
+[
+  {
+    "instance_id": "pallets__flask-5063",
+    "repo": "pallets/flask",
+    "d_mass": 56,
+    "n_query_terms": 74,
+    "error": null,
+    "files": [
+      {
+        "file": "src/flask/cli.py",
+        "d_lines": 56,
+        "n_functions_in_file": 34,
+        "gold": {
+          "qual": "routes_command",
+          "span": [
+            988,
+            1034
+          ],
+          "density": 0.06250497789025185,
+          "rank": 13,
+          "n_lines": 47,
+          "tok": 409,
+          "seg_terms": [
+            "all",
+            "app",
+            "default",
+            "endpoint",
+            "flask",
+            "method",
+            "regist",
+            "request",
+            "rout",
+            "rule",
+            "url",
+            "when",
+            "will"
+          ],
+          "name_subtokens": [
+            "rout",
+            "command"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "Choice",
+            "attrgetter",
+            "command",
+            "echo",
+            "format",
+            "iter_rules",
+            "join",
+            "len",
+            "list",
+            "max",
+            "option",
+            "rstrip",
+            "set",
+            "sorted",
+            "strip",
+            "zip"
+          ]
+        },
+        "chosen": {
+          "qual": "_env_file_callback",
+          "span": [
+            446,
+            466
+          ],
+          "density": 0.1293421021260017,
+          "rank": 1,
+          "n_lines": 21,
+          "tok": 131,
+          "seg_terms": [
+            "check",
+            "dotenv",
+            "env",
+            "file",
+            "flask",
+            "flaskenv",
+            "install",
+            "python"
+          ],
+          "name_subtokens": [
+            "env",
+            "file",
+            "callback"
+          ],
+          "raises": [],
+          "excepts": [
+            "ImportError"
+          ],
+          "calls": [
+            "BadParameter",
+            "import_module",
+            "load_dotenv"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "rout"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "env",
+            "file"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "iter_rules"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "load_dotenv"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 522,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 2.238095238095238,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "endpoint",
+            "rule",
+            "all",
+            "when",
+            "regist",
+            "method",
+            "default",
+            "will",
+            "rout",
+            "url",
+            "request",
+            "app"
+          ],
+          "gold_only_max_idf": 1.6158688027643908,
+          "chosen_only_terms": [
+            "flaskenv",
+            "dotenv",
+            "install",
+            "env",
+            "python",
+            "file",
+            "check"
+          ],
+          "chosen_only_max_idf": 3.1039458581942236,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-20154",
+    "repo": "sympy/sympy",
+    "d_mass": 39,
+    "n_query_terms": 43,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/utilities/iterables.py",
+        "d_lines": 39,
+        "n_functions_in_file": 60,
+        "gold": {
+          "qual": "partitions",
+          "span": [
+            1696,
+            1847
+          ],
+          "density": 0.03839512392040814,
+          "rank": 26,
+          "n_lines": 152,
+          "tok": 1242,
+          "seg_terms": [
+            "are",
+            "copy",
+            "dictionari",
+            "give",
+            "iterabl",
+            "list",
+            "partition",
+            "reus",
+            "sympi",
+            "utiliti",
+            "way",
+            "yield"
+          ],
+          "name_subtokens": [
+            "partition"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "append",
+            "as_int",
+            "bool",
+            "divmod",
+            "min",
+            "pop",
+            "sum",
+            "values"
+          ]
+        },
+        "chosen": {
+          "qual": "filter_symbols",
+          "span": [
+            642,
+            664
+          ],
+          "density": 0.1271997625167453,
+          "rank": 1,
+          "n_lines": 23,
+          "tok": 93,
+          "seg_terms": [
+            "iterabl",
+            "iterat",
+            "yield"
+          ],
+          "name_subtokens": [
+            "filt",
+            "symbol"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "set"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "partition"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": [
+            "multiset_partitions"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 1032,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 6.608695652173913,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "reus",
+            "partition",
+            "copy",
+            "dictionari",
+            "way",
+            "give",
+            "utiliti",
+            "list",
+            "are",
+            "sympi"
+          ],
+          "gold_only_max_idf": 5.49865742884467,
+          "chosen_only_terms": [
+            "iterat"
+          ],
+          "chosen_only_max_idf": 2.8531275847237936,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-13265",
+    "repo": "django/django",
+    "d_mass": 37,
+    "n_query_terms": 95,
+    "error": null,
+    "files": [
+      {
+        "file": "django/db/migrations/autodetector.py",
+        "d_lines": 37,
+        "n_functions_in_file": 42,
+        "gold": {
+          "qual": "MigrationAutodetector.generate_created_models",
+          "span": [
+            509,
+            682
+          ],
+          "density": 0.09058433455451044,
+          "rank": 24,
+          "n_lines": 174,
+          "tok": 1394,
+          "seg_terms": [
+            "add",
+            "addindex",
+            "alter",
+            "alterorderwithrespectto",
+            "auto",
+            "auto_creat",
+            "creat",
+            "createmodel",
+            "deletion",
+            "field",
+            "foreign",
+            "has",
+            "index",
+            "key",
+            "meta",
+            "model",
+            "model_nam",
+            "name",
+            "operation",
+            "order",
+            "order_with_respect_to",
+            "other",
+            "primari",
+            "primary_kei",
+            "relat",
+            "respect"
+          ],
+          "name_subtokens": [
+            "generat",
+            "creat",
+            "model"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "AddConstraint",
+            "AddField",
+            "AddIndex",
+            "AlterField",
+            "AlterIndexTogether",
+            "AlterOrderWithRespectTo",
+            "AlterUniqueTogether",
+            "CreateModel",
+            "_get_dependencies_for_foreign_key",
+            "add_operation",
+            "append",
+            "chain",
+            "difference",
+            "get",
+            "get_model",
+            "getattr",
+            "intersection",
+            "isinstance",
+            "items",
+            "list",
+            "pop",
+            "set",
+            "sorted",
+            "split"
+          ]
+        },
+        "chosen": {
+          "qual": "MigrationAutodetector.generate_added_indexes",
+          "span": [
+            1015,
+            1024
+          ],
+          "density": 0.35188131123415206,
+          "rank": 1,
+          "n_lines": 10,
+          "tok": 63,
+          "seg_terms": [
+            "add",
+            "addindex",
+            "alter",
+            "index",
+            "model",
+            "model_nam",
+            "name",
+            "operation"
+          ],
+          "name_subtokens": [
+            "generat",
+            "add",
+            "index"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "AddIndex",
+            "add_operation",
+            "items"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "creat",
+            "model"
+          ],
+          "n": 2
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "add",
+            "index"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "AddConstraint",
+            "AddField",
+            "AddIndex",
+            "AlterField",
+            "AlterIndexTogether",
+            "AlterOrderWithRespectTo",
+            "AlterUniqueTogether",
+            "CreateModel",
+            "_get_dependencies_for_foreign_key",
+            "add_operation",
+            "get_model"
+          ],
+          "called_by_query_match": [
+            "MigrationAutodetector.generate_deleted_models"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "AddIndex",
+            "add_operation"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 333,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 17.4,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "alterorderwithrespectto",
+            "order_with_respect_to",
+            "respect",
+            "deletion",
+            "auto_creat",
+            "createmodel",
+            "primary_kei",
+            "primari",
+            "foreign",
+            "auto",
+            "relat",
+            "other",
+            "order",
+            "meta",
+            "has",
+            "key",
+            "creat",
+            "field"
+          ],
+          "gold_only_max_idf": 5.796291532180814,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25500",
+    "repo": "scikit-learn/scikit-learn",
+    "d_mass": 36,
+    "n_query_terms": 174,
+    "error": null,
+    "files": [
+      {
+        "file": "sklearn/isotonic.py",
+        "d_lines": 36,
+        "n_functions_in_file": 13,
+        "gold": {
+          "qual": "IsotonicRegression.transform",
+          "span": [
+            363,
+            398
+          ],
+          "density": 0.054860398957583024,
+          "rank": 5,
+          "n_lines": 36,
+          "tok": 232,
+          "seg_terms": [
+            "arrai",
+            "input",
+            "linear",
+            "pred",
+            "reshap",
+            "scipi",
+            "shap",
+            "transform"
+          ],
+          "name_subtokens": [
+            "transform"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_check_input_data_shape",
+            "astype",
+            "check_array",
+            "clip",
+            "f_",
+            "hasattr",
+            "reshape"
+          ]
+        },
+        "chosen": {
+          "qual": "IsotonicRegression._check_input_data_shape",
+          "span": [
+            244,
+            250
+          ],
+          "density": 0.1543176809173981,
+          "rank": 1,
+          "n_lines": 7,
+          "tok": 75,
+          "seg_terms": [
+            "arrai",
+            "input",
+            "isotonic",
+            "regression",
+            "shap",
+            "should",
+            "valu",
+            "valueerr"
+          ],
+          "name_subtokens": [
+            "check",
+            "input",
+            "data",
+            "shap"
+          ],
+          "raises": [
+            "ValueError"
+          ],
+          "excepts": [],
+          "calls": [
+            "ValueError"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "transform"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "input",
+            "shap"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_check_input_data_shape",
+            "check_array",
+            "reshape"
+          ],
+          "called_by_query_match": [
+            "IsotonicRegression.predict"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "ValueError"
+          ],
+          "called_by_query_match": [
+            "IsotonicRegression.transform"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [
+            "ValueError"
+          ],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "ValueError"
+        ],
+        "adjacency": {
+          "line_distance": 113,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 5.142857142857143,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "pred",
+            "reshap",
+            "transform",
+            "scipi",
+            "linear"
+          ],
+          "gold_only_max_idf": 1.4834820350218425,
+          "chosen_only_terms": [
+            "isotonic",
+            "valueerr",
+            "regression",
+            "should",
+            "valu"
+          ],
+          "chosen_only_max_idf": 4.306412512122475,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-11445",
+    "repo": "sphinx-doc/sphinx",
+    "d_mass": 35,
+    "n_query_terms": 97,
+    "error": null,
+    "files": [
+      {
+        "file": "sphinx/util/rst.py",
+        "d_lines": 35,
+        "n_functions_in_file": 7,
+        "gold": null,
+        "chosen": {
+          "qual": "heading",
+          "span": [
+            54,
+            60
+          ],
+          "density": 0.16589134292545307,
+          "rank": 1,
+          "n_lines": 7,
+          "tok": 83,
+          "seg_terms": [
+            "environment",
+            "head",
+            "languag",
+            "level",
+            "text"
+          ],
+          "name_subtokens": [
+            "head"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "textwidth"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "head"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": null,
+        "length_ratio_gold_over_chosen": null,
+        "rare_term_feature": null
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-20322",
+    "repo": "sympy/sympy",
+    "d_mass": 34,
+    "n_query_terms": 18,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/core/mul.py",
+        "d_lines": 34,
+        "n_functions_in_file": 77,
+        "gold": {
+          "qual": "Mul._eval_is_integer",
+          "span": [
+            1265,
+            1285
+          ],
+          "density": 0.021873435631899207,
+          "rank": 6,
+          "n_lines": 21,
+          "tok": 161,
+          "seg_terms": [
+            "even",
+            "sympi"
+          ],
+          "name_subtokens": [
+            "eval",
+            "integ"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_eval_is_rational",
+            "atoms",
+            "bool",
+            "fraction",
+            "fuzzy_and",
+            "fuzzy_not"
+          ]
+        },
+        "chosen": {
+          "qual": "Mul._eval_is_even",
+          "span": [
+            1483,
+            1490
+          ],
+          "density": 0.0636368622604406,
+          "rank": 1,
+          "n_lines": 8,
+          "tok": 39,
+          "seg_terms": [
+            "even"
+          ],
+          "name_subtokens": [
+            "eval",
+            "even"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "fuzzy_not"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "even"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 198,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 2.625,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "sympi"
+          ],
+          "gold_only_max_idf": 0.03978550857858929,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-20639",
+    "repo": "sympy/sympy",
+    "d_mass": 34,
+    "n_query_terms": 23,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/printing/pretty/pretty.py",
+        "d_lines": 34,
+        "n_functions_in_file": 225,
+        "gold": {
+          "qual": "PrettyPrinter._print_nth_root",
+          "span": [
+            1905,
+            1948
+          ],
+          "density": 0.030603208070445385,
+          "rank": 197,
+          "n_lines": 44,
+          "tok": 477,
+          "seg_terms": [
+            "exp",
+            "just",
+            "pretti",
+            "print"
+          ],
+          "name_subtokens": [
+            "print",
+            "nth",
+            "root"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_print",
+            "above",
+            "height",
+            "hobj",
+            "isinstance",
+            "join",
+            "left",
+            "len",
+            "ljust",
+            "max",
+            "prettyForm",
+            "range",
+            "right",
+            "str",
+            "stringPict",
+            "width",
+            "xobj"
+          ]
+        },
+        "chosen": {
+          "qual": "PrettyPrinter.emptyPrinter",
+          "span": [
+            54,
+            55
+          ],
+          "density": 0.33309868229491213,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 15,
+          "seg_terms": [
+            "pretti",
+            "print"
+          ],
+          "name_subtokens": [
+            "empti",
+            "print"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "prettyForm",
+            "str"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_print",
+            "prettyForm"
+          ],
+          "called_by_query_match": [
+            "PrettyPrinter._print_Pow"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "prettyForm"
+          ],
+          "called_by_query_match": [
+            "PrettyPrinter._print_Atom",
+            "PrettyPrinter._print_Fraction",
+            "PrettyPrinter._print_GeometryEntity",
+            "PrettyPrinter._print_Quantity",
+            "PrettyPrinter._print_Rational"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 1850,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 22.0,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "just",
+            "exp"
+          ],
+          "gold_only_max_idf": 1.9507222997443814,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-15202",
+    "repo": "django/django",
+    "d_mass": 29,
+    "n_query_terms": 39,
+    "error": null,
+    "files": [
+      {
+        "file": "django/core/validators.py",
+        "d_lines": 29,
+        "n_functions_in_file": 37,
+        "gold": {
+          "qual": "URLValidator.__call__",
+          "span": [
+            100,
+            143
+          ],
+          "density": 0.09636600462127602,
+          "rank": 15,
+          "n_lines": 44,
+          "tok": 456,
+          "seg_terms": [
+            "__call__",
+            "call",
+            "invalid",
+            "ipv6",
+            "one",
+            "url",
+            "urlsplit",
+            "validat",
+            "validation",
+            "validationerr",
+            "valu",
+            "valueerr"
+          ],
+          "name_subtokens": [
+            "call"
+          ],
+          "raises": [
+            "ValidationError",
+            "e"
+          ],
+          "excepts": [
+            "UnicodeError",
+            "ValidationError",
+            "ValueError"
+          ],
+          "calls": [
+            "ValidationError",
+            "__call__",
+            "intersection",
+            "isinstance",
+            "len",
+            "lower",
+            "punycode",
+            "search",
+            "split",
+            "super",
+            "urlsplit",
+            "urlunsplit",
+            "validate_ipv6_address"
+          ]
+        },
+        "chosen": {
+          "qual": "validate_ipv6_address",
+          "span": [
+            265,
+            267
+          ],
+          "density": 0.4387318385475322,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 39,
+          "seg_terms": [
+            "invalid",
+            "ipv6",
+            "validat",
+            "validation",
+            "validationerr",
+            "valu"
+          ],
+          "name_subtokens": [
+            "validat",
+            "ipv",
+            "address"
+          ],
+          "raises": [
+            "ValidationError"
+          ],
+          "excepts": [],
+          "calls": [
+            "ValidationError",
+            "_",
+            "is_valid_ipv6_address"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "call"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "validat"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "ValidationError",
+            "__call__",
+            "urlsplit",
+            "validate_ipv6_address"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "ValidationError"
+          ],
+          "called_by_query_match": [
+            "URLValidator.__call__",
+            "validate_ipv46_address"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [
+            "ValidationError"
+          ],
+          "excepts_query_exc": [
+            "ValidationError",
+            "ValueError"
+          ]
+        },
+        "exc_chosen": {
+          "raises_query_exc": [
+            "ValidationError"
+          ],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "ValidationError",
+          "ValueError"
+        ],
+        "adjacency": {
+          "line_distance": 122,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 14.666666666666666,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "urlsplit",
+            "__call__",
+            "valueerr",
+            "call",
+            "url",
+            "one"
+          ],
+          "gold_only_max_idf": 5.337080099386466,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7490",
+    "repo": "pytest-dev/pytest",
+    "d_mass": 29,
+    "n_query_terms": 416,
+    "error": null,
+    "files": [
+      {
+        "file": "src/_pytest/skipping.py",
+        "d_lines": 29,
+        "n_functions_in_file": 10,
+        "gold": {
+          "qual": "pytest_runtest_setup",
+          "span": [
+            232,
+            244
+          ],
+          "density": 0.09062078576982797,
+          "rank": 3,
+          "n_lines": 13,
+          "tok": 117,
+          "seg_terms": [
+            "item",
+            "mark",
+            "pytest",
+            "reason",
+            "xfail"
+          ],
+          "name_subtokens": [
+            "pytest",
+            "runtest",
+            "setup"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "evaluate_skip_marks",
+            "evaluate_xfail_marks",
+            "hookimpl",
+            "skip",
+            "xfail"
+          ]
+        },
+        "chosen": {
+          "qual": "pytest_addoption",
+          "span": [
+            29,
+            45
+          ],
+          "density": 0.09119266388952062,
+          "rank": 1,
+          "n_lines": 17,
+          "tok": 113,
+          "seg_terms": [
+            "default",
+            "mark",
+            "pytest",
+            "test",
+            "xfail"
+          ],
+          "name_subtokens": [
+            "pytest",
+            "addoption"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "addini",
+            "addoption",
+            "getgroup"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "pytest"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "pytest"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "evaluate_skip_marks",
+            "evaluate_xfail_marks",
+            "xfail"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "AssertionError"
+        ],
+        "adjacency": {
+          "line_distance": 187,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 0.7647058823529411,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "reason",
+            "item"
+          ],
+          "gold_only_max_idf": 1.656418121358293,
+          "chosen_only_terms": [
+            "default",
+            "test"
+          ],
+          "chosen_only_max_idf": 1.1506686506241628,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25638",
+    "repo": "scikit-learn/scikit-learn",
+    "d_mass": 29,
+    "n_query_terms": 72,
+    "error": null,
+    "files": [
+      {
+        "file": "sklearn/utils/multiclass.py",
+        "d_lines": 29,
+        "n_functions_in_file": 10,
+        "gold": {
+          "qual": "type_of_target",
+          "span": [
+            210,
+            367
+          ],
+          "density": 0.04435398274439097,
+          "rank": 8,
+          "n_lines": 158,
+          "tok": 1564,
+          "seg_terms": [
+            "are",
+            "arrai",
+            "binari",
+            "convert",
+            "data",
+            "dtyp",
+            "float",
+            "get",
+            "got",
+            "label",
+            "like",
+            "multiclass",
+            "numpi",
+            "object",
+            "panda",
+            "pass",
+            "rais",
+            "seri",
+            "should",
+            "sklearn",
+            "support",
+            "uniqu",
+            "unknown",
+            "used",
+            "util",
+            "valu",
+            "valueerr",
+            "you"
+          ],
+          "name_subtokens": [
+            "target"
+          ],
+          "raises": [
+            "ValueError"
+          ],
+          "excepts": [
+            "IndexError",
+            "ValueError"
+          ],
+          "calls": [
+            "ValueError",
+            "_assert_all_finite",
+            "any",
+            "asarray",
+            "astype",
+            "catch_warnings",
+            "get_namespace",
+            "getrow",
+            "hasattr",
+            "is_multilabel",
+            "isinstance",
+            "issparse",
+            "len",
+            "min",
+            "simplefilter",
+            "unique_values"
+          ]
+        },
+        "chosen": {
+          "qual": "_unique_multiclass",
+          "span": [
+            23,
+            28
+          ],
+          "density": 0.13905390718318242,
+          "rank": 1,
+          "n_lines": 6,
+          "tok": 50,
+          "seg_terms": [
+            "arrai",
+            "get",
+            "multiclass",
+            "uniqu",
+            "valu"
+          ],
+          "name_subtokens": [
+            "uniqu",
+            "multiclass"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "asarray",
+            "get_namespace",
+            "hasattr",
+            "set",
+            "unique_values"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "multiclass",
+            "uniqu"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "ValueError",
+            "get_namespace",
+            "unique_values"
+          ],
+          "called_by_query_match": [
+            "unique_labels"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "get_namespace",
+            "unique_values"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [
+            "ValueError"
+          ],
+          "excepts_query_exc": [
+            "ValueError"
+          ]
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "ValueError"
+        ],
+        "adjacency": {
+          "line_distance": 182,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 26.333333333333332,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "seri",
+            "unknown",
+            "panda",
+            "you",
+            "convert",
+            "got",
+            "binari",
+            "object",
+            "like",
+            "support",
+            "pass",
+            "valueerr",
+            "dtyp",
+            "should",
+            "float",
+            "label",
+            "used",
+            "rais",
+            "util",
+            "are",
+            "data",
+            "numpi",
+            "sklearn"
+          ],
+          "gold_only_max_idf": 2.695801579026011,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-12419",
+    "repo": "sympy/sympy",
+    "d_mass": 28,
+    "n_query_terms": 47,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/matrices/expressions/matexpr.py",
+        "d_lines": 28,
+        "n_functions_in_file": 76,
+        "gold": null,
+        "chosen": {
+          "qual": "MatrixSymbol._entry",
+          "span": [
+            422,
+            423
+          ],
+          "density": 0.16453021626848,
+          "rank": 2,
+          "n_lines": 2,
+          "tok": 20,
+          "seg_terms": [
+            "element",
+            "matrix"
+          ],
+          "name_subtokens": [
+            "entri"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "MatrixElement"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "MatrixElement"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": null,
+        "length_ratio_gold_over_chosen": null,
+        "rare_term_feature": null
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-15011",
+    "repo": "sympy/sympy",
+    "d_mass": 28,
+    "n_query_terms": 36,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/utilities/lambdify.py",
+        "d_lines": 28,
+        "n_functions_in_file": 22,
+        "gold": {
+          "qual": "_EvaluatorPrinter._preprocess",
+          "span": [
+            704,
+            744
+          ],
+          "density": 0.039719652204402336,
+          "rank": 6,
+          "n_lines": 41,
+          "tok": 324,
+          "seg_terms": [
+            "dummifi",
+            "name",
+            "symbol",
+            "sympi",
+            "vector"
+          ],
+          "name_subtokens": [
+            "preprocess"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "Dummy",
+            "_argrepr",
+            "_is_safe_ident",
+            "_preprocess",
+            "_subexpr",
+            "any",
+            "append",
+            "flatten",
+            "isinstance",
+            "iterable",
+            "str"
+          ]
+        },
+        "chosen": {
+          "qual": "isiter",
+          "span": [
+            583,
+            584
+          ],
+          "density": 0.11904325657892631,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 21,
+          "seg_terms": [
+            "vector"
+          ],
+          "name_subtokens": [
+            "isit"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "iterable"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "SyntaxError"
+        ],
+        "adjacency": {
+          "line_distance": 120,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 20.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "dummifi",
+            "name",
+            "symbol",
+            "sympi"
+          ],
+          "gold_only_max_idf": 6.180430646620605,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11019",
+    "repo": "django/django",
+    "d_mass": 27,
+    "n_query_terms": 83,
+    "error": null,
+    "files": [
+      {
+        "file": "django/forms/widgets.py",
+        "d_lines": 27,
+        "n_functions_in_file": 96,
+        "gold": null,
+        "chosen": {
+          "qual": "Media.__repr__",
+          "span": [
+            54,
+            55
+          ],
+          "density": 0.28433751562529336,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 29,
+          "seg_terms": [
+            "css",
+            "media"
+          ],
+          "name_subtokens": [
+            "repr"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "MediaOrderConflictWarning"
+        ],
+        "adjacency": null,
+        "length_ratio_gold_over_chosen": null,
+        "rare_term_feature": null
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-14308",
+    "repo": "sympy/sympy",
+    "d_mass": 26,
+    "n_query_terms": 19,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/printing/pretty/pretty.py",
+        "d_lines": 26,
+        "n_functions_in_file": 177,
+        "gold": {
+          "qual": "PrettyPrinter._print_BasisDependent",
+          "span": [
+            889,
+            964
+          ],
+          "density": 0.013634170177911072,
+          "rank": 173,
+          "n_lines": 76,
+          "tok": 681,
+          "seg_terms": [
+            "pretti",
+            "print",
+            "sympi",
+            "vector"
+          ],
+          "name_subtokens": [
+            "print",
+            "basi",
+            "dependent"
+          ],
+          "raises": [
+            "NotImplementedError"
+          ],
+          "excepts": [],
+          "calls": [
+            "NotImplementedError",
+            "__str__",
+            "_print",
+            "append",
+            "enumerate",
+            "isinstance",
+            "items",
+            "join",
+            "len",
+            "list",
+            "max",
+            "parens",
+            "prettyForm",
+            "range",
+            "replace",
+            "separate",
+            "sort",
+            "split",
+            "startswith",
+            "sum"
+          ]
+        },
+        "chosen": {
+          "qual": "PrettyPrinter._print_BaseScalarField",
+          "span": [
+            2241,
+            2243
+          ],
+          "density": 0.3015877489387525,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 34,
+          "seg_terms": [
+            "coord",
+            "pretti",
+            "print",
+            "sys"
+          ],
+          "name_subtokens": [
+            "print",
+            "base",
+            "scalar",
+            "field"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_print",
+            "pretty_symbol"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_print",
+            "prettyForm"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "_print",
+            "pretty_symbol"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 1277,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 25.333333333333332,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "vector",
+            "sympi"
+          ],
+          "gold_only_max_idf": 1.9769169017261783,
+          "chosen_only_terms": [
+            "coord",
+            "sys"
+          ],
+          "chosen_only_max_idf": 3.069159742108808,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-18869",
+    "repo": "matplotlib/matplotlib",
+    "d_mass": 25,
+    "n_query_terms": 117,
+    "error": null,
+    "files": [
+      {
+        "file": "lib/matplotlib/__init__.py",
+        "d_lines": 25,
+        "n_functions_in_file": 48,
+        "gold": {
+          "qual": "__getattr__",
+          "span": [
+            133,
+            151
+          ],
+          "density": 0.08227336965384496,
+          "rank": 3,
+          "n_lines": 19,
+          "tok": 201,
+          "seg_terms": [
+            "__version__",
+            "need",
+            "only",
+            "version",
+            "would"
+          ],
+          "name_subtokens": [
+            "getattr"
+          ],
+          "raises": [
+            "AttributeError"
+          ],
+          "excepts": [],
+          "calls": [
+            "AttributeError",
+            "Path",
+            "exists",
+            "get_version",
+            "resolve"
+          ]
+        },
+        "chosen": {
+          "qual": "_check_versions",
+          "span": [
+            154,
+            170
+          ],
+          "density": 0.10034591953836011,
+          "rank": 1,
+          "n_lines": 17,
+          "tok": 157,
+          "seg_terms": [
+            "__version__",
+            "befor",
+            "check",
+            "have",
+            "matplotlib",
+            "version",
+            "you"
+          ],
+          "name_subtokens": [
+            "check",
+            "version"
+          ],
+          "raises": [
+            "ImportError"
+          ],
+          "excepts": [],
+          "calls": [
+            "ImportError",
+            "import_module",
+            "parse_version"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "check",
+            "version"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "get_version"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "parse_version"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 3,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 1.1176470588235294,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "would",
+            "need",
+            "only"
+          ],
+          "gold_only_max_idf": 2.026565789631888,
+          "chosen_only_terms": [
+            "befor",
+            "check",
+            "you",
+            "have",
+            "matplotlib"
+          ],
+          "chosen_only_max_idf": 2.204604684633842,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-8801",
+    "repo": "sphinx-doc/sphinx",
+    "d_mass": 24,
+    "n_query_terms": 50,
+    "error": null,
+    "files": [
+      {
+        "file": "sphinx/ext/autodoc/importer.py",
+        "d_lines": 24,
+        "n_functions_in_file": 9,
+        "gold": {
+          "qual": "get_class_members",
+          "span": [
+            245,
+            318
+          ],
+          "density": 0.0748390685098335,
+          "rank": 5,
+          "n_lines": 74,
+          "tok": 588,
+          "seg_terms": [
+            "annotation",
+            "attr",
+            "attr1",
+            "attribut",
+            "autodoc",
+            "docstr",
+            "ext",
+            "memb",
+            "only",
+            "sphinx",
+            "superclass"
+          ],
+          "name_subtokens": [
+            "get",
+            "memb"
+          ],
+          "raises": [],
+          "excepts": [
+            "AttributeError",
+            "PycodeError",
+            "TypeError",
+            "ValueError"
+          ],
+          "calls": [
+            "ObjectMember",
+            "analyze",
+            "attrgetter",
+            "dir",
+            "for_module",
+            "getannotations",
+            "getmro",
+            "getslots",
+            "isenumclass",
+            "ismock",
+            "items",
+            "join",
+            "safe_getattr",
+            "undecorate",
+            "unmangle"
+          ]
+        },
+        "chosen": {
+          "qual": "_getannotations",
+          "span": [
+            178,
+            181
+          ],
+          "density": 0.13269288354706885,
+          "rank": 1,
+          "n_lines": 4,
+          "tok": 47,
+          "seg_terms": [
+            "autodoc",
+            "ext",
+            "sphinx"
+          ],
+          "name_subtokens": [
+            "getannotation"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "getannotations",
+            "warn"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "memb"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "ObjectMember"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 64,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 18.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "superclass",
+            "attr1",
+            "memb",
+            "docstr",
+            "attr",
+            "annotation",
+            "attribut",
+            "only"
+          ],
+          "gold_only_max_idf": 4.829202231363416,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-16792",
+    "repo": "sympy/sympy",
+    "d_mass": 24,
+    "n_query_terms": 102,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/utilities/codegen.py",
+        "d_lines": 24,
+        "n_functions_in_file": 90,
+        "gold": {
+          "qual": "CodeGen.routine",
+          "span": [
+            577,
+            745
+          ],
+          "density": 0.06729261762599137,
+          "rank": 48,
+          "n_lines": 169,
+          "tok": 1386,
+          "seg_terms": [
+            "arg",
+            "argument",
+            "arrai",
+            "but",
+            "can",
+            "code",
+            "defin",
+            "expr",
+            "expression",
+            "given",
+            "has",
+            "least",
+            "matrix",
+            "matrixsymbol",
+            "one",
+            "only",
+            "output",
+            "result",
+            "scalar",
+            "should",
+            "symbol",
+            "sympi",
+            "try",
+            "when",
+            "wheth",
+            "will"
+          ],
+          "name_subtokens": [
+            "routin"
+          ],
+          "raises": [
+            "CodeGenArgumentListError",
+            "CodeGenError",
+            "ValueError"
+          ],
+          "excepts": [
+            "KeyError"
+          ],
+          "calls": [
+            "CodeGenArgumentListError",
+            "CodeGenError",
+            "Equality",
+            "InOutArgument",
+            "InputArgument",
+            "MatrixSymbol",
+            "OutputArgument",
+            "Result",
+            "Routine",
+            "Tuple",
+            "ValueError",
+            "abs",
+            "append",
+            "atoms",
+            "cse",
+            "extend",
+            "format",
+            "has",
+            "hash",
+            "is_sequence",
+            "isinstance",
+            "join",
+            "remove",
+            "set",
+            "sort",
+            "sorted",
+            "str",
+            "tuple",
+            "update",
+            "zip"
+          ]
+        },
+        "chosen": {
+          "qual": "JuliaCodeGen._declare_arguments",
+          "span": [
+            1444,
+            1445
+          ],
+          "density": 0.15549668263449948,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 12,
+          "seg_terms": [
+            "argument"
+          ],
+          "name_subtokens": [
+            "declar",
+            "argument"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "argument"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "CodeGenArgumentListError",
+            "CodeGenError",
+            "InOutArgument",
+            "InputArgument",
+            "MatrixSymbol",
+            "OutputArgument",
+            "Result",
+            "has"
+          ],
+          "called_by_query_match": [
+            "codegen"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": [
+            "CodeGen.dump_code",
+            "FCodeGen.get_interface"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "TypeError"
+        ],
+        "adjacency": {
+          "line_distance": 699,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 84.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "least",
+            "matrixsymbol",
+            "scalar",
+            "wheth",
+            "arrai",
+            "output",
+            "code",
+            "defin",
+            "given",
+            "when",
+            "but",
+            "try",
+            "will",
+            "only",
+            "should",
+            "result",
+            "has",
+            "matrix",
+            "expression",
+            "can",
+            "expr",
+            "one",
+            "arg",
+            "symbol",
+            "sympi"
+          ],
+          "gold_only_max_idf": 2.691345799646892,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-18698",
+    "repo": "sympy/sympy",
+    "d_mass": 23,
+    "n_query_terms": 16,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/polys/polytools.py",
+        "d_lines": 23,
+        "n_functions_in_file": 284,
+        "gold": {
+          "qual": "_symbolic_factor_list",
+          "span": [
+            5898,
+            5953
+          ],
+          "density": 0.034416449311092875,
+          "rank": 29,
+          "n_lines": 56,
+          "tok": 374,
+          "seg_terms": [
+            "factor",
+            "list",
+            "one"
+          ],
+          "name_subtokens": [
+            "symbolic",
+            "factor",
+            "list"
+          ],
+          "raises": [],
+          "excepts": [
+            "PolificationFailed"
+          ],
+          "calls": [
+            "_eval_factor",
+            "_factors_product",
+            "_poly_from_expr",
+            "append",
+            "as_expr",
+            "extend",
+            "func",
+            "getattr",
+            "hasattr",
+            "make_args"
+          ]
+        },
+        "chosen": {
+          "qual": "sqf_list",
+          "span": [
+            6203,
+            6218
+          ],
+          "density": 0.11167332736257331,
+          "rank": 1,
+          "n_lines": 16,
+          "tok": 134,
+          "seg_terms": [
+            "exampl",
+            "factor",
+            "list",
+            "sqf",
+            "sqf_list"
+          ],
+          "name_subtokens": [
+            "sqf",
+            "list"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_generic_factor_list"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "factor",
+            "list"
+          ],
+          "n": 2
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "list",
+            "sqf"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_eval_factor",
+            "_factors_product"
+          ],
+          "called_by_query_match": [
+            "_generic_factor_list",
+            "_symbolic_factor"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "_generic_factor_list"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 250,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 3.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "one"
+          ],
+          "gold_only_max_idf": 0.8100564721677319,
+          "chosen_only_terms": [
+            "sqf_list",
+            "sqf",
+            "exampl"
+          ],
+          "chosen_only_max_idf": 4.717722172226923,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-18835",
+    "repo": "sympy/sympy",
+    "d_mass": 23,
+    "n_query_terms": 53,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/utilities/iterables.py",
+        "d_lines": 23,
+        "n_functions_in_file": 59,
+        "gold": {
+          "qual": "uniq",
+          "span": [
+            2088,
+            2124
+          ],
+          "density": 0.06472686815197223,
+          "rank": 6,
+          "n_lines": 37,
+          "tok": 282,
+          "seg_terms": [
+            "iterat",
+            "list",
+            "pass",
+            "set",
+            "try",
+            "uniq"
+          ],
+          "name_subtokens": [
+            "uniq"
+          ],
+          "raises": [],
+          "excepts": [
+            "TypeError"
+          ],
+          "calls": [
+            "add",
+            "append",
+            "enumerate",
+            "hasattr",
+            "set",
+            "uniq"
+          ]
+        },
+        "chosen": {
+          "qual": "take",
+          "span": [
+            820,
+            822
+          ],
+          "density": 0.09591457311231229,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 35,
+          "seg_terms": [
+            "iterat"
+          ],
+          "name_subtokens": [
+            "take"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "range",
+            "zip"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "uniq"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "set",
+            "uniq"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "RuntimeError"
+        ],
+        "adjacency": {
+          "line_distance": 1266,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 12.333333333333334,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "uniq",
+            "pass",
+            "try",
+            "set",
+            "list"
+          ],
+          "gold_only_max_idf": 4.010808763166331,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11742",
+    "repo": "django/django",
+    "d_mass": 22,
+    "n_query_terms": 31,
+    "error": null,
+    "files": [
+      {
+        "file": "django/db/models/fields/__init__.py",
+        "d_lines": 22,
+        "n_functions_in_file": 215,
+        "gold": {
+          "qual": "Field._check_choices",
+          "span": [
+            244,
+            292
+          ],
+          "density": 0.05834734910849963,
+          "rank": 138,
+          "n_lines": 49,
+          "tok": 309,
+          "seg_terms": [
+            "check",
+            "choic",
+            "field",
+            "valu"
+          ],
+          "name_subtokens": [
+            "check",
+            "choic"
+          ],
+          "raises": [],
+          "excepts": [
+            "TypeError",
+            "ValueError"
+          ],
+          "calls": [
+            "Error",
+            "all",
+            "is_iterable",
+            "is_value",
+            "isinstance"
+          ]
+        },
+        "chosen": {
+          "qual": "DateTimeCheckMixin._check_fix_default_value",
+          "span": [
+            1054,
+            1055
+          ],
+          "density": 0.2439388431420031,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 12,
+          "seg_terms": [
+            "check",
+            "valu"
+          ],
+          "name_subtokens": [
+            "check",
+            "fix",
+            "default",
+            "valu"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [
+            "check",
+            "choic"
+          ],
+          "n": 2
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "check",
+            "valu"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "is_value"
+          ],
+          "called_by_query_match": [
+            "Field.check"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": [
+            "DateTimeCheckMixin.check"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 762,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 24.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "choic",
+            "field"
+          ],
+          "gold_only_max_idf": 2.759771077019723,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14092",
+    "repo": "scikit-learn/scikit-learn",
+    "d_mass": 22,
+    "n_query_terms": 161,
+    "error": null,
+    "files": [
+      {
+        "file": "sklearn/neighbors/nca.py",
+        "d_lines": 22,
+        "n_functions_in_file": 7,
+        "gold": {
+          "qual": "NeighborhoodComponentsAnalysis._validate_params",
+          "span": [
+            262,
+            368
+          ],
+          "density": 0.07080240981802764,
+          "rank": 5,
+          "n_lines": 107,
+          "tok": 894,
+          "seg_terms": [
+            "are",
+            "check",
+            "component",
+            "fit",
+            "float",
+            "given",
+            "how",
+            "input",
+            "instanc",
+            "iter",
+            "its",
+            "lda",
+            "learn",
+            "like",
+            "max",
+            "max_it",
+            "must",
+            "n_component",
+            "numpi",
+            "param",
+            "paramet",
+            "rais",
+            "random",
+            "sampl",
+            "tol",
+            "valu",
+            "valueerr"
+          ],
+          "name_subtokens": [
+            "validat",
+            "param"
+          ],
+          "raises": [
+            "ValueError"
+          ],
+          "excepts": [],
+          "calls": [
+            "LabelEncoder",
+            "ValueError",
+            "callable",
+            "check_X_y",
+            "check_array",
+            "check_classification_targets",
+            "check_scalar",
+            "fit_transform",
+            "format",
+            "hasattr",
+            "isinstance"
+          ]
+        },
+        "chosen": {
+          "qual": "NeighborhoodComponentsAnalysis.transform",
+          "span": [
+            238,
+            260
+          ],
+          "density": 0.14429260279703174,
+          "rank": 1,
+          "n_lines": 23,
+          "tok": 124,
+          "seg_terms": [
+            "befor",
+            "check",
+            "component",
+            "fit",
+            "given",
+            "learn",
+            "like",
+            "n_component",
+            "paramet",
+            "rais",
+            "sampl"
+          ],
+          "name_subtokens": [
+            "transform"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "check_array",
+            "check_is_fitted",
+            "dot"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "param"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "ValueError",
+            "check_X_y",
+            "check_array",
+            "check_classification_targets",
+            "check_scalar",
+            "fit_transform"
+          ],
+          "called_by_query_match": [
+            "NeighborhoodComponentsAnalysis.fit"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "check_array",
+            "check_is_fitted"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [
+            "ValueError"
+          ],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [
+          "ValueError"
+        ],
+        "adjacency": {
+          "line_distance": 2,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 4.6521739130434785,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "lda",
+            "how",
+            "tol",
+            "max_it",
+            "its",
+            "instanc",
+            "must",
+            "iter",
+            "param",
+            "input",
+            "valueerr",
+            "float",
+            "max",
+            "valu",
+            "are",
+            "random",
+            "numpi"
+          ],
+          "gold_only_max_idf": 3.8783592376080613,
+          "chosen_only_terms": [
+            "befor"
+          ],
+          "chosen_only_max_idf": 1.736266730966558,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-14024",
+    "repo": "sympy/sympy",
+    "d_mass": 22,
+    "n_query_terms": 9,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/core/numbers.py",
+        "d_lines": 22,
+        "n_functions_in_file": 305,
+        "gold": {
+          "qual": "Rational._eval_power",
+          "span": [
+            1671,
+            1711
+          ],
+          "density": 0.010958256945192644,
+          "rank": 95,
+          "n_lines": 41,
+          "tok": 444,
+          "seg_terms": [
+            "integ",
+            "positiv"
+          ],
+          "name_subtokens": [
+            "eval",
+            "power"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "Integer",
+            "Rational",
+            "S",
+            "_eval_evalf",
+            "isinstance"
+          ]
+        },
+        "chosen": {
+          "qual": "Integer.floor",
+          "span": [
+            2009,
+            2010
+          ],
+          "density": 0.13054781599962617,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 11,
+          "seg_terms": [
+            "integ"
+          ],
+          "name_subtokens": [
+            "floor"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "Integer"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "Integer"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "Integer"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 298,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 20.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "positiv"
+          ],
+          "gold_only_max_idf": 1.4294401076696457,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-19007",
+    "repo": "sympy/sympy",
+    "d_mass": 22,
+    "n_query_terms": 22,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/matrices/expressions/blockmatrix.py",
+        "d_lines": 22,
+        "n_functions_in_file": 43,
+        "gold": {
+          "qual": "BlockMatrix._entry",
+          "span": [
+            235,
+            247
+          ],
+          "density": 0.03965385563046387,
+          "rank": 38,
+          "n_lines": 13,
+          "tok": 107,
+          "seg_terms": [
+            "block"
+          ],
+          "name_subtokens": [
+            "entri"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "enumerate"
+          ]
+        },
+        "chosen": {
+          "qual": "BlockMatrix.blockshape",
+          "span": [
+            140,
+            142
+          ],
+          "density": 0.24953083683064226,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 15,
+          "seg_terms": [
+            "block"
+          ],
+          "name_subtokens": [
+            "blockshap"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 93,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 4.333333333333333,
+        "rare_term_feature": {
+          "gold_only_terms": [],
+          "gold_only_max_idf": 0.0,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-23191",
+    "repo": "sympy/sympy",
+    "d_mass": 22,
+    "n_query_terms": 48,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/printing/pretty/pretty.py",
+        "d_lines": 22,
+        "n_functions_in_file": 237,
+        "gold": {
+          "qual": "PrettyPrinter._print_BasisDependent",
+          "span": [
+            1095,
+            1193
+          ],
+          "density": 0.019657385713607995,
+          "rank": 229,
+          "n_lines": 99,
+          "tok": 934,
+          "seg_terms": [
+            "insert",
+            "pretti",
+            "print",
+            "sympi",
+            "vector"
+          ],
+          "name_subtokens": [
+            "print",
+            "basi",
+            "dependent"
+          ],
+          "raises": [
+            "NotImplementedError"
+          ],
+          "excepts": [],
+          "calls": [
+            "NotImplementedError",
+            "__str__",
+            "_print",
+            "append",
+            "enumerate",
+            "insert",
+            "isinstance",
+            "items",
+            "join",
+            "len",
+            "list",
+            "max",
+            "parens",
+            "prettyForm",
+            "range",
+            "replace",
+            "separate",
+            "sort",
+            "split",
+            "startswith",
+            "sum"
+          ]
+        },
+        "chosen": {
+          "qual": "PrettyPrinter._print_Object",
+          "span": [
+            2670,
+            2671
+          ],
+          "density": 0.34180290635669,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 20,
+          "seg_terms": [
+            "object",
+            "pretti",
+            "print",
+            "symbol"
+          ],
+          "name_subtokens": [
+            "print",
+            "object"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_print",
+            "pretty_symbol"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "object",
+            "print"
+          ],
+          "n": 2
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_print",
+            "insert",
+            "prettyForm"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "_print",
+            "pretty_symbol"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 1477,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 49.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "insert",
+            "vector",
+            "sympi"
+          ],
+          "gold_only_max_idf": 2.8882992182941924,
+          "chosen_only_terms": [
+            "object",
+            "symbol"
+          ],
+          "chosen_only_max_idf": 1.380777105745136,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sympy__sympy-16503",
+    "repo": "sympy/sympy",
+    "d_mass": 21,
+    "n_query_terms": 12,
+    "error": null,
+    "files": [
+      {
+        "file": "sympy/printing/pretty/pretty.py",
+        "d_lines": 21,
+        "n_functions_in_file": 192,
+        "gold": {
+          "qual": "PrettyPrinter._print_Sum",
+          "span": [
+            535,
+            634
+          ],
+          "density": 0.021426755198564917,
+          "rank": 176,
+          "n_lines": 100,
+          "tok": 918,
+          "seg_terms": [
+            "cent",
+            "lower",
+            "pretti",
+            "print",
+            "sum"
+          ],
+          "name_subtokens": [
+            "print",
+            "sum"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "Equality",
+            "_print",
+            "above",
+            "append",
+            "asum",
+            "below",
+            "height",
+            "len",
+            "list",
+            "max",
+            "parens",
+            "prettyForm",
+            "range",
+            "reversed",
+            "right",
+            "stack",
+            "stringPict",
+            "vobj",
+            "width"
+          ]
+        },
+        "chosen": {
+          "qual": "PrettyPrinter._print_basestring",
+          "span": [
+            71,
+            72
+          ],
+          "density": 0.22655884658449715,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 17,
+          "seg_terms": [
+            "pretti",
+            "print"
+          ],
+          "name_subtokens": [
+            "print",
+            "basestr"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "prettyForm"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "print",
+            "sum"
+          ],
+          "n": 2
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "print"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_print",
+            "prettyForm"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [
+            "prettyForm"
+          ],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 463,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 50.0,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "cent",
+            "lower",
+            "sum"
+          ],
+          "gold_only_max_idf": 3.1805260194933345,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-23913",
+    "repo": "matplotlib/matplotlib",
+    "d_mass": 20,
+    "n_query_terms": 51,
+    "error": null,
+    "files": [
+      {
+        "file": "lib/matplotlib/legend.py",
+        "d_lines": 20,
+        "n_functions_in_file": 43,
+        "gold": {
+          "qual": "Legend.__init__",
+          "span": [
+            304,
+            575
+          ],
+          "density": 0.03153970052996402,
+          "rank": 36,
+          "n_lines": 272,
+          "tok": 2509,
+          "seg_terms": [
+            "__init__",
+            "add",
+            "best",
+            "can",
+            "code",
+            "draggabl",
+            "init",
+            "keyword",
+            "legend",
+            "make",
+            "more",
+            "one",
+            "out",
+            "ther"
+          ],
+          "name_subtokens": [
+            "init"
+          ],
+          "raises": [
+            "TypeError",
+            "ValueError"
+          ],
+          "excepts": [
+            "AttributeError"
+          ],
+          "calls": [
+            "FancyBboxPatch",
+            "FontProperties",
+            "TypeError",
+            "ValueError",
+            "__init__",
+            "_from_any",
+            "_init_legend_box",
+            "_set_artist_props",
+            "_set_loc",
+            "append",
+            "array",
+            "asarray",
+            "check_getitem",
+            "check_in_list",
+            "cycle",
+            "get_size_in_points",
+            "getattr",
+            "isinstance",
+            "iterable",
+            "len",
+            "list",
+            "make_keyword_only",
+            "set_bbox_to_anchor",
+            "set_color",
+            "set_figure",
+            "set_size",
+            "set_title",
+            "startswith",
+            "super",
+            "tile",
+            "to_rgba_array",
+            "val_or_rc",
+            "warn_external",
+            "zip"
+          ]
+        },
+        "chosen": {
+          "qual": "Legend.get_draggable",
+          "span": [
+            1113,
+            1115
+          ],
+          "density": 0.2572740128098988,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 33,
+          "seg_terms": [
+            "draggabl",
+            "legend"
+          ],
+          "name_subtokens": [
+            "get",
+            "draggabl"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [
+            "init"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "draggabl"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "__init__",
+            "_init_legend_box",
+            "make_keyword_only"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 538,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 90.66666666666667,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "best",
+            "keyword",
+            "out",
+            "ther",
+            "code",
+            "more",
+            "__init__",
+            "init",
+            "one",
+            "make",
+            "can",
+            "add"
+          ],
+          "gold_only_max_idf": 3.1205230463677793,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-11281",
+    "repo": "scikit-learn/scikit-learn",
+    "d_mass": 20,
+    "n_query_terms": 46,
+    "error": null,
+    "files": [
+      {
+        "file": "sklearn/mixture/base.py",
+        "d_lines": 20,
+        "n_functions_in_file": 25,
+        "gold": {
+          "qual": "BaseMixture.fit",
+          "span": [
+            172,
+            243
+          ],
+          "density": 0.033908177591498355,
+          "rank": 21,
+          "n_lines": 72,
+          "tok": 553,
+          "seg_terms": [
+            "component",
+            "data",
+            "different",
+            "fit",
+            "have",
+            "like",
+            "method",
+            "model",
+            "n_component",
+            "paramet"
+          ],
+          "name_subtokens": [
+            "fit"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "_check_X",
+            "_check_initial_parameters",
+            "_compute_lower_bound",
+            "_e_step",
+            "_get_parameters",
+            "_initialize_parameters",
+            "_m_step",
+            "_print_verbose_msg_init_beg",
+            "_print_verbose_msg_init_end",
+            "_print_verbose_msg_iter_end",
+            "_set_parameters",
+            "abs",
+            "check_random_state",
+            "hasattr",
+            "range",
+            "warn"
+          ]
+        },
+        "chosen": {
+          "qual": "BaseMixture._get_parameters",
+          "span": [
+            282,
+            284
+          ],
+          "density": 0.13455884704459006,
+          "rank": 1,
+          "n_lines": 3,
+          "tok": 13,
+          "seg_terms": [
+            "paramet"
+          ],
+          "name_subtokens": [
+            "get",
+            "paramet"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [
+            "fit"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "paramet"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "_check_initial_parameters",
+            "_get_parameters",
+            "_initialize_parameters",
+            "_set_parameters"
+          ],
+          "called_by_query_match": [
+            "BaseMixture._initialize_parameters"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": [
+            "BaseMixture.fit"
+          ]
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 39,
+          "same_class": true
+        },
+        "length_ratio_gold_over_chosen": 24.0,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "n_component",
+            "component",
+            "like",
+            "different",
+            "method",
+            "have",
+            "model",
+            "fit",
+            "data"
+          ],
+          "gold_only_max_idf": 1.7785724649461012,
+          "chosen_only_terms": [],
+          "chosen_only_max_idf": 0.0,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-10451",
+    "repo": "sphinx-doc/sphinx",
+    "d_mass": 20,
+    "n_query_terms": 34,
+    "error": null,
+    "files": [
+      {
+        "file": "sphinx/ext/autodoc/typehints.py",
+        "d_lines": 20,
+        "n_functions_in_file": 6,
+        "gold": {
+          "qual": "augment_descriptions_with_types",
+          "span": [
+            141,
+            187
+          ],
+          "density": 0.029915389421615406,
+          "rank": 4,
+          "n_lines": 47,
+          "tok": 420,
+          "seg_terms": [
+            "description",
+            "param",
+            "paramet"
+          ],
+          "name_subtokens": [
+            "augment",
+            "description",
+            "type"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "add",
+            "astext",
+            "cast",
+            "field",
+            "field_body",
+            "field_name",
+            "join",
+            "len",
+            "paragraph",
+            "set",
+            "split"
+          ]
+        },
+        "chosen": {
+          "qual": "setup",
+          "span": [
+            190,
+            198
+          ],
+          "density": 0.15821196553645575,
+          "rank": 1,
+          "n_lines": 9,
+          "tok": 67,
+          "seg_terms": [
+            "autodoc",
+            "description",
+            "sphinx",
+            "typehint"
+          ],
+          "name_subtokens": [
+            "setup"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "connect"
+          ]
+        },
+        "name_match_gold": {
+          "overlap": [
+            "description"
+          ],
+          "n": 1
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": [
+            "merge_typehints"
+          ]
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 3,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 5.222222222222222,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "paramet",
+            "param"
+          ],
+          "gold_only_max_idf": 2.50490731649467,
+          "chosen_only_terms": [
+            "typehint",
+            "autodoc",
+            "sphinx"
+          ],
+          "chosen_only_max_idf": 4.055504728905837,
+          "gold_has_rarer_term": false
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-8282",
+    "repo": "sphinx-doc/sphinx",
+    "d_mass": 20,
+    "n_query_terms": 42,
+    "error": null,
+    "files": [
+      {
+        "file": "sphinx/ext/autodoc/__init__.py",
+        "d_lines": 20,
+        "n_functions_in_file": 127,
+        "gold": {
+          "qual": "ClassDocumenter.format_signature",
+          "span": [
+            1469,
+            1493
+          ],
+          "density": 0.05577956805481245,
+          "rank": 44,
+          "n_lines": 25,
+          "tok": 193,
+          "seg_terms": [
+            "autodoc",
+            "overload"
+          ],
+          "name_subtokens": [
+            "format",
+            "signatur"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": [
+            "append",
+            "evaluate_signature",
+            "format_signature",
+            "get_overloaded_signatures",
+            "join",
+            "list",
+            "replace",
+            "safe_getattr",
+            "stringify_signature",
+            "super",
+            "values"
+          ]
+        },
+        "chosen": {
+          "qual": "FunctionDocumenter.document_members",
+          "span": [
+            1231,
+            1232
+          ],
+          "density": 0.23831737298865757,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 18,
+          "seg_terms": [
+            "all",
+            "memb"
+          ],
+          "name_subtokens": [
+            "document",
+            "memb"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [
+            "memb"
+          ],
+          "n": 1
+        },
+        "callgraph_gold": {
+          "calls_query_match": [
+            "get_overloaded_signatures"
+          ],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": {
+          "line_distance": 237,
+          "same_class": false
+        },
+        "length_ratio_gold_over_chosen": 12.5,
+        "rare_term_feature": {
+          "gold_only_terms": [
+            "overload",
+            "autodoc"
+          ],
+          "gold_only_max_idf": 3.7787201581137255,
+          "chosen_only_terms": [
+            "memb",
+            "all"
+          ],
+          "chosen_only_max_idf": 2.734916105940611,
+          "gold_has_rarer_term": true
+        }
+      }
+    ]
+  },
+  {
+    "instance_id": "django__django-11564",
+    "repo": "django/django",
+    "d_mass": 19,
+    "n_query_terms": 69,
+    "error": null,
+    "files": [
+      {
+        "file": "django/conf/__init__.py",
+        "d_lines": 19,
+        "n_functions_in_file": 20,
+        "gold": null,
+        "chosen": {
+          "qual": "SettingsReference.__init__",
+          "span": [
+            38,
+            39
+          ],
+          "density": 0.20612231256157598,
+          "rank": 1,
+          "n_lines": 2,
+          "tok": 19,
+          "seg_terms": [
+            "name",
+            "sett",
+            "valu"
+          ],
+          "name_subtokens": [
+            "init"
+          ],
+          "raises": [],
+          "excepts": [],
+          "calls": []
+        },
+        "name_match_gold": {
+          "overlap": [],
+          "n": 0
+        },
+        "name_match_chosen": {
+          "overlap": [],
+          "n": 0
+        },
+        "callgraph_gold": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "callgraph_chosen": {
+          "calls_query_match": [],
+          "called_by_query_match": []
+        },
+        "exc_gold": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "exc_chosen": {
+          "raises_query_exc": [],
+          "excepts_query_exc": []
+        },
+        "query_exc_types": [],
+        "adjacency": null,
+        "length_ratio_gold_over_chosen": null,
+        "rare_term_feature": null
+      }
+    ]
+  }
+]
