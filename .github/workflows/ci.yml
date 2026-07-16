@@ -7,6 +7,15 @@ on:
     branches: [main]
 
 jobs:
+  version-check:
+    name: Version consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare pyproject.toml and roust-rs/Cargo.toml versions
+        run: python3 scripts/check_versions.py
+
   python-tests:
     name: Python tests
     runs-on: ubuntu-latest
