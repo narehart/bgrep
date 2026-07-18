@@ -1,0 +1,199 @@
+{
+  "source": {
+    "predictions": "lab/results_regions/pilot10_verified_old.jsonl",
+    "gold": "lab/swebench_verified_heldout.parquet",
+    "n_instances": 10,
+    "n_region_eval_errors": 0,
+    "engine_shas_seen": [
+      "5e81c8a"
+    ],
+    "engine_dirty_seen": [
+      false
+    ],
+    "pipeline": "shipped roust-rs engine, --budget 8192, confidence-scheduled packing (parity/region_eval_verified.py Part A, no-LLM), SWE-bench Verified held-out instances (issue #4 out-of-sample validation)"
+  },
+  "all_instances": {
+    "n": 10,
+    "file": {
+      "pct_correct": 90.0,
+      "n": 10,
+      "n_correct": 9
+    },
+    "function": {
+      "pct_correct": 40.0,
+      "n_evaluated": 10,
+      "n_correct": 4,
+      "n_engine_errors_excluded": 0,
+      "n_git_show_failures_excluded": 0,
+      "detail": [
+        {
+          "instance_id": "astropy__astropy-13033",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 82,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13236",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 106,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13398",
+          "n_gold_functions": 6,
+          "n_predicted_functions": 62,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13453",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 92,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-13579",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 88,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13977",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 128,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-14096",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 118,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-14309",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 69,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-14369",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 66,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-14508",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 92,
+          "correct": true
+        }
+      ]
+    },
+    "line": {
+      "pct_correct_all_or_nothing": 20.0,
+      "n": 10,
+      "n_correct_all_or_nothing": 2,
+      "mean_fraction_covered": 0.34421505376344086,
+      "median_fraction_covered": 0.0
+    },
+    "region_precision": {
+      "mean_precision": 0.008622846648796043,
+      "median_precision": 0.0,
+      "n": 10,
+      "n_excluded": 0,
+      "mean_total_region_lines_per_instance": 1115.2,
+      "median_total_region_lines_per_instance": 1123.5
+    }
+  },
+  "file_correct_subset": {
+    "n": 9,
+    "file": {
+      "pct_correct": 100.0,
+      "n": 9,
+      "n_correct": 9
+    },
+    "function": {
+      "pct_correct": 44.44,
+      "n_evaluated": 9,
+      "n_correct": 4,
+      "n_engine_errors_excluded": 0,
+      "n_git_show_failures_excluded": 0,
+      "detail": [
+        {
+          "instance_id": "astropy__astropy-13236",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 106,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13398",
+          "n_gold_functions": 6,
+          "n_predicted_functions": 62,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13453",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 92,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-13579",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 88,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-13977",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 128,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-14096",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 118,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-14309",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 69,
+          "correct": true
+        },
+        {
+          "instance_id": "astropy__astropy-14369",
+          "n_gold_functions": 2,
+          "n_predicted_functions": 66,
+          "correct": false
+        },
+        {
+          "instance_id": "astropy__astropy-14508",
+          "n_gold_functions": 1,
+          "n_predicted_functions": 92,
+          "correct": true
+        }
+      ]
+    },
+    "line": {
+      "pct_correct_all_or_nothing": 22.22,
+      "n": 9,
+      "n_correct_all_or_nothing": 2,
+      "mean_fraction_covered": 0.38246117084826764,
+      "median_fraction_covered": 0.0
+    },
+    "region_precision": {
+      "mean_precision": 0.009580940720884492,
+      "median_precision": 0.0,
+      "n": 9,
+      "n_excluded": 0,
+      "mean_total_region_lines_per_instance": 1113.5555555555557,
+      "median_total_region_lines_per_instance": 1117.0
+    },
+    "note": "restricted to instances where FILE-level was already correct -- isolates region/line/function quality from file recall (spec item 4)"
+  },
+  "agentless_gpt4o_published": {
+    "file": 69.7,
+    "function": 52.0,
+    "line": 35.3
+  }
+}

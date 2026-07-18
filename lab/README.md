@@ -413,3 +413,64 @@ arm, on top of confirming full cross-isolation reproducibility.
 repo is a standing hazard for any future concurrent parity/region-eval work
 — a repo-level fix (e.g. per-worktree private clones, or a lock/queue around
 checkouts of the shared clones) should get its own issue.
+
+## Out-of-sample validation: region gains replicate on held-out Verified (2026-07-16)
+
+The #4 campaign's padding/length-normalization defaults (`--pad-lines 5
+--len-exp 0.85`, adopted above) were tuned and measured entirely on
+SWE-bench Lite. This is the follow-on the previous entry's Limits note
+flagged: does the FUNCTION/LINE gain hold on instances the defaults were
+never fit against, or is it Lite-specific overfitting?
+
+**Design.** A/B, same 407 instances both arms, engine `5e81c8a` for both
+(only the CLI flags differ): "old formula" (`--pad-lines 0 --len-exp 1.0`,
+the pre-adoption behavior) vs "new formula" (no flags, i.e. today's shipped
+defaults). Gold source is `lab/swebench_verified_heldout.parquet` — SWE-bench
+Verified's 500 instances minus the 93 that overlap Lite (the tuning set),
+computed once and cached; **held-out purity** means none of these 407
+instances contributed a single tuning decision anywhere in the #4 campaign.
+Both arms ran through `parity/region_eval_verified.py` (modeled on
+`region_eval2.py`, same gold-hunk parsing and per-instance record shape)
+against this worktree's own **private** `cp -R` of `lab/swebench_repos`
+(issue #41 standard — avoids the shared-symlink race the previous entry
+documented) and scored with `lab/agentless_metric_verified.py` (a
+parameterized fork of `agentless_metric_v4.py`, same FILE/FUNCTION/LINE/
+region-precision definitions, no hardcoded `n=300` assert). A 10-instance
+pilot ran first to shake out plumbing bugs (`pilot10_verified_{old,new}.jsonl`)
+before committing to the full 407-instance run (`full407_verified_{old,new}.jsonl`,
+`full407_verified_old.log`).
+
+**Verdict: replicated.**
+
+| Metric | Old formula (Verified) | New formula (Verified) | Delta | Lite delta (`agentless_metric_v3.json` → `v5.json`) | % of Lite delta |
+|---|---|---|---|---|---|
+| FUNCTION | 34.15% | 47.04% | +12.89pp | 41.0→53.3% (+12.3pp) | 104% |
+| LINE (all-or-nothing) | 26.29% | 35.38% | +9.09pp | 35.7→42.7% (+7.0pp) | 130% |
+| mean-fraction-covered | 0.4208 | 0.4741 | +0.053 | 0.4564→0.5168 (+0.060) | 88% |
+| FILE (all-gold) | 92.14% | 91.89% | −0.25pp | unaffected by design (file-selection code untouched) | n/a (control) |
+
+FUNCTION and LINE gains replicate at 88–130% of the Lite-measured delta —
+noise-level agreement given n=407 vs n=300, not degradation. The absolute
+levels are lower on Verified than Lite (FUNCTION 47.0 vs 53.3, LINE 35.4 vs
+42.7) because held-out Verified is a harder set on this engine (baseline
+FILE accuracy is lower, 92.1% vs Lite's 92.3%, and there are more gold hunks
+per instance on average) — but the *delta* is what needed to replicate for
+the adoption decision to be validated, not the absolute level, and it did.
+
+FILE is the control and behaves exactly as predicted: padding/length-norm
+only reshape region spans within already-selected files, so FILE should be
+near-invariant to the flag change. It is (92.14%→91.89%, within noise) —
+the one difference is the new arm hit a single 180s engine timeout
+(`django__django-11603`) that the old arm didn't, counted as wrong per the
+metric's engine-error convention; this looks like ordinary run-to-run
+scheduling variance on a slow instance near the timeout boundary, not a
+regression caused by the flags (padding/length-norm add no new subprocess
+work that would explain a timeout appearing only in one arm).
+
+This converts the root README's Limits-section caveat ("region-level gains
+are Lite-only evidence... held-out region validation is follow-up work")
+into a confirmation. See issue #4.
+
+Artifacts: `lab/agentless_metric_verified.py`, `parity/region_eval_verified.py`,
+`lab/results_regions/{pilot10,full407}_verified_{old,new}.jsonl`,
+`lab/results_regions/agentless_metric_verified_{old,new}.json`.

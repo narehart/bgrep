@@ -1,0 +1,456 @@
+#!/usr/bin/env python3
+"""Agentless-style "% Correct Location" metric for roust on SWE-bench VERIFIED.
+
+A parameterized fork of `lab/agentless_metric_v4.py` for the out-of-sample
+validation campaign (issue #4 follow-on): scores a `region_eval_verified.py`
+JSONL report against a SWE-bench VERIFIED gold parquet (default: the
+held-out subset, Verified minus Lite overlap) instead of v4's hardcoded
+Lite parquet + hardcoded `assert len(records) == 300`. All scoring LOGIC
+(FILE / FUNCTION-exact / LINE / region-precision definitions) is unchanged
+from v4 -- see that docstring for the full definitions.
+
+Path difference from v4 (which hardcodes `REPO_ROOT =
+Path("/Users/.../bgrep")`, the MAIN repo's absolute path): this script
+resolves REPO_ROOT from `__file__` instead, so it walks the PRIVATE
+checkout tree of whichever worktree it's run from (issue #41 standard) --
+running v4's hardcoded path unmodified from inside a worktree would silently
+score against the main repo's shared clones instead of the worktree's own.
+
+Usage:
+    python lab/agentless_metric_verified.py \\
+        --predictions lab/results_regions/full407_verified_new.jsonl \\
+        --gold-parquet lab/swebench_verified_heldout.parquet \\
+        --out lab/results_regions/agentless_metric_verified_new.json
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import json
+import statistics
+import subprocess
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "parity"))
+from region_eval import parse_gold_hunks, line_in_spans  # noqa: E402
+
+SWEBENCH_REPOS = REPO_ROOT / "lab" / "swebench_repos"
+DEFAULT_GOLD_PARQUET = REPO_ROOT / "lab" / "swebench_verified_heldout.parquet"
+DEFAULT_PREDICTIONS = REPO_ROOT / "lab" / "results_regions" / "full407_verified_new.jsonl"
+DEFAULT_OUT = REPO_ROOT / "lab" / "results_regions" / "agentless_metric_verified_new.json"
+
+# Agentless's own published GPT-4o SWE-bench Lite numbers (Table 1 of
+# arXiv:2407.01489) -- for side-by-side reporting only, not reproduced here.
+AGENTLESS_GPT4O = {"file": 69.7, "function": 52.0, "line": 35.3}
+
+
+def mean_median(values: list[float]) -> tuple[float | None, float | None]:
+    if not values:
+        return None, None
+    return statistics.mean(values), statistics.median(values)
+
+
+def pct(x: float | None) -> float | None:
+    return None if x is None else round(100.0 * x, 2)
+
+
+# ---------------------------------------------------------------------------
+# function spans (AST, via read-only `git show`) -- shared gold/predicted
+# ---------------------------------------------------------------------------
+
+
+def git_show(repo_slug: str, sha: str, path: str) -> str | None:
+    repo_path = SWEBENCH_REPOS / repo_slug.replace("/", "__")
+    if not repo_path.exists():
+        return None
+    r = subprocess.run(["git", "show", f"{sha}:{path}"], cwd=repo_path,
+                        capture_output=True, text=True, timeout=30)
+    if r.returncode != 0:
+        return None
+    return r.stdout
+
+
+def function_spans(source: str) -> list[tuple[int, int]]:
+    """Returns [(start, end_inclusive), ...] for every function/method
+    definition in `source` (def and async def; NOT bare class bodies --
+    "function/method" per the task's definition). Span start includes any
+    decorator lines; end is ast's end_lineno (Python 3.8+)."""
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return []
+    spans = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            start = node.lineno
+            if node.decorator_list:
+                start = min(start, min(d.lineno for d in node.decorator_list))
+            end = getattr(node, "end_lineno", None) or node.lineno
+            spans.append((start, end))
+    return spans
+
+
+def gold_function_spans_for_instance(repo_slug: str, base_commit: str,
+                                      gold_hunks: dict[str, list[tuple[int, int]]]
+                                      ) -> tuple[set[tuple[str, int, int]], bool]:
+    """Returns ({(path, start, end), ...}, ast_ok). A gold function span is
+    any function/method AST span in a gold-hunk .py file that contains >=1
+    gold-patch line. ast_ok is False if any gold .py file couldn't be
+    fetched via `git show` (informational + exclusion trigger -- see
+    compute_function_level_exact)."""
+    spans_out: set[tuple[str, int, int]] = set()
+    ast_ok = True
+    for path, ranges in gold_hunks.items():
+        if not path.endswith(".py"):
+            continue
+        src = git_show(repo_slug, base_commit, path)
+        if src is None:
+            ast_ok = False
+            continue
+        line_set: set[int] = set()
+        for s, e in ranges:
+            line_set.update(range(s, e + 1))
+        for fs, fe in function_spans(src):
+            if any(fs <= ln <= fe for ln in line_set):
+                spans_out.add((path, fs, fe))
+    return spans_out, ast_ok
+
+
+def predicted_function_spans_for_instance(repo_slug: str, base_commit: str,
+                                           regions: dict[str, list[list[int]]]
+                                           ) -> tuple[set[tuple[str, int, int]], bool]:
+    """Mirrors gold_function_spans_for_instance exactly (same git_show, same
+    AST function_spans, same span identity `(path, start, end)`), but walks
+    roust's actual RETURNED region spans instead of the gold hunk lines: a
+    predicted function span is any function/method AST span in a
+    RETURNED .py file that overlaps >=1 of that file's returned region
+    spans. Non-.py returned files are skipped (function_spans is a Python
+    AST parser only -- same convention the gold side already used)."""
+    spans_out: set[tuple[str, int, int]] = set()
+    ast_ok = True
+    for path, region_spans in regions.items():
+        if not path.endswith(".py"):
+            continue
+        src = git_show(repo_slug, base_commit, path)
+        if src is None:
+            ast_ok = False
+            continue
+        for fs, fe in function_spans(src):
+            if any(fs <= e and s <= fe for s, e in region_spans):
+                spans_out.add((path, fs, fe))
+    return spans_out, ast_ok
+
+
+# ---------------------------------------------------------------------------
+# metric computation
+# ---------------------------------------------------------------------------
+
+
+def compute_file_level(records: list[dict]) -> dict:
+    """Exact. Agentless's FILE metric is `predicted files ⊇ gold files`.
+    The stored `all_gold_files_retrieved` is defined identically
+    (`hunk_file_covered == 1.0`, i.e. every gold file is a key in the
+    returned `regions` dict) -- so this is a direct read, not an
+    approximation.
+
+    A region_eval_verified engine error (e.g. a roust timeout -- no
+    `regions` ever obtained) has no stored `all_gold_files_retrieved` key;
+    such records are counted as INCORRECT (0.0), not dropped -- an engine
+    failure returned zero files, which trivially fails the non-empty gold
+    superset condition. `n_engine_errors` reports how many of `n` were
+    counted this way."""
+    n_engine_errors = sum(1 for r in records if r["error"] is not None)
+    vals = [1.0 if r.get("all_gold_files_retrieved", False) else 0.0 for r in records]
+    m, _ = mean_median(vals)
+    return {"pct_correct": pct(m), "n": len(records), "n_correct": sum(int(v) for v in vals),
+            "n_engine_errors": n_engine_errors}
+
+
+def compute_line_level(records: list[dict]) -> dict:
+    """All-or-nothing part is EXACT: the stored `hunk_line_recall` is
+    `covered_lines / total_lines` over the exact union of gold lines for
+    the instance. Since this is a true fraction of a finite set,
+    `hunk_line_recall == 1.0` is logically equivalent to "every gold line
+    is covered by a returned region" -- exactly Agentless's LINE
+    superset condition.
+
+    A region_eval_verified engine error has no stored `hunk_line_recall`;
+    such records are counted as INCORRECT (0.0) in the all-or-nothing
+    metric (same convention as compute_file_level) and excluded from the
+    mean/median fraction (there is no partial-credit fraction to report
+    for an instance with zero returned regions -- see `n_engine_errors`).
+
+    Also reports the mean-fraction (prior "hunk_line_recall" metric) for
+    continuity -- NOTE this is a materially easier number (partial credit)
+    than the all-or-nothing metric to its left."""
+    n_engine_errors = sum(1 for r in records if r["error"] is not None)
+    all_or_nothing = [1.0 if r.get("hunk_line_recall") == 1.0 else 0.0 for r in records]
+    fractions = [r["hunk_line_recall"] for r in records
+                 if r.get("hunk_line_recall") is not None]
+    aon_m, _ = mean_median(all_or_nothing)
+    frac_m, frac_med = mean_median(fractions)
+    return {
+        "pct_correct_all_or_nothing": pct(aon_m),
+        "n": len(records),
+        "n_correct_all_or_nothing": sum(int(v) for v in all_or_nothing),
+        "mean_fraction_covered": frac_m,
+        "median_fraction_covered": frac_med,
+        "n_engine_errors": n_engine_errors,
+    }
+
+
+def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str]) -> dict:
+    """EXACT (superseding the old hunk_touched==1.0 proxy). An instance is
+    correct iff its gold function-span set is a subset of its predicted
+    function-span set (both sets computed via AST over `git show
+    <base_commit>:<path>`, see gold_function_spans_for_instance /
+    predicted_function_spans_for_instance).
+
+    Instances are excluded from the mean (and counted separately, per the
+    task's "count and report, don't silently drop" policy) in two cases:
+      - region_eval_verified itself failed for the instance (`r["error"]`
+        set -- no regions were ever obtained, e.g. a checkout/engine
+        failure).
+      - a `git_show` failure on either the gold or predicted side (ast_ok
+        False) -- the true gold or predicted function set is then
+        incomplete/unknown, so superset correctness cannot be judged
+        safely in either direction (undercounting gold could manufacture a
+        false "correct"; undercounting predicted could manufacture a false
+        "incorrect").
+
+    Flagged assumption: an instance whose (complete, ast_ok) gold function
+    set is EMPTY (e.g. every gold hunk lands in a non-.py file, or in
+    module-level code outside any def) counts as correct -- the superset
+    condition holds vacuously, same convention Agentless's own FILE/LINE
+    supersets use for an empty gold set. This does not silently inflate the
+    number: the per-instance detail list below records `n_gold_functions`
+    for every counted instance so the case is auditable.
+    """
+    n_correct = 0
+    n_evaluated = 0
+    n_engine_errors = 0
+    n_git_show_failures = 0
+    detail = []
+    for r in records:
+        if r["error"] is not None:
+            n_engine_errors += 1
+            continue
+        patch = patch_by_id.get(r["instance_id"])
+        if patch is None:
+            n_engine_errors += 1
+            continue
+        gold_hunks = parse_gold_hunks(patch)
+        gold_spans, gold_ok = gold_function_spans_for_instance(r["repo"], r["base_commit"], gold_hunks)
+        pred_spans, pred_ok = predicted_function_spans_for_instance(
+            r["repo"], r["base_commit"], r["regions"])
+        if not (gold_ok and pred_ok):
+            n_git_show_failures += 1
+            continue
+        n_evaluated += 1
+        correct = gold_spans.issubset(pred_spans)
+        if correct:
+            n_correct += 1
+        detail.append({
+            "instance_id": r["instance_id"],
+            "n_gold_functions": len(gold_spans),
+            "n_predicted_functions": len(pred_spans),
+            "correct": correct,
+        })
+    pct_m = (n_correct / n_evaluated) if n_evaluated else None
+    return {
+        "pct_correct": pct(pct_m),
+        "n_evaluated": n_evaluated,
+        "n_correct": n_correct,
+        "n_engine_errors_excluded": n_engine_errors,
+        "n_git_show_failures_excluded": n_git_show_failures,
+        "detail": detail,
+    }
+
+
+def compute_region_precision(records: list[dict], patch_by_id: dict[str, str]) -> dict:
+    """NEW (issue #4): "are we returning too much?" Per instance:
+    (gold lines covered by returned regions) / (total lines spanned by
+    ALL returned regions, across every returned file, not just gold
+    files). Low precision means roust is packing a lot of non-gold
+    context alongside the gold lines -- expected and by design (regions
+    are read for surrounding context, not just the exact diff lines), but
+    worth quantifying.
+
+    Instances with `r["error"]` set (region_eval_verified failure, no
+    regions obtained) are excluded and counted. An instance whose returned
+    `regions` dict is present but spans zero total lines (empty budget
+    edge case) has undefined precision (0/0) and is excluded from the
+    mean but still contributes to `total_region_lines_per_instance`...
+    actually excluded there too since there's nothing to measure."""
+    precisions = []
+    total_region_lines_list = []
+    n_excluded = 0
+    for r in records:
+        if r["error"] is not None:
+            n_excluded += 1
+            continue
+        patch = patch_by_id.get(r["instance_id"])
+        gold_hunks = parse_gold_hunks(patch) if patch is not None else {}
+        gold_line_sets: dict[str, set[int]] = {}
+        for f, ranges in gold_hunks.items():
+            s: set[int] = set()
+            for a, b in ranges:
+                s.update(range(a, b + 1))
+            gold_line_sets[f] = s
+
+        regions: dict[str, list[list[int]]] = r["regions"]
+        total_region_lines = 0
+        covered_gold_lines = 0
+        for f, spans in regions.items():
+            total_region_lines += sum(e - s + 1 for s, e in spans)
+            if f in gold_line_sets:
+                covered_gold_lines += sum(
+                    1 for ln in gold_line_sets[f] if line_in_spans(ln, spans))
+
+        if total_region_lines == 0:
+            n_excluded += 1
+            continue
+        precisions.append(covered_gold_lines / total_region_lines)
+        total_region_lines_list.append(total_region_lines)
+
+    prec_m, prec_med = mean_median(precisions)
+    lines_m, lines_med = mean_median([float(x) for x in total_region_lines_list])
+    return {
+        "mean_precision": prec_m,
+        "median_precision": prec_med,
+        "n": len(precisions),
+        "n_excluded": n_excluded,
+        "mean_total_region_lines_per_instance": lines_m,
+        "median_total_region_lines_per_instance": lines_med,
+    }
+
+
+def load_records(path: Path) -> list[dict]:
+    records = []
+    with path.open() as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                records.append(json.loads(line))
+    return records
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--predictions", type=Path, default=DEFAULT_PREDICTIONS,
+                     help="region_eval_verified JSONL report to score")
+    ap.add_argument("--gold-parquet", type=Path, default=DEFAULT_GOLD_PARQUET,
+                     help="SWE-bench Verified gold parquet (default: held-out subset)")
+    ap.add_argument("--expect-n", type=int, default=0,
+                     help="if set, assert len(records) == this value (sanity check); "
+                          "0 (default) skips the assertion -- unlike v4, which hardcodes "
+                          "`assert len(records) == 300` for the fixed-size Lite set")
+    ap.add_argument("--out", type=Path, default=DEFAULT_OUT,
+                     help="output JSON path")
+    args = ap.parse_args()
+
+    records = load_records(args.predictions)
+    if args.expect_n:
+        assert len(records) == args.expect_n, \
+            f"expected {args.expect_n} stored records, got {len(records)}"
+
+    engine_shas = {r["engine_sha"] for r in records if r["engine_sha"] is not None}
+    engine_dirty = {r["engine_dirty"] for r in records if r["engine_dirty"] is not None}
+
+    import pandas as pd
+    df = pd.read_parquet(args.gold_parquet)
+    patch_by_id = {row["instance_id"]: row["patch"] for _, row in df.iterrows()}
+
+    n_region_eval_errors = sum(1 for r in records if r["error"] is not None)
+
+    file_correct_subset = [r for r in records if r.get("all_gold_files_retrieved", False)]
+
+    print("Computing exact FUNCTION-level metric + region precision via read-only "
+          "`git show` (this walks every gold + returned .py file's AST)...", file=sys.stderr)
+
+    def block(recs: list[dict]) -> dict:
+        return {
+            "n": len(recs),
+            "file": compute_file_level(recs),
+            "function": compute_function_level_exact(recs, patch_by_id),
+            "line": compute_line_level(recs),
+            "region_precision": compute_region_precision(recs, patch_by_id),
+        }
+
+    all_block = block(records)
+    subset_block = block(file_correct_subset)
+
+    report: dict = {
+        "source": {
+            "predictions": str(args.predictions.relative_to(REPO_ROOT))
+            if args.predictions.is_absolute() else str(args.predictions),
+            "gold": str(args.gold_parquet.relative_to(REPO_ROOT))
+            if args.gold_parquet.is_absolute() else str(args.gold_parquet),
+            "n_instances": len(records),
+            "n_region_eval_errors": n_region_eval_errors,
+            "engine_shas_seen": sorted(engine_shas),
+            "engine_dirty_seen": sorted(engine_dirty),
+            "pipeline": "shipped roust-rs engine, --budget 8192, confidence-scheduled packing "
+                        "(parity/region_eval_verified.py Part A, no-LLM), SWE-bench Verified "
+                        "held-out instances (issue #4 out-of-sample validation)",
+        },
+        "all_instances": all_block,
+        "file_correct_subset": {
+            **subset_block,
+            "note": "restricted to instances where FILE-level was already correct -- isolates "
+                    "region/line/function quality from file recall (spec item 4)",
+        },
+        "agentless_gpt4o_published": AGENTLESS_GPT4O,
+    }
+
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(report, indent=2, default=str))
+    print(f"\nwrote {args.out}", file=sys.stderr)
+
+    print_table(report)
+
+
+def print_table(report: dict) -> None:
+    al = report["agentless_gpt4o_published"]
+    a = report["all_instances"]
+    fc = report["file_correct_subset"]
+
+    def row(label, ours, theirs):
+        ours_s = f"{ours:.1f}%" if ours is not None else "n/a"
+        theirs_s = f"{theirs:.1f}%" if theirs is not None else "n/a"
+        print(f"{label:38} {ours_s:>10}   {theirs_s:>10}")
+
+    print("\n" + "=" * 78)
+    print("Agentless-style %% Correct Location -- roust (no-LLM) vs GPT-4o Agentless")
+    print("(FUNCTION is EXACT, not a proxy -- SWE-bench Verified held-out)")
+    print("=" * 78)
+    print(f"{'':38} {'roust':>10}   {'GPT-4o Agentless':>10}")
+    row("FILE   (predicted ⊇ gold files)", a["file"]["pct_correct"], al["file"])
+    row("FUNCTION (EXACT)                ", a["function"]["pct_correct"], al["function"])
+    row("LINE   (all-or-nothing)         ", a["line"]["pct_correct_all_or_nothing"], al["line"])
+    print(f"\n{'LINE mean-fraction covered (continuity w/ prior reporting)':60} "
+          f"{a['line']['mean_fraction_covered']:.4f}")
+    rp = a["region_precision"]
+    print(f"{'REGION PRECISION (gold lines / total returned lines), mean':60} "
+          f"{rp['mean_precision']:.4f}  (n={rp['n']}, excluded={rp['n_excluded']})")
+    print(f"{'  mean total region lines / instance':60} "
+          f"{rp['mean_total_region_lines_per_instance']:.1f}")
+    print(f"\nFUNCTION n_evaluated={a['function']['n_evaluated']} "
+          f"n_correct={a['function']['n_correct']} "
+          f"excluded(engine_errors={a['function']['n_engine_errors_excluded']}, "
+          f"git_show_failures={a['function']['n_git_show_failures_excluded']})")
+
+    print(f"\n--- restricted to file-correct subset (n={fc['n']}/{a['n']}) ---")
+    row("FUNCTION (EXACT)                ", fc["function"]["pct_correct"], None)
+    row("LINE   (all-or-nothing)         ", fc["line"]["pct_correct_all_or_nothing"], None)
+    print(f"{'LINE mean-fraction covered':60} {fc['line']['mean_fraction_covered']:.4f}")
+    rpf = fc["region_precision"]
+    print(f"{'REGION PRECISION, mean':60} {rpf['mean_precision']:.4f} (n={rpf['n']})")
+
+
+if __name__ == "__main__":
+    main()
