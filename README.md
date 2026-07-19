@@ -103,7 +103,7 @@ roust "connection pooling" ~/code/httpx --pad-lines 5
 # (default 0.85; `--pad-lines 0 --len-exp 1.0` reproduces the pre-adoption packing)
 roust "connection pooling" ~/code/httpx --len-exp 0.85
 
-# Dump the full diagnostic record (roust.core.Explain) as JSON to stderr
+# Dump the full diagnostic record (the engine's Explain struct) as JSON to stderr
 roust "connection pooling" ~/code/httpx --explain
 ```
 
