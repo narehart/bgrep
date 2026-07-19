@@ -25,6 +25,7 @@ function-level metric -- so it is not reproduced in this script.
 
 Usage:
     python parity/region_eval2.py [--limit N] [--timeout SECONDS] \\
+        [--include-preamble N] [--preamble-top-k N] \\
         --report lab/results_regions/full300_v8.jsonl
 
 Output: one JSON object per line (JSONL), one line per instance, written as
@@ -63,7 +64,8 @@ def engine_version_string() -> str:
 
 
 def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int = 0,
-              len_exp: float = 1.0) -> tuple[dict | None, str | None]:
+              len_exp: float = 1.0, include_preamble: int = 0,
+              preamble_top_k: int = 3) -> tuple[dict | None, str | None]:
     argv = [str(ROUST_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path)]
     if pad_lines != 0:
         # only appended for non-default (0) values here -- 0 is this
@@ -82,6 +84,15 @@ def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int = 0,
         # shipped-engine default of the moment (0.85 post-adoption, 1.0
         # pre-).
         argv += ["--len-exp", str(len_exp)]
+    if include_preamble != 0:
+        # only appended for non-default (0) values -- 0 matches roust-rs/
+        # src/main.rs's own `--include-preamble` default (off,
+        # byte-identical), so the default invocation stays flag-free.
+        # Always passed TOGETHER with --preamble-top-k (E15b, unchanged
+        # from the E15 amendment): --preamble-top-k is meaningless on its
+        # own (roust ignores it when --include-preamble == 0), so there is
+        # no separate "top-k only" branch here.
+        argv += ["--include-preamble", str(include_preamble), "--preamble-top-k", str(preamble_top_k)]
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -128,7 +139,8 @@ def load_lite_rows(limit: int) -> list[dict]:
     return rows
 
 
-def eval_lite_instance(row: dict, timeout: float, pad_lines: int = 0, len_exp: float = 1.0) -> dict:
+def eval_lite_instance(row: dict, timeout: float, pad_lines: int = 0, len_exp: float = 1.0,
+                       include_preamble: int = 0, preamble_top_k: int = 3) -> dict:
     instance_id = row["instance_id"]
     gold_hunks = parse_gold_hunks(row["patch"])
     gold_files = sorted(gold_hunks.keys())
@@ -154,7 +166,8 @@ def eval_lite_instance(row: dict, timeout: float, pad_lines: int = 0, len_exp: f
         rec["error"] = f"checkout failed: {exc}"
         return rec
 
-    obj, err = run_roust(row["problem_statement"], repo_path, timeout, pad_lines, len_exp)
+    obj, err = run_roust(row["problem_statement"], repo_path, timeout, pad_lines, len_exp,
+                         include_preamble, preamble_top_k)
     if err:
         rec["error"] = err
         return rec
@@ -221,6 +234,13 @@ def main() -> None:
                           "binary uses ITS OWN default (0.85 post-adoption); any other value is "
                           "forwarded as-is (there is no way to force an explicit `--len-exp 1.0` "
                           "through this script's CLI -- invoke the roust binary directly for that)")
+    ap.add_argument("--include-preamble", type=int, default=0,
+                     help="passthrough to roust's --include-preamble (E15b); 0 (default) matches "
+                          "roust's own default (off, byte-identical)")
+    ap.add_argument("--preamble-top-k", type=int, default=3,
+                     help="passthrough to roust's --preamble-top-k (E15b); only meaningful when "
+                          "--include-preamble > 0, always passed together with it; 3 (default) "
+                          "matches roust's own default")
     args = ap.parse_args()
 
     if not ROUST_BIN.exists():
@@ -241,7 +261,8 @@ def main() -> None:
     t0 = time.time()
     with args.report.open("w") as fh:
         for i, row in enumerate(rows, 1):
-            rec = eval_lite_instance(row, args.timeout, args.pad_lines, args.len_exp)
+            rec = eval_lite_instance(row, args.timeout, args.pad_lines, args.len_exp,
+                                     args.include_preamble, args.preamble_top_k)
             fh.write(json.dumps(rec, default=str) + "\n")
             fh.flush()
             if rec["error"] is None:

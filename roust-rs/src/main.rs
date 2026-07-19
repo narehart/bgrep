@@ -3,6 +3,7 @@
 //!     roust [--json] [--files-only] [--budget N=8192] [--k N]
 //!              [--no-cache] [--reindex]
 //!              [--no-history] [--no-docs] [--no-anchors] [--no-testbridge]
+//!              [--include-preamble N] [--preamble-top-k N]
 //!              [--explain] QUERY PATH
 //!
 //! Runs the frozen-v7 retrieval pipeline (roust::core, roust::cache,
@@ -123,6 +124,27 @@ struct Args {
     /// pre-E12/E14) engine, where 1.0 is the original linear length penalty.
     #[arg(long, default_value_t = 0.85)]
     len_exp: f64,
+
+    /// force-include each top-ranked returned file's module preamble
+    /// (imports, module-level constants, docstring -- up to N lines, capped
+    /// at the line before its first def/class for Python files, plain first
+    /// N lines otherwise) alongside its selected region(s); under budget
+    /// pressure preambles are de-escalated (shrunk toward an 8-line floor,
+    /// lowest-ranked file first) before padding shrinks and before any
+    /// whole span is dropped, and a file's last remaining span is never
+    /// evicted -- the returned FILE set is invariant to this flag. 0
+    /// (default) is OFF, byte-identical output (E15b)
+    #[arg(long, default_value_t = 0)]
+    include_preamble: i64,
+
+    /// restrict --include-preamble's forced preamble to only the top N
+    /// ranked files (rank = position in the ranked file order returned by
+    /// file selection); only meaningful when --include-preamble > 0 --
+    /// bounds the token cost of preambles under unrestricted --k, where
+    /// force-including every returned file's preamble alone can rival the
+    /// whole --budget (E15b, carried over from the E15 amendment)
+    #[arg(long, default_value_t = 3)]
+    preamble_top_k: i64,
 }
 
 fn main() {
@@ -138,6 +160,14 @@ fn main() {
     }
     if !args.len_exp.is_finite() {
         eprintln!("roust: error: --len-exp must be finite");
+        std::process::exit(2);
+    }
+    if args.include_preamble < 0 {
+        eprintln!("roust: error: --include-preamble must be >= 0");
+        std::process::exit(2);
+    }
+    if args.preamble_top_k < 0 {
+        eprintln!("roust: error: --preamble-top-k must be >= 0");
         std::process::exit(2);
     }
 
@@ -201,6 +231,8 @@ fn main() {
         0.0,
         args.pad_lines,
         args.len_exp,
+        args.include_preamble as usize,
+        args.preamble_top_k as usize,
     );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 
