@@ -72,6 +72,11 @@ PROGRESS_EVERY = 25
 DEFAULT_PAD_LINES = 5    # current engine default (E12, adopted commit 5e81c8a)
 DEFAULT_LEN_EXP = 0.85   # current engine default (E14, adopted commit 5e81c8a)
 
+# Additional flags appended to every roust invocation. Empty here (this
+# script always runs the default engine); parity/region_eval_full.py sets
+# this module global to its BM25_ONLY_FLAGS for the same-harness BM25 arm.
+EXTRA_ENGINE_FLAGS: list[str] = []
+
 
 def engine_version_string() -> str:
     proc = subprocess.run([str(ROUST_BIN), "--version"], capture_output=True, text=True, timeout=30)
@@ -81,7 +86,8 @@ def engine_version_string() -> str:
 def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int,
               len_exp: float) -> tuple[dict | None, str | None]:
     argv = [str(ROUST_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path),
-            "--pad-lines", str(pad_lines), "--len-exp", str(len_exp)]
+            "--pad-lines", str(pad_lines), "--len-exp", str(len_exp),
+            *EXTRA_ENGINE_FLAGS]
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
