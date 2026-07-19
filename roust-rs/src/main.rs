@@ -123,6 +123,14 @@ struct Args {
     /// pre-E12/E14) engine, where 1.0 is the original linear length penalty.
     #[arg(long, default_value_t = 0.85)]
     len_exp: f64,
+
+    /// EXPERIMENTAL (E16, issue #4): post-division marginal-gain bonus in
+    /// pack_regions' pass 2 for a method-level region whose enclosing
+    /// class was already anchored by a pass-1 pick in the same .py file --
+    /// deepens coverage within already-committed classes, never promotes a
+    /// new file. Default 0.0 = OFF, byte-identical to the current engine.
+    #[arg(long, default_value_t = 0.0)]
+    sibling_boost: f64,
 }
 
 fn main() {
@@ -138,6 +146,10 @@ fn main() {
     }
     if !args.len_exp.is_finite() {
         eprintln!("roust: error: --len-exp must be finite");
+        std::process::exit(2);
+    }
+    if !args.sibling_boost.is_finite() {
+        eprintln!("roust: error: --sibling-boost must be finite");
         std::process::exit(2);
     }
 
@@ -201,6 +213,7 @@ fn main() {
         0.0,
         args.pad_lines,
         args.len_exp,
+        args.sibling_boost,
     );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;
 

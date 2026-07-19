@@ -2216,6 +2216,49 @@ fn python_blocks(text: &str) -> Vec<(usize, usize)> {
     spans.into_iter().filter(|&(a, b)| b >= a).collect()
 }
 
+/// Class-only subset of `python_blocks`' header spans (1-indexed,
+/// inclusive): one span per `class` header, from the header line through
+/// the last line before the next same-or-lower-indent header -- the same
+/// header-scan + end-line machinery as `python_blocks` (`PY_BLOCK_RE`,
+/// same indent rule), filtered to class headers. Used by E16's
+/// sibling-method boost (`pack_regions`' `sibling_boost`) to map a
+/// selected span back to its enclosing class. Differences from
+/// `python_blocks`, both deliberate: (1) decorators above the class are
+/// NOT folded into the span start (the span is used only for containment
+/// tests against candidate spans, and a method candidate can never start
+/// above its class's own header line -- while a decorated WHOLE-CLASS
+/// candidate starting at the decorator line correctly fails the
+/// containment test, since boosting the whole class is exactly what E16
+/// must not do); (2) non-class headers emit nothing.
+fn py_class_spans(text: &str) -> Vec<(usize, usize)> {
+    let lines = py_splitlines(text);
+    let n = lines.len();
+    let mut headers: Vec<(usize, usize)> = Vec::new();
+    for (i, ln) in lines.iter().enumerate() {
+        if let Some(caps) = PY_BLOCK_RE.captures(ln) {
+            let indent = caps.get(1).unwrap().as_str().chars().count();
+            headers.push((i, indent));
+        }
+    }
+    let mut spans: Vec<(usize, usize)> = Vec::new();
+    for (idx, &(i, indent)) in headers.iter().enumerate() {
+        if !lines[i].trim_start().starts_with("class ") {
+            continue;
+        }
+        let mut end = n;
+        for &(j, ind2) in &headers[idx + 1..] {
+            if ind2 <= indent {
+                end = j;
+                break;
+            }
+        }
+        if end >= i + 1 {
+            spans.push((i + 1, end));
+        }
+    }
+    spans
+}
+
 static PY_DEF_LINE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"^[ \t]*(?:async def|def|class)\s+(\w+)").unwrap());
 
 /// 1-indexed line number of each class/def header's FIRST occurrence in
@@ -2472,6 +2515,38 @@ fn name_score(sym: Option<&str>, tset: &HashSet<String>) -> f64 {
 /// padded span's own `tok`/`text` from the file directly rather than
 /// touching `tok_pow` (a selection-time-only field), so the two experiments
 /// compose without either one reaching into the other's fields.
+///
+/// `sibling_boost` (E16, issue #4 / wave-3 case mining: in 11/26 mined
+/// D-class misses the correct CLASS was already anchored via a sibling
+/// method's selection -- file/class localization succeeded, only the
+/// specific-method greedy pick failed; 0.0 is OFF and byte-identical --
+/// the boost precomputation is skipped entirely and pass 2's metric adds
+/// no term at all, not even `+ 0.0`): after pass 1 seats its per-file
+/// picks, each pick's span in a `.py` file is mapped (via
+/// `py_class_spans`, the `python_blocks` header machinery) to its
+/// innermost enclosing class span; that (file, class-span) set is the
+/// "anchored classes". In pass 2's marginal scoring, a candidate whose
+/// span lies strictly inside an anchored class of the SAME file -- and is
+/// not the whole-class block itself, and is not already contained in a
+/// selected span (that text is already in the bundle) -- gets
+/// `+ sibling_boost * 1.0` added POST-division, the `w_name` pattern:
+/// class co-membership is structural identity evidence, independent of
+/// how long the sibling method happens to be, so folding it into `gain`
+/// pre-division would let the `/tok^len_exp` denominator crush it for
+/// exactly the long real-fix methods E16 exists to rescue. The bonus is a
+/// precomputed 0-or-1 indicator per candidate (normalized: `sibling_boost`
+/// IS the bonus magnitude in selection-metric units) -- a flat additive
+/// term, so ranking AMONG boosted siblings is still their own marginal
+/// density and no saturation point exists (the w_name lesson: a
+/// multiplicative or dominant term saturates and regresses). Determinism:
+/// the indicator vector is computed once between the passes (and only
+/// dampened to 0.0 in the greedy loop's BODY when a newly seated span
+/// swallows a candidate -- never inside the comparator), so the pass-2
+/// comparator stays a pure function of a stable snapshot (issue #14).
+/// Blast radius: the boost can only deepen coverage within classes pass 1
+/// already committed to -- it can never promote a new file (pass 2 only
+/// ever sees candidates from `files`, and the bonus only fires inside
+/// already-anchored classes) and is a no-op for non-Python files.
 pub fn pack_regions(
     corpus: &Corpus,
     files: &[String],
@@ -2483,6 +2558,7 @@ pub fn pack_regions(
     w_name: f64,
     pad_lines: usize,
     len_exp: f64,
+    sibling_boost: f64,
 ) -> (IndexMap<String, Vec<(usize, usize)>>, String) {
     let tset: HashSet<String> = terms.iter().cloned().collect();
     let idf: HashMap<String, f64> = tset
@@ -2708,6 +2784,69 @@ pub fn pack_regions(
         chosen_map.entry(rel.clone()).or_default().push(seg_idx);
     }
 
+    // ------------------------------------------------------------ E16: sibling-method boost precompute
+    //
+    // Between the passes (pass-1 picks are final, pass 2 hasn't scored
+    // anything yet): map every pass-1 pick in a .py file to its innermost
+    // enclosing class span, then precompute a 0-or-1 bonus indicator per
+    // ORIGINAL candidate. Precomputed ONCE here -- the pass-2 comparator
+    // only reads this vector (no float recomputation, no set iteration; the
+    // issue #14 determinism rule). Mapping uses the pick's START line, not
+    // its full span: a per-file-cap-trimmed pick's reported end can exceed
+    // the true block end (see the `keep` quirk above), but its start line
+    // is always the untrimmed candidate's own first line.
+    let mut sibling_bonus: Vec<f64> = vec![0.0; candidates.len()];
+    if sibling_boost != 0.0 {
+        let mut anchored: HashMap<String, Vec<(usize, usize)>> = HashMap::new();
+        for (rel, idxs) in &chosen_map {
+            if !rel.ends_with(".py") {
+                continue; // non-Python: no class machinery, no-op
+            }
+            let cls_spans = py_class_spans(&corpus.text[rel]);
+            if cls_spans.is_empty() {
+                continue;
+            }
+            for &si in idxs {
+                let a = all_segments[si].span.0;
+                // Innermost enclosing class = the containing class span with
+                // the LARGEST start line (class spans nest, so the deepest
+                // container starts last).
+                if let Some(&(ca, cb)) =
+                    cls_spans.iter().filter(|&&(ca, cb)| ca <= a && a <= cb).max_by_key(|&&(ca, _)| ca)
+                {
+                    let v = anchored.entry(rel.clone()).or_default();
+                    if !v.contains(&(ca, cb)) {
+                        v.push((ca, cb));
+                    }
+                }
+            }
+        }
+        if !anchored.is_empty() {
+            // Pass-1 selected spans per file: a candidate already contained
+            // in one of these is already in the bundle -- boosting it would
+            // only buy duplicate text.
+            let selected: HashMap<&String, Vec<(usize, usize)>> = chosen_map
+                .iter()
+                .map(|(f, idxs)| (f, idxs.iter().map(|&i| all_segments[i].span).collect()))
+                .collect();
+            for (i, c) in candidates.iter().enumerate() {
+                let Some(cls) = anchored.get(&c.file) else { continue };
+                let (a, b) = c.span;
+                let inside_anchored =
+                    cls.iter().any(|&(ca, cb)| ca <= a && b <= cb && (a, b) != (ca, cb));
+                if !inside_anchored {
+                    continue;
+                }
+                let already_covered = selected
+                    .get(&c.file)
+                    .is_some_and(|sp| sp.iter().any(|&(sa, sb)| sa <= a && b <= sb));
+                if !already_covered {
+                    sibling_bonus[i] = 1.0;
+                }
+            }
+        }
+    }
+
     // pass 2: greedy marginal coverage over the ORIGINAL candidates minus
     // whichever became the pass-1 pick per file (Python compares dicts by
     // identity/equality against the `chosen` accumulator; here we track by
@@ -2741,7 +2880,16 @@ pub fn pack_regions(
             // (see pack_regions' doc comment) -- otherwise a name-anchored
             // region too large to win pass 1 could never win pass 2's
             // marginal race either.
-            base + w_name * c.name_score
+            let mut m = base + w_name * c.name_score;
+            // E16: post-division sibling bonus, read from the precomputed
+            // indicator vector (see the precompute block above). Guarded so
+            // the OFF path adds no term at all: even `+ 0.0` is not
+            // byte-identity-safe in principle (`-0.0 + 0.0` flips sign, and
+            // total_cmp orders -0.0 < +0.0).
+            if sibling_boost != 0.0 {
+                m += sibling_boost * sibling_bonus[i];
+            }
+            m
         };
         // total_cmp, not partial_cmp().unwrap(): `marginal` folds in
         // `scores.get(&c.file)`, an externally-supplied score that isn't
@@ -2784,6 +2932,25 @@ pub fn pack_regions(
         spent += tok;
         covered.extend(candidates[i].terms.iter().cloned());
         let file = candidates[i].file.clone();
+        // E16: a just-seated span swallows any candidate contained in it --
+        // its text is now in the bundle, so its sibling bonus (if any) must
+        // stop firing or the boost would pull in duplicate text (e.g. seat
+        // the whole-class block, then re-seat each method inside it).
+        // Mutated HERE, in the loop body, never inside the comparator: each
+        // iteration's `marginal` closure reads a snapshot that is stable for
+        // the duration of that iteration's scoring (issue #14 rule).
+        if sibling_boost != 0.0 {
+            let (sa, sb) = candidates[i].span;
+            for j in 0..sibling_bonus.len() {
+                if sibling_bonus[j] != 0.0
+                    && candidates[j].file == file
+                    && sa <= candidates[j].span.0
+                    && candidates[j].span.1 <= sb
+                {
+                    sibling_bonus[j] = 0.0;
+                }
+            }
+        }
         let seg_idx = all_segments.len();
         all_segments.push(Candidate {
             file: candidates[i].file.clone(),
@@ -3201,10 +3368,10 @@ mod tests {
             spans["core.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans_off, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         assert_eq!(sym_of(&spans_off), Some("subtokens".to_string()), "pre-fix (w_name=0.0) reproduces the bug: body term-density picks the wrong region");
 
-        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0, 1.0);
+        let (spans_on, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 1.0, 0, 1.0, 0.0);
         assert_eq!(sym_of(&spans_on), Some("pack_regions".to_string()), "w_name=1.0 must select pack_regions via name-score anchoring");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -3259,19 +3426,162 @@ mod tests {
             spans["mod.py"].first().and_then(|&(a, b)| region_symbol(&def_lines, a, b)).map(|s| s.to_string())
         };
 
-        let (spans_linear, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans_linear, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         assert_eq!(
             sym_of(&spans_linear),
             Some("stub_widget".to_string()),
             "len_exp=1.0 (pre-E14 linear gain/tok) must reproduce the crushed-long-fix failure mode: stub wins"
         );
 
-        let (spans_softened, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 0.7);
+        let (spans_softened, _) = pack_regions(&corpus, &files, &terms, &scores, 1, &count_tokens, None, 0.0, 0, 0.7, 0.0);
         assert_eq!(
             sym_of(&spans_softened),
             Some("real_gadget_sprocket_cog_lever".to_string()),
             "len_exp=0.7 must flip the pick to the longer, more densely on-topic real function"
         );
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E16 fixture: `py_class_spans` must emit one span per `class` header
+    /// (header line through the line before the next same-or-lower-indent
+    /// header), including nested classes, and must NOT fold a decorator
+    /// above a class into the span start (see its doc comment for why
+    /// that's deliberate), nor emit anything for defs or non-class headers.
+    #[test]
+    fn py_class_spans_maps_class_headers_to_spans() {
+        let src = "\
+import os
+
+class Outer:
+    def method_a(self):
+        pass
+
+    class Inner:
+        def method_b(self):
+            pass
+
+    def method_c(self):
+        pass
+
+@decorator
+class Decorated:
+    def method_d(self):
+        pass
+
+def top_level():
+    pass
+";
+        // Outer: header line 3 through line 13 (the line before the
+        // @decorator header). Inner (nested): 7..10 (blank line before
+        // method_c's header). Decorated: 15..18 -- starts at the class
+        // header, NOT the @decorator line 14.
+        assert_eq!(py_class_spans(src), vec![(3, 13), (7, 10), (15, 18)]);
+        // No classes at all -> no spans.
+        assert_eq!(py_class_spans("def only_func():\n    pass\n"), Vec::<(usize, usize)>::new());
+    }
+
+    /// E16 behavioral fixture (single .py file, whitespace-count tokenizer,
+    /// len_exp=1.0, pad_lines=0, w_name=0.0): pass 1 picks the dense method
+    /// `dense_widget_gadget`, anchoring class Alpha. Budget then admits
+    /// exactly ONE pass-2 seat. Unboosted, the seat goes to `outsider` (a
+    /// method of UNanchored class Beta) because it is shorter than Alpha's
+    /// `quiet_sibling` at identical marginal term coverage -- exactly the
+    /// D-class "right file, wrong function" greedy shape. With
+    /// `sibling_boost=0.5` the post-division bonus (which fires ONLY for
+    /// candidates strictly inside anchored-class Alpha -- `outsider` gets
+    /// nothing despite its better density) flips the seat to
+    /// `quiet_sibling`. Also pins the OFF golden path (0.0 twice,
+    /// identical) and 10x determinism for both settings.
+    #[test]
+    fn pack_regions_sibling_boost_deepens_anchored_class_only() {
+        let tmp = std::env::temp_dir().join(format!("roust_e16_sibling_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let src = "\
+class Alpha:
+    def dense_widget_gadget(self):
+        widget = 1
+        gadget = 2
+        return widget + gadget
+
+    def quiet_sibling(self):
+        val = widget
+        misc = 1
+        return val
+
+class Beta:
+    def outsider(self):
+        v = widget
+        return v
+";
+        std::fs::write(tmp.join("mod.py"), src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("widget gadget", &[]);
+        let scores: IndexMap<String, f64> = [("mod.py".to_string(), 1.0)].into_iter().collect();
+        let files = vec!["mod.py".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+        // Pass 1 spends 12 (dense_widget_gadget, span (2,6)). Budget 22
+        // leaves room for exactly one more small seat: quiet_sibling costs
+        // 10 (12+10=22 fits), outsider costs 7 (12+7=19 fits), but after
+        // either seat the next candidate overflows and pass 2 breaks.
+        let budget = 22;
+
+        let (spans_off, bundle_off) =
+            pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0, 0.0);
+        assert_eq!(
+            spans_off["mod.py"],
+            vec![(2, 6), (13, 15)],
+            "OFF golden: pass 2's density race must seat Beta's shorter `outsider`, not the anchored-class sibling"
+        );
+
+        let (spans_on, _) =
+            pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0, 0.5);
+        assert_eq!(
+            spans_on["mod.py"],
+            vec![(2, 6), (7, 11)],
+            "sibling_boost=0.5 must flip the pass-2 seat to `quiet_sibling` inside anchored class Alpha"
+        );
+
+        // Default OFF path is stable/golden and the ON path is deterministic:
+        // 10 repeat calls each, identical spans AND bundle text.
+        for _ in 0..10 {
+            let (s0, b0) =
+                pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0, 0.0);
+            assert_eq!(s0, spans_off, "sibling_boost=0.0 must stay byte-identical across calls");
+            assert_eq!(b0, bundle_off, "sibling_boost=0.0 bundle must stay byte-identical across calls");
+            let (s1, _) =
+                pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0, 0.5);
+            assert_eq!(s1, spans_on, "sibling_boost=0.5 selection must be deterministic");
+        }
+
+        std::fs::remove_dir_all(&tmp).ok();
+    }
+
+    /// E16 no-op guard for non-Python files: the class-span machinery only
+    /// runs for `.py` files, so on a corpus whose only file is a `.go`
+    /// (window_blocks path) containing class-looking text in comments, any
+    /// `sibling_boost` value must leave the selection identical to OFF.
+    #[test]
+    fn pack_regions_sibling_boost_noop_for_non_python() {
+        let tmp = std::env::temp_dir().join(format!("roust_e16_nonpy_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).unwrap();
+        let body: String = (0..80).map(|i| format!("// filler line {i} widget note\n")).collect();
+        let src = format!("// class Alpha:\n//     def dense_widget_gadget(self):\nfunc DenseWidget() {{}}\n{body}");
+        std::fs::write(tmp.join("notes.go"), src).unwrap();
+
+        let corpus = Corpus::build(&tmp, None, false, false);
+        let terms = query_terms("widget gadget", &[]);
+        let scores: IndexMap<String, f64> = [("notes.go".to_string(), 1.0)].into_iter().collect();
+        let files = vec!["notes.go".to_string()];
+        let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
+
+        let (spans_off, bundle_off) =
+            pack_regions(&corpus, &files, &terms, &scores, 60, &count_tokens, None, 0.0, 0, 1.0, 0.0);
+        let (spans_on, bundle_on) =
+            pack_regions(&corpus, &files, &terms, &scores, 60, &count_tokens, None, 0.0, 0, 1.0, 5.0);
+        assert_eq!(spans_on, spans_off, "sibling_boost must be a no-op for non-Python files");
+        assert_eq!(bundle_on, bundle_off, "sibling_boost must not change non-Python bundle text");
 
         std::fs::remove_dir_all(&tmp).ok();
     }
@@ -3314,8 +3624,8 @@ mod tests {
         // Large budget so pass 2's greedy loop actually runs over multiple
         // remaining candidates (pass 1 alone would only ever touch one span
         // per file).
-        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0);
-        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans1, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0, 0.0);
+        let (spans2, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         assert_eq!(spans1, spans2, "pack_regions must be deterministic given identical (NaN/inf-bearing) inputs");
         assert!(!spans1.is_empty(), "pack_regions should still select regions despite NaN/inf scores");
 
@@ -3364,10 +3674,10 @@ mod tests {
         // remaining candidates per iteration -- the exact scenario that
         // triggers repeated `marginal(i)` calls for the same `i` within a
         // single sort.
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls given many equal/near-equal marginal scores (and must never panic)"
@@ -3404,7 +3714,7 @@ mod tests {
         let files = vec!["needles.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         let got = &spans["needles.py"];
         assert_eq!(got, &vec![(1, 5), (6, 8)], "pad_lines=0 must keep the two naturally-adjacent spans as separate, unmerged entries (pre-E12 behavior)");
 
@@ -3429,7 +3739,7 @@ mod tests {
         let files = vec!["needles.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 1, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 1, 1.0, 0.0);
         let got = &spans["needles.py"];
         assert_eq!(got, &vec![(1, 8)], "pad_lines=1 must merge the two adjacent spans into one (1,8) covering the whole file");
         // merged text must be the FULL file content, not a truncated slice.
@@ -3454,7 +3764,7 @@ mod tests {
         let files = vec!["tiny.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 500, 1.0);
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 500, 1.0, 0.0);
         assert_eq!(spans["tiny.py"], vec![(1, 3)], "pad_lines far exceeding the file's own length must clamp to (1, n_lines)");
 
         std::fs::remove_dir_all(&tmp).ok();
@@ -3500,7 +3810,7 @@ mod tests {
         // ignoring budget) -- it only gates pass 2 and (new) the post-
         // padding eviction step, so both hi.py and lo.py's pass-1 spans are
         // seated before padding/eviction ever runs.
-        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 2, 1.0);
+        let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 2, 1.0, 0.0);
 
         assert!(!spans.contains_key("lo.py"), "lower-gain lo.py span must be evicted WHOLLY (key absent), not truncated");
         assert!(spans.contains_key("hi.py"), "higher-gain hi.py span must survive eviction");
@@ -3554,7 +3864,7 @@ mod tests {
 
         // pad=0 baseline: both files' own needle spans are seated
         // unconditionally by pass 1 and comfortably fit budget on their own.
-        let (spans0, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans0, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 0, 1.0, 0.0);
         assert!(
             spans0.contains_key("hi.py") && spans0.contains_key("lo.py"),
             "pad_lines=0 baseline must select both files"
@@ -3562,7 +3872,7 @@ mod tests {
         let baseline: HashSet<&String> = spans0.keys().collect();
 
         for pad in [2usize, 6, 15] {
-            let (spans, _bundle) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, pad, 1.0);
+            let (spans, _bundle) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, pad, 1.0, 0.0);
             let got: HashSet<&String> = spans.keys().collect();
             assert_eq!(
                 got, baseline,
@@ -3621,10 +3931,10 @@ mod tests {
         let t_needle = count_tokens(&needle_text) as i64;
         let budget = 2 * t_needle + 3;
 
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 15, 1.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 15, 1.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 15, 1.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, budget, &count_tokens, None, 0.0, 15, 1.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions with the E12b guard active must produce byte-identical spans across repeated calls"
@@ -3654,10 +3964,10 @@ mod tests {
         let scores: IndexMap<String, f64> = [("many.py".to_string(), 1.0)].into_iter().collect();
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 3, 1.0);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 3, 1.0, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 3, 1.0);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 3, 1.0, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions with pad_lines>0 must produce byte-identical spans across repeated calls"
@@ -3688,7 +3998,7 @@ mod tests {
         let files = vec!["a.py".to_string()];
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &scores, 8192, &count_tokens, None, 0.0, 0, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &scores, 8192, &count_tokens, None, 0.0, 0, 1.0, 0.0);
 
         let expected_spans: IndexMap<String, Vec<(usize, usize)>> =
             [("a.py".to_string(), vec![(1usize, 2usize)])].into_iter().collect();
@@ -3722,10 +4032,10 @@ mod tests {
         let scores: IndexMap<String, f64> = [("many.py".to_string(), 1.0)].into_iter().collect();
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
 
-        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 0.7);
+        let (first, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 0.7, 0.0);
         assert!(!first.is_empty());
         for _ in 0..10 {
-            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 0.7);
+            let (spans, _) = pack_regions(&corpus, &files, &terms, &scores, 100_000, &count_tokens, None, 0.0, 0, 0.7, 0.0);
             assert_eq!(
                 spans, first,
                 "pack_regions must produce byte-identical spans across repeated calls at len_exp=0.7"
@@ -3783,7 +4093,7 @@ mod tests {
         assert!(files.contains(&"pkg/validators.py".to_string()));
 
         let count_tokens = |s: &str| -> usize { s.split_whitespace().count() };
-        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0, 1.0);
+        let (spans, bundle) = pack_regions(&corpus, &files, &terms, &_scores, 4096, &count_tokens, None, 1.0, 0, 1.0, 0.0);
         assert!(!bundle.is_empty());
         assert!(spans.contains_key("pkg/router.py"));
 
