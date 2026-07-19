@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ---------------------------------------------------------------------------
+# SHARED-CLONE HAZARD (issue #41): this script MUTATES lab/swebench_repos/
+# (git checkout of each instance's base commit before invoking the engines).
+# That directory has historically been ONE physical set of clones shared
+# across every worktree of this repo -- two concurrent evals (or an eval plus
+# anything else reading those clones) in different worktrees race each
+# other's checkouts and silently corrupt results. Discipline: when anything
+# else might touch the clones, run from a worktree whose lab/swebench_repos/
+# is a PRIVATE copy (`cp -R` of the main repo's clones), never the main
+# repo's shared directory.
+# ---------------------------------------------------------------------------
 """Full-bundle parity checker: Python `roust` engine vs Rust `roust` engine.
 
 `parity/harness.py` is the binding 300/300 gate, but it only compares

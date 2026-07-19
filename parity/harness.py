@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ---------------------------------------------------------------------------
+# SHARED-CLONE HAZARD (issue #41): this script MUTATES lab/swebench_repos/
+# (per-task git checkout of each instance's base commit). That directory has
+# historically been ONE physical set of clones shared across every worktree
+# of this repo -- two concurrent evals (or an eval plus anything else reading
+# those clones) in different worktrees race each other's checkouts and
+# silently corrupt results. Discipline: when anything else might touch the
+# clones, run from a worktree whose lab/swebench_repos/ is a PRIVATE copy
+# (`cp -R` of the main repo's clones), never the main repo's shared
+# directory.
+# ---------------------------------------------------------------------------
 """Language-agnostic parity harness for the bgrep retrieval pipeline.
 
 Runs any command that implements the bgrep retrieval CONTRACT against the
