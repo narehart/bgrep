@@ -136,6 +136,20 @@ struct Args {
     /// disables the table and this flag becomes a no-op).
     #[arg(long, default_value_t = 0.0)]
     history_boost: f64,
+
+    /// relative tie-break epsilon for the E8 history-association signal
+    /// (experiment E8b, issue #4 campaign): candidates are ranked by the
+    /// engine's incumbent density metric UNCHANGED, then any group of
+    /// candidates within `eps * leader_metric` of the local leader (in
+    /// pass-1 per-file selection and pass-2's marginal sort) is re-ordered
+    /// by repo-history association score, stable within -- the signal
+    /// arbitrates ONLY among near-equal candidates and can never override
+    /// density (the E8 additive-bonus doorway flooded; this one cannot).
+    /// Default 0.0 = OFF: byte-identical to the pre-E8b engine. Mutually
+    /// exclusive with --history-boost (error if both are nonzero).
+    /// Requires history (--no-history makes it a no-op).
+    #[arg(long, default_value_t = 0.0)]
+    history_tiebreak: f64,
 }
 
 fn main() {
@@ -155,6 +169,19 @@ fn main() {
     }
     if !args.history_boost.is_finite() {
         eprintln!("roust: error: --history-boost must be finite");
+        std::process::exit(2);
+    }
+    if !args.history_tiebreak.is_finite() || args.history_tiebreak < 0.0 {
+        eprintln!("roust: error: --history-tiebreak must be finite and >= 0");
+        std::process::exit(2);
+    }
+    // E8b contract: the two doorways for the association signal are
+    // mutually exclusive -- the tie-break exists precisely because the
+    // additive bonus lost, and combining them would make the arms
+    // uninterpretable. Erroring (not silently preferring one) keeps eval
+    // sweeps honest.
+    if args.history_boost != 0.0 && args.history_tiebreak != 0.0 {
+        eprintln!("roust: error: --history-boost and --history-tiebreak are mutually exclusive");
         std::process::exit(2);
     }
 
@@ -223,6 +250,7 @@ fn main() {
         args.pad_lines,
         args.len_exp,
         args.history_boost,
+        args.history_tiebreak,
         history_assoc,
     );
     let query_ms = t1.elapsed().as_secs_f64() * 1000.0;

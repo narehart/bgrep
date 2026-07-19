@@ -63,7 +63,8 @@ def engine_version_string() -> str:
 
 
 def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int = 0,
-              len_exp: float = 1.0, history_boost: float = 0.0) -> tuple[dict | None, str | None]:
+              len_exp: float = 1.0, history_boost: float = 0.0,
+              history_tiebreak: float = 0.0) -> tuple[dict | None, str | None]:
     argv = [str(ROUST_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path)]
     if pad_lines != 0:
         # only appended for non-default (0) values here -- 0 is this
@@ -88,6 +89,14 @@ def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int = 0,
         # `--history-boost` default (E8 is OFF/byte-identical by default),
         # so not passing the flag and passing 0.0 are equivalent here.
         argv += ["--history-boost", str(history_boost)]
+    if history_tiebreak != 0.0:
+        # only appended for non-default (0.0) values -- 0.0 is both this
+        # script's "flag off" sentinel AND the roust binary's own
+        # `--history-tiebreak` default (E8b is OFF/byte-identical by
+        # default). The binary itself enforces mutual exclusion with
+        # --history-boost (exit 2), which surfaces here as a per-instance
+        # error rather than being silently resolved.
+        argv += ["--history-tiebreak", str(history_tiebreak)]
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -135,7 +144,7 @@ def load_lite_rows(limit: int) -> list[dict]:
 
 
 def eval_lite_instance(row: dict, timeout: float, pad_lines: int = 0, len_exp: float = 1.0,
-                       history_boost: float = 0.0) -> dict:
+                       history_boost: float = 0.0, history_tiebreak: float = 0.0) -> dict:
     instance_id = row["instance_id"]
     gold_hunks = parse_gold_hunks(row["patch"])
     gold_files = sorted(gold_hunks.keys())
@@ -162,7 +171,7 @@ def eval_lite_instance(row: dict, timeout: float, pad_lines: int = 0, len_exp: f
         return rec
 
     obj, err = run_roust(row["problem_statement"], repo_path, timeout, pad_lines, len_exp,
-                         history_boost)
+                         history_boost, history_tiebreak)
     if err:
         rec["error"] = err
         return rec
@@ -228,6 +237,12 @@ def main() -> None:
                           "association); 0.0 (default) omits the flag, which is equivalent "
                           "here since 0.0 is also the roust binary's own default (E8 OFF, "
                           "byte-identical); any other value is forwarded as-is")
+    ap.add_argument("--history-tiebreak", type=float, default=0.0,
+                     help="passthrough to roust's --history-tiebreak (E8b tie-break doorway "
+                          "for the E8 association signal); 0.0 (default) omits the flag, which "
+                          "is equivalent here since 0.0 is also the roust binary's own default "
+                          "(E8b OFF, byte-identical); any other value is forwarded as-is; "
+                          "mutually exclusive with --history-boost (the binary exits 2)")
     ap.add_argument("--len-exp", type=float, default=1.0,
                      help="passthrough to roust's --len-exp (E14/issue #14); 1.0 (default, and "
                           "the only value this script treats as 'omit the flag') means the roust "
@@ -255,7 +270,7 @@ def main() -> None:
     with args.report.open("w") as fh:
         for i, row in enumerate(rows, 1):
             rec = eval_lite_instance(row, args.timeout, args.pad_lines, args.len_exp,
-                                     args.history_boost)
+                                     args.history_boost, args.history_tiebreak)
             fh.write(json.dumps(rec, default=str) + "\n")
             fh.flush()
             if rec["error"] is None:

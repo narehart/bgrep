@@ -71,6 +71,7 @@ PROGRESS_EVERY = 25
 DEFAULT_PAD_LINES = 5    # current engine default (E12, adopted commit 5e81c8a)
 DEFAULT_LEN_EXP = 0.85   # current engine default (E14, adopted commit 5e81c8a)
 DEFAULT_HISTORY_BOOST = 0.0  # current engine default (E8 OFF, byte-identical)
+DEFAULT_HISTORY_TIEBREAK = 0.0  # current engine default (E8b OFF, byte-identical)
 
 
 def engine_version_string() -> str:
@@ -79,10 +80,12 @@ def engine_version_string() -> str:
 
 
 def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int,
-              len_exp: float, history_boost: float) -> tuple[dict | None, str | None]:
+              len_exp: float, history_boost: float,
+              history_tiebreak: float) -> tuple[dict | None, str | None]:
     argv = [str(ROUST_BIN), "--json", "--budget", str(BUDGET), query, str(repo_path),
             "--pad-lines", str(pad_lines), "--len-exp", str(len_exp),
-            "--history-boost", str(history_boost)]
+            "--history-boost", str(history_boost),
+            "--history-tiebreak", str(history_tiebreak)]
     try:
         proc = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -134,7 +137,7 @@ def load_verified_rows(gold_parquet: Path, limit: int) -> list[dict]:
 
 
 def eval_verified_instance(row: dict, timeout: float, pad_lines: int, len_exp: float,
-                           history_boost: float) -> dict:
+                           history_boost: float, history_tiebreak: float) -> dict:
     instance_id = row["instance_id"]
     gold_hunks = parse_gold_hunks(row["patch"])
     gold_files = sorted(gold_hunks.keys())
@@ -164,7 +167,7 @@ def eval_verified_instance(row: dict, timeout: float, pad_lines: int, len_exp: f
         return rec
 
     obj, err = run_roust(row["problem_statement"], repo_path, timeout, pad_lines, len_exp,
-                         history_boost)
+                         history_boost, history_tiebreak)
     if err:
         rec["error"] = err
         return rec
@@ -235,6 +238,12 @@ def main() -> None:
                      help=f"passthrough to roust's --history-boost (E8 repo-history "
                           f"association); always forwarded (default {DEFAULT_HISTORY_BOOST}, "
                           f"the current engine default = E8 OFF/byte-identical)")
+    ap.add_argument("--history-tiebreak", type=float, default=DEFAULT_HISTORY_TIEBREAK,
+                     help=f"passthrough to roust's --history-tiebreak (E8b tie-break doorway "
+                          f"for the E8 association signal); always forwarded (default "
+                          f"{DEFAULT_HISTORY_TIEBREAK}, the current engine default = E8b OFF/"
+                          f"byte-identical); mutually exclusive with --history-boost (the "
+                          f"binary exits 2, surfacing as per-instance errors)")
     args = ap.parse_args()
 
     if not ROUST_BIN.exists():
@@ -248,7 +257,8 @@ def main() -> None:
     print(f"engine version: {version}", file=sys.stderr)
     print(f"gold parquet: {args.gold_parquet}", file=sys.stderr)
     print(f"pad_lines={args.pad_lines} len_exp={args.len_exp} "
-          f"history_boost={args.history_boost}", file=sys.stderr)
+          f"history_boost={args.history_boost} "
+          f"history_tiebreak={args.history_tiebreak}", file=sys.stderr)
 
     rows = load_verified_rows(args.gold_parquet, args.limit)
     args.report.parent.mkdir(parents=True, exist_ok=True)
@@ -259,7 +269,7 @@ def main() -> None:
     with args.report.open("w") as fh:
         for i, row in enumerate(rows, 1):
             rec = eval_verified_instance(row, args.timeout, args.pad_lines, args.len_exp,
-                                         args.history_boost)
+                                         args.history_boost, args.history_tiebreak)
             fh.write(json.dumps(rec, default=str) + "\n")
             fh.flush()
             if rec["error"] is None:
