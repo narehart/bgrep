@@ -1,0 +1,16 @@
+engine version: roust 0.2.0 (0bbfab5, clean)
+[25/300] django__django-11848                          elapsed=78s (ok) ok=25 err=0
+[50/300] django__django-13220                          elapsed=159s (ok) ok=50 err=0
+[75/300] django__django-14580                          elapsed=238s (ok) ok=75 err=0
+[100/300] django__django-15814                          elapsed=324s (ok) ok=100 err=0
+[125/300] matplotlib__matplotlib-23314                  elapsed=408s (ok) ok=125 err=0
+[150/300] pallets__flask-5063                           elapsed=474s (ok) ok=150 err=0
+[175/300] pytest-dev__pytest-5692                       elapsed=511s (ok) ok=175 err=0
+[200/300] scikit-learn__scikit-learn-14894              elapsed=559s (ok) ok=200 err=0
+[225/300] sympy__sympy-11870                            elapsed=622s (ok) ok=225 err=0
+[250/300] sympy__sympy-15011                            elapsed=699s (ok) ok=250 err=0
+[275/300] sympy__sympy-19487                            elapsed=800s (ok) ok=275 err=0
+[300/300] sympy__sympy-24909                            elapsed=906s (ok) ok=300 err=0
+
+engine version: roust 0.2.0 (0bbfab5, clean)
+wrote 300 records (300 ok, 0 errors) to lab/results_regions/e8_hb03.jsonl
