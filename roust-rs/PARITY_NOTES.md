@@ -2,10 +2,10 @@
 
 Every Python-semantics trap the Rust port had to reproduce byte-for-byte
 against `lab/lanes2.py` + `lab/history.py` (the frozen v7 pipeline), plus how
-each was resolved in `src/`: fifteen numbered traps (items 1-15 below; the
+each was resolved in `src/`. **15 numbered traps** (items 1-15 below; the
 original twelve from the port itself, plus items 13-15 added post-port as
 region packing v2, the on-disk cache, and the `weight()` determinism fix
-landed). Ordered roughly by where you'd hit them reading the pipeline top to
+landed), ordered roughly by where you'd hit them reading the pipeline top to
 bottom: filesystem walk -> tokenization -> corpus/BM25 -> import graph ->
 select_files -> history mining -> region packing.
 
@@ -15,6 +15,10 @@ Validated by:
 - `parity/harness.py --suite lite --limit 40` (SWE-bench Lite gate):
   **40/40 exact-match** against the frozen `abl_bridges_v7.jsonl` expectations
   (astropy + django instances).
+- Full 300-instance gates, added after the notes above were first written:
+  file-ranking parity **300/300 exact** (`parity/rust_gate_300.json` and
+  successors) and full-bundle parity including packed regions **300/300
+  EXACT** (`parity/bundle_parity_300.json`, `parity/bundle_parity.py`).
 
 ## 1. `str.splitlines()` vs Rust `str::lines()` (`src/pyutil.rs::py_splitlines`)
 

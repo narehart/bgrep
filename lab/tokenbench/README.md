@@ -71,7 +71,7 @@ narrow/refine its query after a miss, same as a human would).
 
 `roust(query)` (`roust_tool.py`) shells out to the real, shipped CLI --
 `uv run roust --json --budget 8192 "<query>" <repo>`, invoked with
-`cwd=<bgrep repo root>` so `uv run` resolves roust's own project
+`cwd=<roust repo root>` so `uv run` resolves roust's own project
 environment -- and returns the packed bundle text verbatim as the tool
 result. This measures the actual shipped tool, not a reimplementation.
 

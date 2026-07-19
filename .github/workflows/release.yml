@@ -6,7 +6,10 @@ name: Release
 # Release credentials exist. See RELEASE.md.
 on:
   push:
-    tags: ["v*"]
+    # Strict vX.Y.Z only (per RELEASE.md) -- a loose "v*" would let a typo'd
+    # or experimental tag (v-test, v0.2.0rc1) trigger a REAL publish, since a
+    # tag push always runs the full publish path.
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -143,9 +146,12 @@ jobs:
 
   publish-crates-io:
     name: Publish to crates.io
-    # Deliberately separate from publish-pypi and github-release: a missing
-    # or invalid CARGO_REGISTRY_TOKEN fails only this job.
-    needs: plan
+    # Deliberately a separate JOB from publish-pypi and github-release (a
+    # missing or invalid CARGO_REGISTRY_TOKEN fails only this job), but it
+    # still requires the sdist + wheel builds to have SUCCEEDED first: a
+    # cargo publish is irrevocable, so nothing may reach any registry from a
+    # commit whose Python-side artifacts don't even build.
+    needs: [plan, sdist, wheels]
     if: needs.plan.outputs.dry_run != 'true'
     runs-on: ubuntu-latest
     continue-on-error: false

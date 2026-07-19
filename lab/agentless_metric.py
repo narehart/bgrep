@@ -31,6 +31,16 @@ function_spans, same span identity `(path, start, end)`) but walks roust's
 actual returned region spans instead of the gold hunk lines, and an instance
 is correct iff every gold function span is contained in the predicted
 function-span set.
+
+CONVENTION NOTE (2026-07 hardening pass): errors now count as WRONG at every
+level -- FILE, FUNCTION, and LINE all share the same denominator (n = all
+loaded records). Previously FUNCTION excluded engine errors and git_show
+failures from its denominator while FILE/LINE counted them as wrong; the two
+conventions differ by <=0.12pp on every published roust run (and <=0.41pp on the archex baseline artifacts, where the old exclusion favored the baseline), so published artifacts
+were deliberately NOT regenerated -- the report's `convention` field records
+which convention an artifact was scored under (artifacts without the field
+predate the unification and used the old FUNCTION exclusion). The excluded
+classes are still counted and reported separately (`*_counted_wrong` keys).
 """
 
 from __future__ import annotations
@@ -163,10 +173,17 @@ def compute_file_level(records: list[dict]) -> dict:
     The stored `all_gold_files_retrieved` is defined identically
     (`hunk_file_covered == 1.0`, i.e. every gold file is a key in the
     returned `regions` dict) -- so this is a direct read, not an
-    approximation."""
-    vals = [1.0 if r["all_gold_files_retrieved"] else 0.0 for r in records]
+    approximation.
+
+    An engine-error record (no `regions` ever obtained) has no stored
+    `all_gold_files_retrieved` key; such records count as WRONG (0.0), not
+    dropped -- same denominator as every other level (see the module
+    docstring's convention note). `n_engine_errors` reports the count."""
+    n_engine_errors = sum(1 for r in records if r["error"] is not None)
+    vals = [1.0 if r.get("all_gold_files_retrieved", False) else 0.0 for r in records]
     m, _ = mean_median(vals)
-    return {"pct_correct": pct(m), "n": len(records), "n_correct": sum(int(v) for v in vals)}
+    return {"pct_correct": pct(m), "n": len(records), "n_correct": sum(int(v) for v in vals),
+            "n_engine_errors": n_engine_errors}
 
 
 def compute_line_level(records: list[dict]) -> dict:
@@ -179,9 +196,17 @@ def compute_line_level(records: list[dict]) -> dict:
 
     Also reports the mean-fraction (prior "hunk_line_recall" metric) for
     continuity -- NOTE this is a materially easier number (partial credit)
-    than the all-or-nothing metric to its left."""
-    all_or_nothing = [1.0 if r["hunk_line_recall"] == 1.0 else 0.0 for r in records]
-    fractions = [r["hunk_line_recall"] for r in records if r["hunk_line_recall"] is not None]
+    than the all-or-nothing metric to its left.
+
+    An engine-error record has no stored `hunk_line_recall`; it counts as
+    WRONG (0.0) in the all-or-nothing metric (same denominator as every
+    other level -- see the module docstring's convention note) and is
+    excluded from the mean/median fraction (there is no partial-credit
+    fraction for an instance with zero returned regions)."""
+    n_engine_errors = sum(1 for r in records if r["error"] is not None)
+    all_or_nothing = [1.0 if r.get("hunk_line_recall") == 1.0 else 0.0 for r in records]
+    fractions = [r["hunk_line_recall"] for r in records
+                 if r.get("hunk_line_recall") is not None]
     aon_m, _ = mean_median(all_or_nothing)
     frac_m, frac_med = mean_median(fractions)
     return {
@@ -190,6 +215,7 @@ def compute_line_level(records: list[dict]) -> dict:
         "n_correct_all_or_nothing": sum(int(v) for v in all_or_nothing),
         "mean_fraction_covered": frac_m,
         "median_fraction_covered": frac_med,
+        "n_engine_errors": n_engine_errors,
     }
 
 
@@ -200,16 +226,21 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
     <base_commit>:<path>`, see gold_function_spans_for_instance /
     predicted_function_spans_for_instance).
 
-    Instances are excluded from the mean (and counted separately, per the
-    task's "count and report, don't silently drop" policy) in two cases:
+    UNIFIED CONVENTION (2026-07): errors count as WRONG, same denominator
+    as FILE/LINE (n = all records). Two classes are counted wrong here and
+    reported separately (per the task's "count and report, don't silently
+    drop" policy):
       - region_eval2 itself failed for the instance (`r["error"]` set --
-        no regions were ever obtained, e.g. a checkout/engine failure).
+        no regions were ever obtained, e.g. a checkout/engine failure):
+        zero regions cannot cover a non-empty gold set, so wrong.
       - a `git_show` failure on either the gold or predicted side (ast_ok
         False) -- the true gold or predicted function set is then
-        incomplete/unknown, so superset correctness cannot be judged
-        safely in either direction (undercounting gold could manufacture a
-        false "correct"; undercounting predicted could manufacture a false
-        "incorrect").
+        incomplete/unknown; counting the instance WRONG is the
+        conservative, self-penalizing resolution of that ambiguity.
+    (Old convention, used by artifacts that predate the report-level
+    `convention` field: both classes were EXCLUDED from the FUNCTION
+    denominator. Shift <=0.12pp on every published roust run, <=0.41pp on the archex baseline artifacts; none
+    regenerated -- see module docstring.)
 
     Flagged assumption: an instance whose (complete, ast_ok) gold function
     set is EMPTY (e.g. every gold hunk lands in a non-.py file, or in
@@ -220,7 +251,7 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
     for every counted instance so the case is auditable.
     """
     n_correct = 0
-    n_evaluated = 0
+    n_judged = 0
     n_engine_errors = 0
     n_git_show_failures = 0
     detail = []
@@ -239,7 +270,7 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
         if not (gold_ok and pred_ok):
             n_git_show_failures += 1
             continue
-        n_evaluated += 1
+        n_judged += 1
         correct = gold_spans.issubset(pred_spans)
         if correct:
             n_correct += 1
@@ -249,13 +280,15 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
             "n_predicted_functions": len(pred_spans),
             "correct": correct,
         })
-    pct_m = (n_correct / n_evaluated) if n_evaluated else None
+    n_total = len(records)
+    pct_m = (n_correct / n_total) if n_total else None
     return {
         "pct_correct": pct(pct_m),
-        "n_evaluated": n_evaluated,
+        "n": n_total,
+        "n_judged": n_judged,
         "n_correct": n_correct,
-        "n_engine_errors_excluded": n_engine_errors,
-        "n_git_show_failures_excluded": n_git_show_failures,
+        "n_engine_errors_counted_wrong": n_engine_errors,
+        "n_git_show_failures_counted_wrong": n_git_show_failures,
         "detail": detail,
     }
 
@@ -359,6 +392,12 @@ def main() -> None:
     subset_block = block(file_correct_subset)
 
     report: dict = {
+        "convention": "errors-count-as-wrong-at-all-levels/v1: FILE, FUNCTION, and LINE share "
+                      "the same denominator (n = all loaded records); engine errors and "
+                      "git_show failures count as WRONG and are reported separately "
+                      "(*_counted_wrong / n_engine_errors keys). Artifacts without this field "
+                      "predate the unification and scored FUNCTION with errors EXCLUDED from "
+                      "the denominator (<=0.12pp difference on every published roust run; <=0.41pp on the archex baseline artifacts).",
         "source": {
             "predictions": str(FULL300_V8.relative_to(REPO_ROOT)),
             "gold": str(LITE_PARQUET.relative_to(REPO_ROOT)),
@@ -410,10 +449,10 @@ def print_table(report: dict) -> None:
           f"{rp['mean_precision']:.4f}  (n={rp['n']}, excluded={rp['n_excluded']})")
     print(f"{'  mean total region lines / instance':60} "
           f"{rp['mean_total_region_lines_per_instance']:.1f}")
-    print(f"\nFUNCTION n_evaluated={a['function']['n_evaluated']} "
+    print(f"\nFUNCTION n={a['function']['n']} n_judged={a['function']['n_judged']} "
           f"n_correct={a['function']['n_correct']} "
-          f"excluded(engine_errors={a['function']['n_engine_errors_excluded']}, "
-          f"git_show_failures={a['function']['n_git_show_failures_excluded']})")
+          f"counted_wrong(engine_errors={a['function']['n_engine_errors_counted_wrong']}, "
+          f"git_show_failures={a['function']['n_git_show_failures_counted_wrong']})")
 
     print(f"\n--- restricted to file-correct subset (n={fc['n']}/{a['n']}) ---")
     row("FUNCTION (EXACT)                ", fc["function"]["pct_correct"], None)

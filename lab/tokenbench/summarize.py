@@ -30,10 +30,18 @@ import argparse
 import itertools
 import json
 import statistics as stats
+import sys
 from collections import defaultdict
 from pathlib import Path
 
 TOKENBENCH_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(TOKENBENCH_DIR))
+
+# Pricing lives in common.py ONLY (single source of truth -- agent.py,
+# run_bench.py, and this script all import it so the constants can never
+# drift; a duplicated copy here previously could).
+from common import PRICE_INPUT_PER_MTOK, PRICE_OUTPUT_PER_MTOK  # noqa: E402
+from common import row_cost as _row_cost  # noqa: E402
 # The known v2 quartet: when the data's discovered arms are exactly this
 # set, we keep the curated A/B/C/D labels and pairwise cells from the v2
 # spec (so known-run output is byte-for-byte what it always was). Any other
@@ -48,9 +56,6 @@ KNOWN_V2_PAIRWISE_CELLS = [("grep", "roust"), ("grep", "roust_grep"), ("roust_gr
 # (pre-fix results.jsonl / results_forced.jsonl) default to "ok" -> counted,
 # so old files reproduce their old numbers exactly.
 EXCLUDED_STATUSES = {"api_error", "aborted_over_budget"}
-
-PRICE_INPUT_PER_MTOK = 3.0
-PRICE_OUTPUT_PER_MTOK = 15.0
 
 
 def load_rows(path: Path) -> list[dict]:
@@ -74,9 +79,10 @@ def _fmt(x, nd=0):
 
 
 def row_cost(row: dict) -> float:
-    ai = row.get("api_input_tokens", 0) or 0
-    ao = row.get("api_output_tokens", 0) or 0
-    return ai / 1e6 * PRICE_INPUT_PER_MTOK + ao / 1e6 * PRICE_OUTPUT_PER_MTOK
+    """Thin row-dict adapter over common.row_cost (the single pricing
+    implementation)."""
+    return _row_cost(row.get("api_input_tokens", 0) or 0,
+                     row.get("api_output_tokens", 0) or 0)
 
 
 def _print_token_table(title: str, arms: list[str], by_arm_rows: dict[str, list[dict]]) -> None:

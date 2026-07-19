@@ -9,7 +9,7 @@ the real CLI:
 
     uv run roust --json --budget 8192 "<query>" <repo>
 
-invoked with cwd=<bgrep repo root> so `uv run` resolves the project's own
+invoked with cwd=<roust repo root> so `uv run` resolves the project's own
 environment regardless of what venv the tokenbench harness itself runs
 under. Returns the packed bundle text as the tool result -- exactly what a
 real integration would see -- and nothing else is added to the

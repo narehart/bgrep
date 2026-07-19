@@ -23,6 +23,17 @@ REPO_ROOT = LAB_DIR.parent  # .../bgrep
 
 # Repo clones are shared with the other lab/swebench_driver*.py scripts so we
 # don't reclone repos that already exist on disk.
+#
+# ---------------------------------------------------------------------------
+# SHARED-CLONE HAZARD (issue #41): checkout() below MUTATES these clones
+# (git checkout -f + git clean -fdq). lab/swebench_repos/ has historically
+# been ONE physical set of clones shared across every worktree of this repo
+# -- two concurrent evals (or an eval plus anything else reading those
+# clones) in different worktrees race each other's checkouts and silently
+# corrupt results. Discipline: when anything else might touch the clones,
+# run from a worktree whose lab/swebench_repos/ is a PRIVATE copy (`cp -R`
+# of the main repo's clones), never the main repo's shared directory.
+# ---------------------------------------------------------------------------
 REPO_CACHE = LAB_DIR / "swebench_repos"
 
 PARQUET_URL = (

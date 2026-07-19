@@ -16,6 +16,16 @@ checkout tree of whichever worktree it's run from (issue #41 standard) --
 running v4's hardcoded path unmodified from inside a worktree would silently
 score against the main repo's shared clones instead of the worktree's own.
 
+CONVENTION NOTE (2026-07 hardening pass): errors now count as WRONG at every
+level -- FILE, FUNCTION, and LINE all share the same denominator (n = all
+loaded records). Previously FUNCTION excluded engine errors and git_show
+failures from its denominator while FILE/LINE counted them as wrong; the two
+conventions differ by <=0.12pp on every published roust run (and <=0.41pp on the archex baseline artifacts, where the old exclusion favored the baseline), so published artifacts
+were deliberately NOT regenerated -- the report's `convention` field records
+which convention an artifact was scored under (artifacts without the field
+predate the unification and used the old FUNCTION exclusion). The excluded
+classes are still counted and reported separately (`*_counted_wrong` keys).
+
 Usage:
     python lab/agentless_metric_verified.py \\
         --predictions lab/results_regions/full407_verified_new.jsonl \\
@@ -209,17 +219,21 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
     <base_commit>:<path>`, see gold_function_spans_for_instance /
     predicted_function_spans_for_instance).
 
-    Instances are excluded from the mean (and counted separately, per the
-    task's "count and report, don't silently drop" policy) in two cases:
+    UNIFIED CONVENTION (2026-07): errors count as WRONG, same denominator
+    as FILE/LINE (n = all records). Two classes are counted wrong here and
+    reported separately (per the task's "count and report, don't silently
+    drop" policy):
       - region_eval_verified itself failed for the instance (`r["error"]`
         set -- no regions were ever obtained, e.g. a checkout/engine
-        failure).
+        failure): zero regions cannot cover a non-empty gold set, so wrong.
       - a `git_show` failure on either the gold or predicted side (ast_ok
         False) -- the true gold or predicted function set is then
-        incomplete/unknown, so superset correctness cannot be judged
-        safely in either direction (undercounting gold could manufacture a
-        false "correct"; undercounting predicted could manufacture a false
-        "incorrect").
+        incomplete/unknown; counting the instance WRONG is the
+        conservative, self-penalizing resolution of that ambiguity.
+    (Old convention, used by artifacts that predate the report-level
+    `convention` field: both classes were EXCLUDED from the FUNCTION
+    denominator. Shift <=0.12pp on every published roust run, <=0.41pp on the archex baseline artifacts; none
+    regenerated -- see module docstring.)
 
     Flagged assumption: an instance whose (complete, ast_ok) gold function
     set is EMPTY (e.g. every gold hunk lands in a non-.py file, or in
@@ -230,7 +244,7 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
     for every counted instance so the case is auditable.
     """
     n_correct = 0
-    n_evaluated = 0
+    n_judged = 0
     n_engine_errors = 0
     n_git_show_failures = 0
     detail = []
@@ -249,7 +263,7 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
         if not (gold_ok and pred_ok):
             n_git_show_failures += 1
             continue
-        n_evaluated += 1
+        n_judged += 1
         correct = gold_spans.issubset(pred_spans)
         if correct:
             n_correct += 1
@@ -259,13 +273,15 @@ def compute_function_level_exact(records: list[dict], patch_by_id: dict[str, str
             "n_predicted_functions": len(pred_spans),
             "correct": correct,
         })
-    pct_m = (n_correct / n_evaluated) if n_evaluated else None
+    n_total = len(records)
+    pct_m = (n_correct / n_total) if n_total else None
     return {
         "pct_correct": pct(pct_m),
-        "n_evaluated": n_evaluated,
+        "n": n_total,
+        "n_judged": n_judged,
         "n_correct": n_correct,
-        "n_engine_errors_excluded": n_engine_errors,
-        "n_git_show_failures_excluded": n_git_show_failures,
+        "n_engine_errors_counted_wrong": n_engine_errors,
+        "n_git_show_failures_counted_wrong": n_git_show_failures,
         "detail": detail,
     }
 
@@ -385,6 +401,12 @@ def main() -> None:
     subset_block = block(file_correct_subset)
 
     report: dict = {
+        "convention": "errors-count-as-wrong-at-all-levels/v1: FILE, FUNCTION, and LINE share "
+                      "the same denominator (n = all loaded records); engine errors and "
+                      "git_show failures count as WRONG and are reported separately "
+                      "(*_counted_wrong / n_engine_errors keys). Artifacts without this field "
+                      "predate the unification and scored FUNCTION with errors EXCLUDED from "
+                      "the denominator (<=0.12pp difference on every published roust run; <=0.41pp on the archex baseline artifacts).",
         "source": {
             "predictions": str(args.predictions.relative_to(REPO_ROOT))
             if args.predictions.is_absolute() else str(args.predictions),
@@ -439,10 +461,10 @@ def print_table(report: dict) -> None:
           f"{rp['mean_precision']:.4f}  (n={rp['n']}, excluded={rp['n_excluded']})")
     print(f"{'  mean total region lines / instance':60} "
           f"{rp['mean_total_region_lines_per_instance']:.1f}")
-    print(f"\nFUNCTION n_evaluated={a['function']['n_evaluated']} "
+    print(f"\nFUNCTION n={a['function']['n']} n_judged={a['function']['n_judged']} "
           f"n_correct={a['function']['n_correct']} "
-          f"excluded(engine_errors={a['function']['n_engine_errors_excluded']}, "
-          f"git_show_failures={a['function']['n_git_show_failures_excluded']})")
+          f"counted_wrong(engine_errors={a['function']['n_engine_errors_counted_wrong']}, "
+          f"git_show_failures={a['function']['n_git_show_failures_counted_wrong']})")
 
     print(f"\n--- restricted to file-correct subset (n={fc['n']}/{a['n']}) ---")
     row("FUNCTION (EXACT)                ", fc["function"]["pct_correct"], None)

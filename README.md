@@ -14,20 +14,18 @@ compressed into one process call.
 
 ## Install
 
-roust is a single Rust binary. Every install path below builds or ships the
-same `roust-rs` engine — there is no separate Python implementation.
+roust is a single Rust binary. Every install path below builds the same
+`roust-rs` engine — there is no separate Python implementation.
 
-```bash
-# PyPI (wheel built by maturin, bundles the Rust binary):
-pip install roust
-# or
-uv tool install roust
-# or
-pipx install roust
-```
+**Not yet on PyPI or crates.io.** The tag-triggered release pipeline is
+committed (`.github/workflows/release.yml`), but the registry credentials
+(PyPI trusted publisher, crates.io token) are not configured and no release
+tag has been pushed — see `RELEASE.md`. Until the first release, install
+from source:
 
 ```bash
 # From source, via cargo:
+git clone https://github.com/narehart/roust && cd roust
 cargo install --path roust-rs
 ```
 
@@ -98,7 +96,14 @@ roust "connection pooling" ~/code/httpx --no-docs        # *.rst/*.txt/*.md docs
 roust "connection pooling" ~/code/httpx --no-anchors     # definition-symbol anchor channel
 roust "connection pooling" ~/code/httpx --no-testbridge  # test-file lexical bridge
 
-# Dump the full diagnostic record (roust.core.Explain) as JSON to stderr
+# Region-packing knobs (the shipped defaults, adopted from the #4 campaign):
+# pad every packed span by N context lines (guarded padding, default 5)
+roust "connection pooling" ~/code/httpx --pad-lines 5
+# length-normalization exponent in region selection, gain/tokens^len_exp
+# (default 0.85; `--pad-lines 0 --len-exp 1.0` reproduces the pre-adoption packing)
+roust "connection pooling" ~/code/httpx --len-exp 0.85
+
+# Dump the full diagnostic record (the engine's Explain struct) as JSON to stderr
 roust "connection pooling" ~/code/httpx --explain
 ```
 
@@ -251,9 +256,10 @@ subprocess call with structured `--json` output when you need it.
 > - Include error messages, stack traces, and symbol names -- don't strip
 >   them out.
 > - Don't summarize the question into clean prose first: measured on
->   adversarial paraphrases that drop key terms, task recall falls from
->   1.00 to 0.833 (14/19 tasks) -- summarization removes the anchors roust
->   relies on. See "Known limits" in `lab/README.md`.
+>   adversarial paraphrases that drop key terms, mean task recall falls
+>   from 1.00 to 0.833, and only 14 of 19 tasks still retrieve every gold
+>   file -- summarization removes the anchors roust relies on. See "Known
+>   limits" in `lab/README.md`.
 
 ## How it works
 
@@ -280,7 +286,7 @@ see [`lab/README.md`](lab/README.md).
 
 ## Scoreboard
 
-Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each method as the agent's only tool), roust solves **93.3%** of tasks, grep **26.7%**, embedding-RAG **80.0%** (9-trial mean) — n=15, a partial run (see below). roust is **not** the most accurate retriever available: trained retrievers (see *Localization accuracy* below) score higher on published localization benchmarks. What roust offers is the best result you can get for free — no model, no embeddings, no API key, no training.
+Given the same task and the same agent (tokenbench v2, live Sonnet 4.5; the grep and roust arms get their method as the agent's only *search* tool, the embedding-RAG arm gets rag_search **plus grep**, and every arm also has a read_file tool), roust solves **93.3%** of tasks, grep **26.7%**, embedding-RAG **80.0%** (9-trial mean) — n=15, a partial run (see below). roust is **not** the most accurate retriever available: trained retrievers (see *Localization accuracy* below) score higher on published localization benchmarks. What roust offers is the best result you can get for free — no model, no embeddings, no API key, no training.
 
 ### Agent-loop outcomes (our protocol)
 
@@ -288,15 +294,16 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 |---|---|---|---|---|---|
 | **roust** | 93.3% | 9 | 308,184 | $0.95 | $0.93 |
 | grep | 26.7% | 30 | 239,600 | $0.76 | $0.53 |
-| embedding-RAG | 80.0% (9-trial mean ± 4.4pp) | 20 | 695,833 | $2.14 | $1.80 |
-| roust + grep (both) | 57.1% | 28 | 595,234 | $1.83 | $1.60 |
+| embedding-RAG | 80.0% (9-trial mean ± 4.4pp) | 20.5 | 695,833 | $2.14 | $1.80 |
+| roust + grep (both) | 57.1% | 27.5 | 595,234 | $1.83 | $1.60 |
 | grep + stopping prompt | 20.0% | — | 52,576 | $0.17 | $0.18 |
 | roust + stopping prompt | 66.7% | — | 241,027 | $0.74 | $0.63 |
 
 - roust costs more per attempt than grep (308k vs 240k tokens) and wins on solve rate anyway. grep is cheap because it gives up: 73.3% of its runs hit the turn cap and produce nothing.
-- `$ / successful run` remains a lower bound on cost-to-answer for a single attempt. The full repeat-run campaign (#16, `results_repeats.jsonl`) measured the rest: for roust and grep, failures are **stable across trials** (p≈0 — the retry term is meaningless; roust's one miss failed 10/10), while embedding-RAG's failures are genuinely stochastic, giving **E[cost to first success] = $2.50** over its solvable set (all 15 instances, per-instance p̂ 0.11–1.00).
+- `$ / successful run` remains a lower bound on cost-to-answer for a single attempt. The full repeat-run campaign (#16, `results_repeats.jsonl`) measured the rest: for roust and grep, failures are **stable across trials** (p≈0 — the retry term is meaningless; roust's one miss failed 10/10), while embedding-RAG's failures are genuinely stochastic. Its per-instance E[cost to first success] — (1−p̂)/p̂ × mean failed-attempt cost + mean successful-attempt cost, p̂ over the 10 trials (trial 0 + 9 repeats) — aggregates over its solvable set (all 15 instances, per-instance p̂ 0.10–1.00) to a **median of $2.42** per instance; the **mean is $4.90**, dominated by django-16400 (p̂ = 0.10, E ≈ $31). An earlier revision stated "$2.50" here without naming the aggregation; the stated-convention numbers above replace it.
 - Giving the agent grep *alongside* roust makes it worse (93.3% → 57.1%): replace grep, don't supplement it ([#5](https://github.com/narehart/roust/issues/5)).
 - embedding-RAG's **Solves** cell is a 9-trial mean, `lab/tokenbench/results_repeats.jsonl`; its other columns (median turns, tokens, $) are the trial-0 measurement, `lab/tokenbench/results.jsonl`.
+- The two `+ stopping prompt` rows are the forced-stopping steelman arms (`grep_forced`/`roust_forced`, hard stopping directive + 12-turn cap): `lab/tokenbench/results_forced.jsonl`.
 - Outcome volatility (measured across 9 identical trial repeats, `lab/tokenbench/results_repeats.jsonl`): embedding-RAG bounces 73.3–86.7% across 9 identical runs (mean 80.0% ± 4.4pp); roust reproduced 93.3% exactly with 0 outcome flips across all repeats, and its single failure (django-16400) failed 10/10 trials — a capability gap, not variance (p < 0.30 at 95%, rule of three). grep's failures were stable across both its trials.
 
 ### Localization accuracy (published protocol)
@@ -317,7 +324,7 @@ Given the same task and the same agent (tokenbench v2, live Sonnet 4.5, each met
 
 — = not measured by us (see gaps below). archex has two rows: its default retrieval mode (BM25+graph, no embeddings) and its optional vector/hybrid mode (FastEmbed/ONNX + graph) — both are now measured, see [#1](https://github.com/narehart/roust/issues/1).
 
-The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 53.3% (exact) / LINE 42.7% (`lab/results_regions/agentless_metric_v5.json`) — training-free roust now *exceeds* Agentless GPT-4o at function level (53.3 vs 52.0) and line level (42.7 vs 35.3), closing what was this table's weakest cell; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3; archex (BM25 default) is 56.0 / 38.3 / 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`, 2 of 300 instances timed out and count as wrong); archex (vector/hybrid) is 57.3 / 40.7 / 27.7 (`lab/results_regions/agentless_metric_archex_vector.json`, same 2 timeouts) — a single-digit gain over BM25 that leaves the ~35-point FILE gap to roust unchanged. LINE mean-fraction-covered (a continuity metric with prior reporting, distinct from the strict all-or-nothing LINE % above) rose 0.4564 → 0.5168 with the same change. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") rose from 0.4486% to 0.5399% mean (+20% relative) — roust still trades precision for recall by design, packing ~1,124 lines of surrounding context per instance under the 8192-token budget (down slightly from ~1,150 pre-adoption). These gains are the additive stack of two measured changes from the #4 campaign (autopsy-driven), now the shipped engine defaults: guarded span padding (`--pad-lines`, default 5) and sub-linear length normalization (`--len-exp`, default 0.85) — run `roust --help` for the exact flags that reproduce the pre-adoption engine, or see [#4](https://github.com/narehart/roust/issues/4).
+The File-level column mixes several different metrics (Acc@10 / Top-1 / file-match / Agentless-metric FILE) and is **not** comparable straight down the column — each row names its own. roust's Agentless-metric scores on Lite are FILE 92.3% / FUNCTION 53.3% (exact) / LINE 42.7% (`lab/results_regions/agentless_metric_v5.json`) — training-free roust now *exceeds* Agentless GPT-4o at function level (53.3 vs 52.0) and line level (42.7 vs 35.3), closing what was this table's weakest cell; Agentless (GPT-4o) for comparison is 69.7 / 52.0 / 35.3; archex (BM25 default) is 56.0 / 38.3 / 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`; 2 of 300 instances timed out — they count as wrong at FILE and LINE but are **excluded from the FUNCTION denominator** in that artifact, a baseline-favorable convention: 38.3 = 114/298, counting them wrong would give 38.0); archex (vector/hybrid) is 57.3 / 40.7 / 27.7 (`lab/results_regions/agentless_metric_archex_vector.json`, same 2 timeouts and convention, plus one git-show exclusion at FUNCTION) — a single-digit gain over BM25 that leaves the ~35-point FILE gap to roust unchanged. LINE mean-fraction-covered (a continuity metric with prior reporting, distinct from the strict all-or-nothing LINE % above) rose 0.4564 → 0.5168 with the same change. Region precision (gold lines returned / total lines returned, i.e. "how much of the packed context is actually the fix") rose from 0.4486% to 0.5399% mean (+20% relative) — roust still trades precision for recall by design, packing ~1,124 lines of surrounding context per instance under the 8192-token budget (down slightly from ~1,150 pre-adoption). These gains are the additive stack of two measured changes from the #4 campaign (autopsy-driven), now the shipped engine defaults: guarded span padding (`--pad-lines`, default 5) and sub-linear length normalization (`--len-exp`, default 0.85) — run `roust --help` for the exact flags that reproduce the pre-adoption engine, or see [#4](https://github.com/narehart/roust/issues/4).
 
 ### Latency (measured, `lab/latency/latency_v1.json`)
 
@@ -385,14 +392,14 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
 
 ### What still needs work
 
-- ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly ([#2](https://github.com/narehart/roust/issues/2)): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine; a `w_name` sweep on the exact harness ([#4](https://github.com/narehart/roust/issues/4)) then showed the symbol-name weighting itself caused the LINE drop — reverting it (w_name=0.0) restores FUNCTION 41.0% (exact) and LINE 35.7% (`lab/results_regions/agentless_metric_v3.json`). ~~FUNCTION is still the weakest cell vs Agentless GPT-4o's 52.0~~ closed ([#4](https://github.com/narehart/roust/issues/4)): the campaign's autopsy on the FUNCTION/LINE misses found the padding/length-normalization mechanism (comboA — guarded span padding + sub-linear length normalization) and it's now adopted as the shipped engine defaults (`--pad-lines 5 --len-exp 0.85`), raising FUNCTION 41.0→53.3% and LINE 35.7→42.7% (fraction 0.4564→0.5168) — roust now exceeds Agentless GPT-4o at both FUNCTION (53.3 vs 52.0) and LINE (42.7 vs 35.3) (`lab/results_regions/agentless_metric_v5.json`); the region-packing gains REPLICATED out-of-sample on the 407-instance held-out SWE-bench Verified set, never used for any tuning decision ([#4](https://github.com/narehart/roust/issues/4)): FUNCTION +12.9pp (34.2→47.0%), LINE +9.1pp (26.3→35.4%), fraction +0.053, FILE unchanged (`lab/results_regions/agentless_metric_verified_{old,new}.json`)
+- ~~Line-level 35.7% and function-level 44.3% (a proxy, not the exact metric)~~ measured exactly (`lab/results_regions/agentless_metric_v2.json`): FUNCTION 39.7% (exact, was a 44.3% proxy) and LINE 29.3% (was 35.7%) from a fresh 300-instance run of the shipped engine; a `w_name` sweep on the exact harness ([#4](https://github.com/narehart/roust/issues/4)) then showed the symbol-name weighting itself caused the LINE drop — reverting it (w_name=0.0) restores FUNCTION 41.0% (exact) and LINE 35.7% (`lab/results_regions/agentless_metric_v3.json`). ~~FUNCTION is still the weakest cell vs Agentless GPT-4o's 52.0~~ closed ([#4](https://github.com/narehart/roust/issues/4)): the campaign's autopsy on the FUNCTION/LINE misses found the padding/length-normalization mechanism (comboA — guarded span padding + sub-linear length normalization) and it's now adopted as the shipped engine defaults (`--pad-lines 5 --len-exp 0.85`), raising FUNCTION 41.0→53.3% and LINE 35.7→42.7% (fraction 0.4564→0.5168) — roust now exceeds Agentless GPT-4o at both FUNCTION (53.3 vs 52.0) and LINE (42.7 vs 35.3) (`lab/results_regions/agentless_metric_v5.json`); the region-packing gains REPLICATED out-of-sample on the 407-instance held-out SWE-bench Verified set, never used for any tuning decision (commit 2f7d324, `lab/results_regions/agentless_metric_verified_{old,new}.json`): FUNCTION +12.9pp (34.2→47.0%), LINE +9.1pp (26.3→35.4%), fraction +0.053, FILE unchanged (`lab/results_regions/agentless_metric_verified_{old,new}.json`)
 - ~~archex has never been measured by us on any of our benches~~ both Agentless-metric arms measured ([#1](https://github.com/narehart/roust/issues/1)): archex 0.19.2 BM25 default mode is FILE 56.0 / FUNCTION 38.3 / LINE 25.7 (`lab/results_regions/agentless_metric_archex_bm25.json`); vector/hybrid mode is FILE 57.3 / FUNCTION 40.7 / LINE 27.7 (`lab/results_regions/agentless_metric_archex_vector.json`), a single-digit gain over BM25 with worse latency (12.98s vs 9.68s query median) that leaves the ~35-point FILE gap to roust unchanged — steelman complete; the tokenbench agent-loop arm is not justified at current quality
-- ~~True cost-per-success~~ measured via repeat runs ([#16](https://github.com/narehart/roust/issues/16)): roust solves 14/15 deterministically at ~$1/answer with one real capability gap (django-16400, 0/10); embedding-RAG reaches everything eventually at $2.50/first-success — see `results_repeats.jsonl`
+- ~~True cost-per-success~~ measured via repeat runs ([#16](https://github.com/narehart/roust/issues/16)): roust solves 14/15 deterministically at ~$1/answer with one real capability gap (django-16400, 0/10); embedding-RAG reaches everything eventually at a median $2.42 (mean $4.90) per first success — see `results_repeats.jsonl` and the aggregation convention stated in the scoreboard notes above
 - ~~Latency has no committed benchmark artifact~~ measured ([#15](https://github.com/narehart/roust/issues/15)): cold/warm index + query p50/p95 across four repo sizes (66–2,131 files indexed), `lab/latency/latency_v1.json`
 
 ### How these were measured
 
-*Agent-loop outcomes* is our agent-loop harness (live Sonnet 4.5, each method as the agent's only tool, measured to task completion) — a partial run, 58 of 120 planned pairs, stopped at an $80 spend cap, so n=15 (14 for embedding-RAG). *Localization accuracy* is published Acc@k-style numbers from each system's own paper, on its own harness — a different protocol, not comparable to the agent-loop numbers. Full artifacts and the research log (including the retracted "95% fewer tokens than grep" claim, which came from a v1 one-shot protocol and does not hold in the agent loop — [#6](https://github.com/narehart/roust/issues/6)) are in `lab/README.md`.
+*Agent-loop outcomes* is our agent-loop harness (live Sonnet 4.5, measured to task completion; the grep and roust arms use their method as the agent's only search tool, while the embedding-RAG arm had grep alongside rag_search, and every arm has a read_file tool) — a partial run, 58 of 120 planned pairs, stopped at an $80 spend cap, so n=15 (14 for embedding-RAG). *Localization accuracy* is published Acc@k-style numbers from each system's own paper, on its own harness — a different protocol, not comparable to the agent-loop numbers. Full artifacts and the research log (including the retracted "95% fewer tokens than grep" claim, which came from a v1 one-shot protocol and does not hold in the agent loop — [#6](https://github.com/narehart/roust/issues/6)) are in `lab/README.md`.
 
 ## Limits
 
@@ -401,7 +408,8 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
 - **@1 precision is the measured weak spot.** Top-1 file accuracy on the
   held-out SWE-bench Verified set is .354 -- if you need "the one file",
   read further down the ranked list, don't trust rank 1 alone.
-- **Region-level gains replicate out-of-sample** ([#4](https://github.com/narehart/roust/issues/4)). The held-out SWE-bench
+- **Region-level gains replicate out-of-sample** (commit 2f7d324,
+  `lab/results_regions/agentless_metric_verified_{old,new}.json`). The held-out SWE-bench
   Verified FILE numbers (79.4 File@10 / 92.1 all-gold, `lab/README.md`'s
   held-out validation section) are unaffected by the guarded-padding +
   length-normalization adoption above -- file-selection code is untouched by
@@ -436,15 +444,19 @@ Adapter + protocol: `lab/contextbench/`; aggregate:
   brought to feature-parity with the (now-deleted) Python v0.2 engine
   (channel-aware packing, on-disk cache with incremental updates,
   deterministic seed) — bundle-level parity gate **PASSED 300/300 exact**
-  on SWE-bench Lite (report in `parity/rust_gate_300_v3.json`) before the
-  Python engine was removed. Measured absolute latency (cold/warm index,
+  on SWE-bench Lite (report in `parity/bundle_parity_300.json`: 300 EXACT,
+  0 region-level differences; `parity/rust_gate_300_v3.json` is the
+  file-ranking-only gate) before the Python engine was removed. Measured absolute latency (cold/warm index,
   query p50/p95) is in the Scoreboard's Latency block above
   (`lab/latency/latency_v1.json`, [#15](https://github.com/narehart/roust/issues/15));
   the old cold-index Rust-vs-Python ratio is no longer reproducible and is
   kept there only as a historical note. Build from source: `cd roust-rs &&
   cargo build --release`.
-- ~~Publish to PyPI~~ **done** — `pip install roust` ships the maturin-built
-  wheel wrapping the Rust binary.
+- Publish to PyPI + crates.io — **pending**: the tag-triggered release
+  pipeline is committed (`.github/workflows/release.yml`), but the two
+  credential steps (PyPI trusted-publisher config, crates.io
+  `CARGO_REGISTRY_TOKEN` secret) and the first `vX.Y.Z` tag push remain —
+  see `RELEASE.md`.
 - MCP server.
 - Incremental index updates (avoid full reindex on every change).
 - Homebrew tap.

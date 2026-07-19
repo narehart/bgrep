@@ -10,7 +10,8 @@
 | **GitHub Release** | The same raw platform binaries extracted out of the wheels (no need to unzip a wheel to get the executable), plus auto-generated release notes. | GitHub Releases |
 
 All of it is built and published by `.github/workflows/release.yml`, triggered
-by pushing a tag matching `v*`.
+by pushing a tag matching the strict `v[0-9]+.[0-9]+.[0-9]+` pattern (`vX.Y.Z`
+only -- a typo'd or pre-release-suffixed tag does not trigger a publish).
 
 ---
 

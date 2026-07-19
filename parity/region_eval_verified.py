@@ -58,6 +58,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from region_eval import parse_gold_hunks, line_in_spans, swebench_driver_guard  # noqa: E402
+from region_eval2 import check_engine_provenance  # noqa: E402  (blocking provenance guard)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -227,6 +228,11 @@ def main() -> None:
                      help=f"passthrough to roust's --len-exp (E14); always forwarded "
                           f"(default {DEFAULT_LEN_EXP}, the current engine default); pass "
                           f"`--len-exp 1.0` to reproduce the pre-adoption old formula")
+    ap.add_argument("--allow-stale-engine", action="store_true",
+                     help="override the blocking engine-provenance guard (logs a loud warning "
+                          "instead of refusing) when the roust binary's embedded sha/dirty state "
+                          "does not match this worktree's roust-rs/ HEAD/dirty state -- NOT "
+                          "recommended for real results")
     args = ap.parse_args()
 
     if not ROUST_BIN.exists():
@@ -236,7 +242,13 @@ def main() -> None:
     if reason:
         raise SystemExit(f"REFUSED to run: {reason}")
 
-    version = engine_version_string()
+    # Blocking engine-provenance check (shared with region_eval2.py): refuses
+    # to run if ROUST_BIN's embedded sha/dirty state does not match this
+    # worktree's roust-rs/ HEAD + dirty state. NOTE: region_eval2's guard
+    # resolves ROUST_BIN/REPO_ROOT from ITS OWN module constants, which point
+    # at the same worktree tree as this script's (__file__-relative), so the
+    # comparison is against the correct private checkout.
+    version = check_engine_provenance(args.allow_stale_engine)
     print(f"engine version: {version}", file=sys.stderr)
     print(f"gold parquet: {args.gold_parquet}", file=sys.stderr)
     print(f"pad_lines={args.pad_lines} len_exp={args.len_exp}", file=sys.stderr)

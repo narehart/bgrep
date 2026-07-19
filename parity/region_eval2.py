@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -48,6 +49,17 @@ from region_eval import parse_gold_hunks, line_in_spans, swebench_driver_guard  
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
+# ---------------------------------------------------------------------------
+# SHARED-CLONE HAZARD (issue #41): this script MUTATES lab/swebench_repos/
+# (git checkout -f + git clean -fdq per instance). That directory has
+# historically been ONE physical set of clones shared across every worktree
+# of this repo -- two concurrent evals (or an eval plus anything else reading
+# those clones) in different worktrees race each other's checkouts and
+# silently corrupt results. Discipline: when anything else might touch the
+# clones, run from a worktree whose lab/swebench_repos/ is a PRIVATE copy
+# (`cp -R` of the main repo's clones), never the main repo's shared
+# directory.
+# ---------------------------------------------------------------------------
 ROUST_BIN = REPO_ROOT / "roust-rs" / "target" / "release" / "roust"
 LITE_PARQUET = REPO_ROOT / "lab" / "swebench_lite.parquet"
 LITE_REPOS = REPO_ROOT / "lab" / "swebench_repos"
@@ -60,6 +72,80 @@ PROGRESS_EVERY = 25
 def engine_version_string() -> str:
     proc = subprocess.run([str(ROUST_BIN), "--version"], capture_output=True, text=True, timeout=30)
     return proc.stdout.strip() or proc.stderr.strip()
+
+
+# roust --version prints e.g. "roust 0.2.0 (c591d75, clean)" -- see
+# roust-rs/build.rs (engine provenance embed, `git rev-parse --short HEAD`)
+# and roust-rs/src/main.rs (clap version wiring).
+_ENGINE_VERSION_RE = re.compile(r"^roust (\S+) \(([0-9a-f]+|unknown), (clean|dirty)\)\s*$")
+
+
+def check_engine_provenance(allow_stale: bool) -> str:
+    """BLOCKING engine-provenance guard, mirroring lab/tokenbench/run_bench.py's
+    check_engine_provenance: before any instance is evaluated, compare the
+    ROUST_BIN binary's embedded git SHA + roust-rs-scoped dirty flag
+    (`--version`) against this worktree's current HEAD and roust-rs/ dirty
+    state, and refuse to run (SystemExit) on any mismatch/dirtiness unless
+    `allow_stale` (--allow-stale-engine) is set, in which case a loud warning
+    is printed and the run proceeds. Guards against silently scoring a stale
+    target/release/roust left over from an earlier commit -- exactly the class
+    of provenance bug the per-record engine_sha/engine_dirty fields exist to
+    make auditable after the fact; this check makes it a hard failure up
+    front instead.
+
+    Returns the full `--version` line for logging."""
+    version_line = engine_version_string()
+    m = _ENGINE_VERSION_RE.match(version_line)
+    if not m:
+        msg = (f"engine provenance guard: could not parse '{ROUST_BIN} --version' "
+               f"output: {version_line!r}. Rebuild with `cargo build --release` in "
+               f"roust-rs/, or pass --allow-stale-engine to override.")
+        if not allow_stale:
+            raise SystemExit(msg)
+        print(f"WARNING (--allow-stale-engine): {msg}", file=sys.stderr, flush=True)
+        return version_line
+
+    _pkg_version, engine_sha, engine_dirty_label = m.groups()
+
+    repo_sha = None
+    repo_dirty = None
+    try:
+        sha_r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT,
+                                capture_output=True, text=True, timeout=10)
+        if sha_r.returncode == 0:
+            repo_sha = sha_r.stdout.strip()
+        dirty_r = subprocess.run(["git", "status", "--porcelain", "--", "roust-rs/"],
+                                  cwd=REPO_ROOT, capture_output=True, text=True, timeout=10)
+        if dirty_r.returncode == 0:
+            repo_dirty = bool(dirty_r.stdout.strip())
+    except (subprocess.SubprocessError, OSError):
+        pass
+
+    sha_mismatch = repo_sha is not None and engine_sha != "unknown" and engine_sha != repo_sha
+    stale = sha_mismatch or engine_dirty_label == "dirty" or bool(repo_dirty)
+
+    if stale:
+        reasons = []
+        if sha_mismatch:
+            reasons.append(f"binary sha {engine_sha!r} != worktree HEAD {repo_sha!r}")
+        if engine_dirty_label == "dirty":
+            reasons.append("binary was built from a dirty roust-rs/ tree")
+        if repo_dirty:
+            reasons.append("worktree roust-rs/ currently has uncommitted changes")
+        msg = (
+            f"engine provenance guard: stale/dirty roust engine detected "
+            f"({'; '.join(reasons)}). The binary at {ROUST_BIN} ({version_line!r}) does "
+            f"not match this worktree's current roust-rs/ state -- rebuild with "
+            f"`cargo build --release` in roust-rs/ (and commit/stash roust-rs/ changes), "
+            f"then re-run. Override with --allow-stale-engine (not recommended for real "
+            f"results)."
+        )
+        if allow_stale:
+            print(f"WARNING (--allow-stale-engine): {msg}", file=sys.stderr, flush=True)
+        else:
+            raise SystemExit(msg)
+
+    return version_line
 
 
 def run_roust(query: str, repo_path: Path, timeout: float, pad_lines: int = 0,
@@ -221,6 +307,11 @@ def main() -> None:
                           "binary uses ITS OWN default (0.85 post-adoption); any other value is "
                           "forwarded as-is (there is no way to force an explicit `--len-exp 1.0` "
                           "through this script's CLI -- invoke the roust binary directly for that)")
+    ap.add_argument("--allow-stale-engine", action="store_true",
+                     help="override the blocking engine-provenance guard (logs a loud warning "
+                          "instead of refusing) when the roust binary's embedded sha/dirty state "
+                          "does not match this worktree's roust-rs/ HEAD/dirty state -- NOT "
+                          "recommended for real results")
     args = ap.parse_args()
 
     if not ROUST_BIN.exists():
@@ -230,7 +321,7 @@ def main() -> None:
     if reason:
         raise SystemExit(f"REFUSED to run: {reason}")
 
-    version = engine_version_string()
+    version = check_engine_provenance(args.allow_stale_engine)
     print(f"engine version: {version}", file=sys.stderr)
 
     rows = load_lite_rows(args.limit)

@@ -18,3 +18,16 @@ Queued, evidence-ranked:
    survival-scheduling underdelivers.
 G4 (NL-only issues): field-wide ceiling externally confirmed (arXiv:2507.18319)
 — attack indirectly via space-shrinking (#neighborhood), no silver bullet.
+
+## Status update (2026-07, #4 campaign ledger)
+
+The region campaign (#4) has since tested the literature-prior direction this
+roadmap encodes, and it lost: every literature-derived packing/selection
+mechanism tried on the exact 300-instance harness came back negative or null
+(E1 block-boundary packing NEG, E2 adaptive stopping NEG, E3 salience NEG,
+E5 chunk-rank NULL, plus w_name NEG/reverted) — 0-for-6 against priors. The
+adopted wins (guarded span padding `--pad-lines 5` + sub-linear length
+normalization `--len-exp 0.85`, engine defaults since PR #40) came from miss
+autopsies and case mining (E7/E13), not from this roadmap. The queued items
+below remain UNVALIDATED leads, kept for the record; neighborhood-first
+shipped earlier as a flag-off experiment (see lab/README.md).

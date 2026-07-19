@@ -3,7 +3,9 @@ __pycache__/
 lab/repos/
 lab/swebench_repos/
 lab/scala_repos/
-lab/*.parquet
+# NOTE: lab/swebench_lite.parquet + lab/swebench_verified_heldout.parquet are
+# COMMITTED (the gold data every published metric is scored against); do not
+# re-add a lab/*.parquet ignore without a fetch script replacing them.
 .venv/
 .roust/
 .venv-pkg/

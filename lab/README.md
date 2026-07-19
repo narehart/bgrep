@@ -1,4 +1,7 @@
-# bgrep lab — retrieval experiments
+# roust lab — retrieval experiments
+
+(Historical note: entries below written before the rename refer to the tool
+as `bgrep`; it is the same pipeline, renamed to `roust`.)
 
 > **⚠️ RETRACTED CLAIM (see [#6](https://github.com/narehart/roust/issues/6)).** The token-savings-vs-grep figures below (95.7% / 95.2% / 94.7% mean savings) are measured correctly **under the v1 protocol** — a single deterministic retrieval pass, counting the tokens of the retrieved content set — but that protocol is **not how an agent actually uses the tool**, and the savings framing derived from it is retracted.
 >
@@ -22,7 +25,7 @@ under equal agent budget, not token savings.
 | disciplined grep (read ±25 lines around matches) | 764,759 | 1.00 | 0.00 |
 | oracle (read exactly the expected files) | 26,395 | 1.00 | 0.00 |
 | archex (embeddings, published artifacts) | 6,433 | 0.947 | 0.158 |
-| **bgrep pipeline (packed regions)** | **8,317** | **1.00** | **0.00** |
+| **roust (then bgrep) pipeline, packed regions** | **8,317** | **1.00** | **0.00** |
 
 - Dev set: 19/19 tasks at recall 1.00; savings vs raw grep mean 95.7%, min 76.0%. **[RETRACTED as a savings claim — v1 protocol only; see #6]**
 - Held-out set (21 `loc_*` fault-localization tasks, frozen config): 21/21 at
@@ -56,7 +59,7 @@ whack-a-mole between tasks; per-seed quotas starve globally-strong candidates.
   avoid the key terms drop to 14/19 (mean 0.833). Consistent with CORE-Bench
   (2026): the fix is **anchor preservation** — callers should pass raw task
   text (error strings, API names, identifiers) rather than cleaned summaries;
-  query *cleanup* hurts even dense retrievers. bgrep's caller is an LLM agent,
+  query *cleanup* hurts even dense retrievers. roust's caller is an LLM agent,
   which can supply anchor-rich multi-variant queries nearly for free.
 - **Depth vs breadth is budget-bound**: bundles pack ~15-26 files into 8k
   tokens. Evidence-proportional allocation helps only marginally (+3%); depth
@@ -99,11 +102,6 @@ Ablation (File@k = all gold files within top-k of the ranked list):
 | **+ def-symbol anchors, tiered** | **.463** | **.737** | **.827** | **.920** | **8,515** |
 | + test-bridge with head tier (superseded) | .463 | .737 | .810 | .927 | 8,544 |
 | **+ tail-only test+docs bridges (FROZEN v7)** | **.463** | **.737** | **.827** | **.923** | **8,549** |
-
-Final: 91.0% of instances get every gold file, ~8.5k-token bundle, 530ms query.
-Verified SOTA context (SweRank, arXiv:2505.07849): trained embedders reach
-Acc@10 90.9 (137M) / 94.2 (7B); +LLM rerank 96.0; BM25 61.7. bgrep holds the
-training-free/model-free point: File@10 81.3 (+19.6 over BM25), @all 91.0.
 
 Negative results (documented, reproducible): comments field hurts issue-style
 queries (-8 net instances) despite its API-search pedigree; fusing history into
@@ -225,9 +223,12 @@ Channel-aware packing v2 (the packer now honors WHY each file was selected:
 anchored symbols' definition blocks are packed; deeper allocation to top
 evidence files): mean 0.46, median 0.26, +0.4% tokens, file rankings byte-
 identical (parity green). On the right-files-found subset: 0.49 / median 0.50.
-archex expected_regions (informational, 9 tasks): 0.13 -> 0.19. Note: bgrep-rs
-does not yet carry the v2 packing — its parity gate covers file rankings only;
-porting + a region-metric gate is queued.
+archex expected_regions (informational, 9 tasks): 0.13 -> 0.19. (A note here
+previously said the Rust port did not yet carry the v2 packing and that its
+parity gate covered file rankings only — both statements are stale: roust-rs
+ported region-packing v2 (`roust-rs/PARITY_NOTES.md` item 13) and the
+full-bundle gate passed 300/300 EXACT including regions,
+`parity/bundle_parity_300.json`.)
 
 ## Neighborhood-first retrieval (2026-07-12, experiment, flag off by default)
 

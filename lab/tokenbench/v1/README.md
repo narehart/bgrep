@@ -7,7 +7,17 @@ success criterion) fixed. This is the harness behind the "solves it for
 1/Nth the tokens" claim, so the design goal is that condition A (grep) is
 argued in good faith, not a strawman.
 
-## STATUS: harness built and validated end-to-end; pilot NOT executed
+## STATUS: SUPERSEDED — the v1 pilot later RAN and was REJECTED for a design bug
+
+(Update, post-archive: the "pilot NOT executed" status below was written when
+this harness was built key-less. The v1 pilot subsequently DID run — its
+`results.jsonl` and `transcripts/` are archived in this directory — and was
+**rejected for a design bug**; see `../README.md` "Why v2 (v1 pilot
+findings)". The v1 one-shot protocol is also the source of the retracted
+"95% fewer tokens than grep" claim, issue #6. Everything below is the
+original, pre-run text, kept as a record.)
+
+### Original status: harness built and validated end-to-end; pilot not yet executed
 
 **No `ANTHROPIC_API_KEY` is available in this environment** (checked `env`
 and `~/.claude/settings.json` -- no key, no `apiKeyHelper`; this machine
