@@ -1,0 +1,32 @@
+engine version: roust 0.2.0 (92baeeb, clean)
+gold parquet: lab/mswe_jsts.parquet
+repos dir: lab/mswe_repos_private
+pad_lines=5 len_exp=0.85 bm25_only=False
+shard 1/1: rows [0:580] of the sorted split (580 instances)
+[25/580] darkreader__darkreader-6747                   elapsed=9s (ok) ok=25 err=0
+[50/580] iamkun__dayjs-1611                            elapsed=16s (ok) ok=50 err=0
+[75/580] iamkun__dayjs-857                             elapsed=21s (ERR) ok=74 err=1
+[100/580] mui__material-ui-24794                        elapsed=65s (ok) ok=99 err=1
+[125/580] mui__material-ui-26413                        elapsed=158s (ok) ok=124 err=1
+[150/580] mui__material-ui-30561                        elapsed=293s (ok) ok=149 err=1
+[175/580] mui__material-ui-33812                        elapsed=448s (ok) ok=174 err=1
+[200/580] mui__material-ui-34829                        elapsed=596s (ok) ok=199 err=1
+[225/580] mui__material-ui-36426                        elapsed=762s (ok) ok=224 err=1
+[250/580] mui__material-ui-39071                        elapsed=919s (ok) ok=249 err=1
+[275/580] sveltejs__svelte-10291                        elapsed=995s (ok) ok=274 err=1
+[300/580] sveltejs__svelte-10917                        elapsed=1031s (ok) ok=299 err=1
+[325/580] sveltejs__svelte-11378                        elapsed=1069s (ok) ok=324 err=1
+[350/580] sveltejs__svelte-12047                        elapsed=1108s (ok) ok=349 err=1
+[375/580] sveltejs__svelte-12474                        elapsed=1146s (ok) ok=374 err=1
+[400/580] sveltejs__svelte-13008                        elapsed=1185s (ok) ok=399 err=1
+[425/580] sveltejs__svelte-13445                        elapsed=1225s (ok) ok=424 err=1
+[450/580] sveltejs__svelte-13774                        elapsed=1264s (ok) ok=449 err=1
+[475/580] sveltejs__svelte-14440                        elapsed=1303s (ok) ok=474 err=1
+[500/580] sveltejs__svelte-14993                        elapsed=1343s (ok) ok=499 err=1
+[525/580] sveltejs__svelte-9811                         elapsed=1377s (ok) ok=524 err=1
+[550/580] vuejs__core-11165                             elapsed=1402s (ok) ok=549 err=1
+[575/580] vuejs__core-9442                              elapsed=1426s (ok) ok=574 err=1
+[580/580] vuejs__core-9751                              elapsed=1430s (ok) ok=579 err=1
+
+engine version: roust 0.2.0 (92baeeb, clean)
+wrote 580 records (579 ok, 1 errors) to lab/results_regions/mswe_jsts_adopted.jsonl

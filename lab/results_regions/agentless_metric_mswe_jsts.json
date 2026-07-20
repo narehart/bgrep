@@ -1,0 +1,5184 @@
+{
+  "convention": "errors-count-as-wrong-at-all-levels/v1: FILE, FUNCTION, and LINE share the same denominator (n = all loaded records); engine errors and git_show failures count as WRONG and are reported separately (*_counted_wrong / n_engine_errors keys).",
+  "source": {
+    "predictions": [
+      "lab/results_regions/mswe_jsts_adopted.jsonl"
+    ],
+    "gold": "lab/mswe_jsts.parquet",
+    "n_instances": 580,
+    "n_region_eval_errors": 1,
+    "engine_shas_seen": [
+      "92baeeb"
+    ],
+    "engine_dirty_seen": [
+      false
+    ],
+    "bm25_only": false,
+    "pipeline": "shipped roust-rs engine, --budget 8192, confidence-scheduled packing (parity/region_eval_full.py Part A, no-LLM), FULL SWE-bench test split (paper eval wave)"
+  },
+  "all_instances": {
+    "n": 580,
+    "file": {
+      "pct_correct": 46.38,
+      "n": 580,
+      "n_correct": 269,
+      "n_engine_errors": 1
+    },
+    "function": {
+      "pct_correct": 99.83,
+      "n": 580,
+      "n_judged": 579,
+      "n_correct": 579,
+      "n_engine_errors_counted_wrong": 1,
+      "n_git_show_failures_counted_wrong": 0,
+      "detail": [
+        {
+          "instance_id": "Kong__insomnia-7734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1041",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-105",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-117",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1314",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1370",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-148",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1608",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2075",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2099",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2228",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2491",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2844",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-293",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-3442",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-58",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-721",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-88",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-99",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5085",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5338",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5661",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5919",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "darkreader__darkreader-6747",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "darkreader__darkreader-7241",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-3495",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-3695",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-3870",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-5555",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1008",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1010",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1019",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1023",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1047",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1112",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1160",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1161",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1201",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1202",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1295",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1307",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1319",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1321",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1414",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1470",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1502",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1567",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1611",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1725",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1953",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1954",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1964",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2175",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2231",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2367",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2369",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2377",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2399",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2420",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2532",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-318",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-337",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-379",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-556",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-569",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-589",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-591",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-602",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-658",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-668",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-745",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-858",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-867",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-872",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-873",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-882",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-889",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-918",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-938",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-950",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-957",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-973",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23073",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23487",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23778",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23786",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23806",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23884",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24010",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24202",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24205",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24213",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24290",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24621",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24782",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24794",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24857",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24945",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24968",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25105",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25149",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25245",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25259",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25276",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25390",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25428",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25431",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25637",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25784",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25815",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25825",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25874",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25974",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26026",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26061",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26098",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26170",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26173",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26186",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26323",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26413",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26460",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26470",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26480",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-28645",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29297",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29317",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29488",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29579",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29613",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29756",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29880",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29898",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29901",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29902",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29954",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29988",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30118",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30126",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30333",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30345",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30374",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30515",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30524",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30561",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30788",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30899",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-31172",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-31313",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-31998",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32182",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32185",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32401",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32626",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32713",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32746",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32962",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32987",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33040",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33145",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33283",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33312",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33415",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33582",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33691",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33692",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33777",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33797",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33801",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33812",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33820",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33863",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33873",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33880",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33934",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33957",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34131",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34158",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34159",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34207",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34216",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34229",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34245",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34247",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34258",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34337",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34380",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34401",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34437",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34455",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34478",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34548",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34610",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34829",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34966",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35047",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35086",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35088",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35178",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35360",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35364",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35410",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35477",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35804",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35838",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35872",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35946",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35963",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35994",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36024",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36056",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36088",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36116",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36353",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36399",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36400",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36401",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36403",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36426",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36659",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36839",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36853",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36971",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37070",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37108",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37118",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37141",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37465",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37667",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37692",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37716",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37850",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37855",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38100",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38167",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38169",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38182",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38188",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38247",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38544",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38788",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38801",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38916",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39071",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39108",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39196",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39353",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39457",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39465",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39536",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39679",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39688",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39775",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39962",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10027",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10046",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10054",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10071",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10077",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10114",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10181",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10187",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10235",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10259",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10266",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10267",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10287",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10291",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10297",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10368",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10391",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10395",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10398",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10413",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10430",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10553",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10590",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10608",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10617",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10642",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10655",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10656",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10669",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10671",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10673",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10691",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10700",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10721",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10727",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10728",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10797",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10917",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10996",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11059",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11096",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11104",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11114",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11183",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11184",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11203",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11219",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11251",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11254",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11276",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11287",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11290",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11295",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11319",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11325",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11326",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11334",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11344",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11357",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11367",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11371",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11421",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11454",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11463",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11470",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11487",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11490",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11495",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11496",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11632",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11652",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11669",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11676",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11720",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11736",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11766",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11768",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11784",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11835",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11913",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11937",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11946",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11947",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12007",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12019",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12047",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12056",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12098",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12119",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12123",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12176",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12215",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12252",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12290",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12298",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12304",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12316",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12321",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12329",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12342",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12345",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12365",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12370",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12373",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12375",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12376",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12413",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12460",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12469",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12474",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12475",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12493",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12509",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12524",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12545",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12560",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12562",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12618",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12638",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12649",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12660",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12679",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12681",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12692",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12715",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12799",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12845",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12869",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12899",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12938",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12948",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12949",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12963",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13008",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13018",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13026",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13035",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13057",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13073",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13097",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13104",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13145",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13151",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13171",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13175",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13198",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13247",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13262",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13265",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13291",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13316",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13333",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13362",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13411",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13416",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13427",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13437",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13456",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13461",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13473",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13526",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13540",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13553",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13559",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13568",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13586",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13589",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13617",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13630",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13632",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13646",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13656",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13668",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13679",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13690",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13698",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13746",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13750",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13760",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13763",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13774",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13849",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13850",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13866",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14007",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14101",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14134",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14143",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14153",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14195",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14210",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14213",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14216",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14222",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14224",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14236",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14260",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14273",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14276",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14289",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14317",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14349",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14353",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14440",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14448",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14456",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14468",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14494",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14546",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14554",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14562",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14575",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14577",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14597",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14607",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14620",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14626",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14629",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14640",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14677",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14691",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14699",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14811",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14907",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14935",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14937",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14942",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14993",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15013",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15020",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15057",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15083",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15086",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15115",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9328",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9456",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9462",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9471",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9497",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9500",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9550",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9626",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9664",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9665",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9713",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9717",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9718",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9723",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9731",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9754",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9784",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9789",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9811",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9838",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9904",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9962",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9970",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9973",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9988",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10004",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10027",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10101",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10141",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10161",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10218",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10250",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10289",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10325",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10416",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10522",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10869",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10874",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10891",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10939",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10989",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11026",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11165",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11201",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11338",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11491",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11502",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11515",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11517",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11625",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11680",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11694",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11761",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11813",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11854",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11899",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8365",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8381",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8402",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8470",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8511",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8535",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8538",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8785",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-8911",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9213",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9442",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9492",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9507",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9532",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9572",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9751",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        }
+      ]
+    },
+    "line": {
+      "pct_correct_all_or_nothing": 9.31,
+      "n": 580,
+      "n_correct_all_or_nothing": 54,
+      "mean_fraction_covered": 0.18050118809479782,
+      "median_fraction_covered": 0.0,
+      "n_engine_errors": 1
+    },
+    "region_precision": {
+      "mean_precision": 0.013098096133156994,
+      "median_precision": 0.0,
+      "n": 579,
+      "n_excluded": 1,
+      "mean_total_region_lines_per_instance": 1003.825561312608,
+      "median_total_region_lines_per_instance": 997.0
+    }
+  },
+  "file_correct_subset": {
+    "n": 269,
+    "file": {
+      "pct_correct": 100.0,
+      "n": 269,
+      "n_correct": 269,
+      "n_engine_errors": 0
+    },
+    "function": {
+      "pct_correct": 100.0,
+      "n": 269,
+      "n_judged": 269,
+      "n_correct": 269,
+      "n_engine_errors_counted_wrong": 0,
+      "n_git_show_failures_counted_wrong": 0,
+      "detail": [
+        {
+          "instance_id": "Kong__insomnia-7734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1041",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-117",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1314",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1370",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-1608",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-2228",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-58",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "anuraghazra__github-readme-stats-99",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5085",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5661",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "axios__axios-5919",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "darkreader__darkreader-6747",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "darkreader__darkreader-7241",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-3695",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "expressjs__express-3870",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1008",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1010",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1019",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1023",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1160",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1161",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1201",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1202",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1295",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1307",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1319",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1321",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1414",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1470",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1502",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1567",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1611",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-1953",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2175",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2231",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2367",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2369",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2377",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2399",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2420",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-2532",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-318",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-556",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-589",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-591",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-602",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-658",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-745",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-867",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-872",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-873",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-889",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-918",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-938",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-950",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-957",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "iamkun__dayjs-973",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23073",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-23786",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24010",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-24205",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25105",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25259",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25276",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-25825",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26061",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-26413",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-29880",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30333",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30374",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30561",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-30899",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-31313",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32182",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32626",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32962",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-32987",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33145",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33692",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33873",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33880",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33934",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-33957",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34131",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34159",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34229",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34245",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34247",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34337",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34437",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-34445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35047",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35086",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35178",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35360",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35364",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35410",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35477",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35804",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-35838",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36088",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36116",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36353",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36403",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36659",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-36853",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37692",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-37855",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38188",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38544",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-38788",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39457",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39465",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "mui__material-ui-39775",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10071",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10077",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10114",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10267",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10287",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10291",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10391",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10395",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10430",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10553",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10590",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10608",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10655",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10669",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10673",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10721",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-10917",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11096",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11104",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11114",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11209",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11251",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11254",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11287",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11290",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11344",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11371",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11421",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11496",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11669",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11676",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11720",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11766",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11768",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11835",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11937",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11946",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-11947",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12019",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12047",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12056",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12098",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12290",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12298",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12316",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12321",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12329",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12345",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12375",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12376",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12460",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12475",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12524",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12562",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12649",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12681",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12734",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-12938",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13008",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13018",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13026",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13104",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13175",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13316",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13411",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13416",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13445",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13540",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13617",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13630",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13632",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13646",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13656",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13668",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13679",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13698",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13750",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13760",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13774",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13850",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-13866",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14143",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14195",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14213",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14216",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14222",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14224",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14236",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14260",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14317",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14349",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14378",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14448",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14494",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14546",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14562",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14577",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14607",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14620",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14626",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14640",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14677",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14699",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14935",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14937",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-14942",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15013",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15057",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15083",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-15086",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9328",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9462",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9471",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9497",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9664",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9665",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9713",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9717",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9731",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9789",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9811",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9824",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9904",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "sveltejs__svelte-9970",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10004",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10027",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10101",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10141",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10289",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10325",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10522",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10869",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-10989",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11165",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11338",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11502",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11517",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11625",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11694",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11761",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11813",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11854",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-11899",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9213",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9492",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9532",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9572",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        },
+        {
+          "instance_id": "vuejs__core-9751",
+          "n_gold_functions": 0,
+          "n_predicted_functions": 0,
+          "correct": true
+        }
+      ]
+    },
+    "line": {
+      "pct_correct_all_or_nothing": 20.07,
+      "n": 269,
+      "n_correct_all_or_nothing": 54,
+      "mean_fraction_covered": 0.2702410865413547,
+      "median_fraction_covered": 0.0,
+      "n_engine_errors": 0
+    },
+    "region_precision": {
+      "mean_precision": 0.007374774603647686,
+      "median_precision": 0.0,
+      "n": 269,
+      "n_excluded": 0,
+      "mean_total_region_lines_per_instance": 1000.546468401487,
+      "median_total_region_lines_per_instance": 999.0
+    },
+    "note": "restricted to instances where FILE-level was already correct -- isolates region/line/function quality from file recall"
+  },
+  "agentless_gpt4o_published": {
+    "file": 69.7,
+    "function": 52.0,
+    "line": 35.3
+  },
+  "agentless_note": "AGENTLESS_GPT4O numbers are Agentless's published SWE-bench LITE localization rates (arXiv:2407.01489 Table 1) -- context only; no published Agentless full-split localization numbers exist to compare against directly."
+}
