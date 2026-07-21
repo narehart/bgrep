@@ -1,0 +1,134 @@
+{
+  "question": "is the raw BM25-only region advantage a composition effect (channels recover harder files) or a real channel penalty?",
+  "method": "FUNCTION/LINE correct-rates recomputed on the intersection of file-correct instances in both arms of each pair",
+  "pairs": {
+    "lite300": {
+      "n_total": 300,
+      "n_file_correct": {
+        "defaults": 277,
+        "bm25": 268
+      },
+      "n_intersection_file_correct": 268,
+      "n_function_excluded_in_intersection": 0,
+      "conditioned": {
+        "defaults": {
+          "function_pct": 58.96,
+          "function_n": 268,
+          "function_n_correct": 158,
+          "line_pct": 47.01,
+          "line_n": 268,
+          "line_n_correct": 126
+        },
+        "bm25": {
+          "function_pct": 60.45,
+          "function_n": 268,
+          "function_n_correct": 162,
+          "line_pct": 49.25,
+          "line_n": 268,
+          "line_n_correct": 132
+        }
+      },
+      "raw_full_set": {
+        "defaults": {
+          "file_pct": 92.33,
+          "function_pct": 53.33,
+          "line_pct": 42.67
+        },
+        "bm25": {
+          "file_pct": 89.33,
+          "function_pct": 54.33,
+          "line_pct": 44.0
+        }
+      },
+      "delta_defaults_minus_bm25_conditioned": {
+        "function_pp": -1.49,
+        "line_pp": -2.24
+      },
+      "discordant_in_intersection": {
+        "function": {
+          "defaults_only": 4,
+          "bm25_only": 8
+        },
+        "line": {
+          "defaults_only": 2,
+          "bm25_only": 8
+        }
+      }
+    },
+    "verified407": {
+      "n_total": 407,
+      "n_file_correct": {
+        "defaults": 374,
+        "bm25": 361
+      },
+      "n_intersection_file_correct": 360,
+      "n_function_excluded_in_intersection": 0,
+      "conditioned": {
+        "defaults": {
+          "function_pct": 51.39,
+          "function_n": 360,
+          "function_n_correct": 185,
+          "line_pct": 39.44,
+          "line_n": 360,
+          "line_n_correct": 142
+        },
+        "bm25": {
+          "function_pct": 51.67,
+          "function_n": 360,
+          "function_n_correct": 186,
+          "line_pct": 41.67,
+          "line_n": 360,
+          "line_n_correct": 150
+        }
+      },
+      "raw_full_set": {
+        "defaults": {
+          "file_pct": 91.89,
+          "function_pct": 46.93,
+          "line_pct": 35.38
+        },
+        "bm25": {
+          "file_pct": 88.7,
+          "function_pct": 46.44,
+          "line_pct": 37.1
+        }
+      },
+      "delta_defaults_minus_bm25_conditioned": {
+        "function_pp": -0.28,
+        "line_pp": -2.23
+      },
+      "discordant_in_intersection": {
+        "function": {
+          "defaults_only": 8,
+          "bm25_only": 9
+        },
+        "line": {
+          "defaults_only": 2,
+          "bm25_only": 10
+        }
+      }
+    }
+  },
+  "sources": {
+    "lite300": {
+      "defaults": {
+        "pred": "lab/results_regions/full300_v11.jsonl",
+        "metric": "lab/results_regions/agentless_metric_v5.json"
+      },
+      "bm25": {
+        "pred": "lab/results_regions/lite300_bm25.jsonl",
+        "metric": "lab/results_regions/agentless_metric_lite_bm25.json"
+      }
+    },
+    "verified407": {
+      "defaults": {
+        "pred": "lab/results_regions/full407_verified_new.jsonl",
+        "metric": "lab/results_regions/agentless_metric_verified_new.json"
+      },
+      "bm25": {
+        "pred": "lab/results_regions/verified407_bm25.jsonl",
+        "metric": "lab/results_regions/agentless_metric_verified_bm25.json"
+      }
+    }
+  }
+}

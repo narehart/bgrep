@@ -1,0 +1,25 @@
+engine version: roust 0.2.0 (52b2305, clean)
+gold parquet: lab/swebench_verified_heldout.parquet
+repos dir: lab/swebench_repos_bm25
+pad_lines=5 len_exp=0.85 bm25_only=True
+shard 1/1: rows [0:407] of the sorted split (407 instances)
+[25/407] django__django-11087                          elapsed=96s (ok) ok=25 err=0
+[50/407] django__django-11734                          elapsed=209s (ok) ok=50 err=0
+[75/407] django__django-12774                          elapsed=333s (ok) ok=75 err=0
+[100/407] django__django-13568                          elapsed=449s (ok) ok=100 err=0
+[125/407] django__django-14376                          elapsed=569s (ok) ok=125 err=0
+[150/407] django__django-15368                          elapsed=690s (ok) ok=150 err=0
+[175/407] django__django-16100                          elapsed=820s (ok) ok=175 err=0
+[200/407] django__django-16901                          elapsed=927s (ok) ok=200 err=0
+[225/407] matplotlib__matplotlib-25287                  elapsed=1062s (ok) ok=225 err=0
+[250/407] pydata__xarray-4075                           elapsed=1141s (ok) ok=250 err=0
+[275/407] pytest-dev__pytest-10081                      elapsed=1211s (ok) ok=275 err=0
+[300/407] scikit-learn__scikit-learn-13328              elapsed=1275s (ok) ok=300 err=0
+[325/407] sphinx-doc__sphinx-7748                       elapsed=1354s (ok) ok=325 err=0
+[350/407] sphinx-doc__sphinx-9602                       elapsed=1469s (ok) ok=350 err=0
+[375/407] sympy__sympy-15809                            elapsed=1579s (ok) ok=375 err=0
+[400/407] sympy__sympy-23413                            elapsed=1719s (ok) ok=400 err=0
+[407/407] sympy__sympy-24661                            elapsed=1756s (ok) ok=407 err=0
+
+engine version: roust 0.2.0 (52b2305, clean)
+wrote 407 records (407 ok, 0 errors) to lab/results_regions/verified407_bm25.jsonl

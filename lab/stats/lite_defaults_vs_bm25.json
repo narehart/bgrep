@@ -1,0 +1,78 @@
+{
+  "n": 300,
+  "n_boot": 10000,
+  "seed": 20260718,
+  "metrics": {
+    "file": {
+      "mean_a": 92.3333,
+      "mean_b": 89.3333,
+      "delta": -3.0,
+      "ci95": [
+        -5.0,
+        -1.3333
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 0,
+        "n10_a_correct_b_wrong": 9,
+        "p_exact_two_sided": 0.00390625
+      }
+    },
+    "function": {
+      "mean_a": 53.3333,
+      "mean_b": 54.3333,
+      "delta": 1.0,
+      "ci95": [
+        -1.3333,
+        3.3333
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 8,
+        "n10_a_correct_b_wrong": 5,
+        "p_exact_two_sided": 0.5810546875
+      }
+    },
+    "line": {
+      "mean_a": 42.6667,
+      "mean_b": 44.0,
+      "delta": 1.3333,
+      "ci95": [
+        -1.0,
+        3.6667
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 8,
+        "n10_a_correct_b_wrong": 4,
+        "p_exact_two_sided": 0.3876953125
+      }
+    },
+    "fraction": {
+      "mean_a": 0.5168,
+      "mean_b": 0.5178,
+      "delta": 0.001,
+      "ci95": [
+        -0.0174,
+        0.0177
+      ],
+      "units": "fraction"
+    }
+  },
+  "source": {
+    "a": {
+      "label": "lite_defaults",
+      "predictions": [
+        "lab/results_regions/full300_v11.jsonl"
+      ],
+      "metric": "lab/results_regions/agentless_metric_v5.json"
+    },
+    "b": {
+      "label": "lite_bm25",
+      "predictions": [
+        "lab/results_regions/lite300_bm25.jsonl"
+      ],
+      "metric": "lab/results_regions/agentless_metric_lite_bm25.json"
+    }
+  }
+}

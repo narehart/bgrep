@@ -1,0 +1,78 @@
+{
+  "n": 407,
+  "n_boot": 10000,
+  "seed": 20260718,
+  "metrics": {
+    "file": {
+      "mean_a": 91.8919,
+      "mean_b": 88.6978,
+      "delta": -3.1941,
+      "ci95": [
+        -5.1597,
+        -1.4742
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 1,
+        "n10_a_correct_b_wrong": 14,
+        "p_exact_two_sided": 0.0009765625
+      }
+    },
+    "function": {
+      "mean_a": 46.9287,
+      "mean_b": 46.4373,
+      "delta": -0.4914,
+      "ci95": [
+        -2.7027,
+        1.7199
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 10,
+        "n10_a_correct_b_wrong": 12,
+        "p_exact_two_sided": 0.8318119049072266
+      }
+    },
+    "line": {
+      "mean_a": 35.3808,
+      "mean_b": 37.1007,
+      "delta": 1.7199,
+      "ci95": [
+        0.0,
+        3.6855
+      ],
+      "units": "percentage points",
+      "mcnemar": {
+        "n01_a_wrong_b_correct": 11,
+        "n10_a_correct_b_wrong": 4,
+        "p_exact_two_sided": 0.11846923828125
+      }
+    },
+    "fraction": {
+      "mean_a": 0.473,
+      "mean_b": 0.4894,
+      "delta": 0.0165,
+      "ci95": [
+        -0.001,
+        0.0345
+      ],
+      "units": "fraction"
+    }
+  },
+  "source": {
+    "a": {
+      "label": "verified_defaults",
+      "predictions": [
+        "lab/results_regions/full407_verified_new.jsonl"
+      ],
+      "metric": "lab/results_regions/agentless_metric_verified_new.json"
+    },
+    "b": {
+      "label": "verified_bm25",
+      "predictions": [
+        "lab/results_regions/verified407_bm25.jsonl"
+      ],
+      "metric": "lab/results_regions/agentless_metric_verified_bm25.json"
+    }
+  }
+}
