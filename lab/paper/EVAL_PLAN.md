@@ -185,3 +185,5 @@ percentile 95% CI, `--n-boot 10000 --seed 20260718` defaults; McNemar exact
 two-sided on discordant pairs; errors count as wrong at every level with the
 full-set denominator (matches the scorers' unified convention). Unit tests:
 `tests/test_paired_stats.py`.
+
+Paper note (2026-07-21, scoreboard metric composition): the paper's localization table must present roust's file-level result as a dual metric — depth-aligned File@10 first (all gold files within top 10: 82.7 Lite / 79.4 Verified held-out), then the all-gold-retrieved Agentless-metric FILE score (92.3 Lite / 92.1 Verified, ~35 files returned, range 22–38) — because Acc@10 (any-gold-in-top-10) and all-gold-retrieved are incommensurable in both directions; File@10 is the number to rank against Acc@10 rows, and on it roust sits below the trained retrievers (SweRankEmbed-Small 90.9).
